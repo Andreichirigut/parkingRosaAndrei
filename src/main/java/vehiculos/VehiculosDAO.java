@@ -5,7 +5,7 @@
  */
 package vehiculos;
 
-import daw.Andrei.*;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
