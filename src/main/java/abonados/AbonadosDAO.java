@@ -5,7 +5,10 @@
  */
 package abonados;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -56,34 +59,160 @@ public class AbonadosDAO implements IAbonados{
         return lista;
     }
 
-    @Override
+   @Override
     public AbonadosVO findByPk(int pk) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+         ResultSet res = null;
+         AbonadosVO p = new AbonadosVO();
+
+        String sql = "select * from Abonado where codAbono=?";
+
+        try (PreparedStatement prest = con.prepareStatement(sql)) {
+            // Preparamos la sentencia parametrizada
+            prest.setInt(1, pk);
+
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+            res = prest.executeQuery();
+
+            // Nos posicionamos en el primer registro del Resultset. Sólo debe haber una fila
+            // si existe esa pk
+            if (res.first()) {
+                // Recogemos los datos de la persona, guardamos en un objeto
+                p.setPk(res.getInt("codAbono"));
+                p.setCodCliente(res.getInt("codcliente"));
+                p.setNombre(res.getString("nombre"));
+                p.setNumTarjeta(res.getString("numTarjeta"));
+                p.setTipoABono(res.getInt("tipoAbono"));
+                p.setImporte(res.getInt("importe"));
+                p.setFechaActiva(res.getDate("fechaActiva").toLocalDate());
+                p.setFechaFin(res.getDate("fechaFin").toLocalDate());
+                return p;
+            }
+
+            return null;
+        }
     }
 
     @Override
     public int insertAbonado(AbonadosVO abonado) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int numFilas = 0;
+        String sql = "insert into Abonado values (?,?,?,?,?,?,?,?)";
+
+        if (findByPk(abonado.getPk()) != null) {
+            // Existe un registro con esa pk
+            // No se hace la inserción
+            return numFilas;
+        } else {
+            // Instanciamos el objeto PreparedStatement para inserción
+            // de datos. Sentencia parametrizada
+            try (PreparedStatement prest = con.prepareStatement(sql)) {
+
+                // Establecemos los parámetros de la sentencia
+                prest.setInt(1, abonado.getPk());
+                prest.setInt(2, abonado.getCodCliente());
+                prest.setString(3,abonado.getNombre());
+                prest.setString(4, abonado.getNumTarjeta());
+                prest.setInt(5, abonado.getTipoABono());
+                prest.setInt(6, abonado.getImporte());
+                prest.setDate(7, Date.valueOf(abonado.getFechaActiva()));
+                prest.setDate(8, Date.valueOf(abonado.getFechaFin()));
+
+                numFilas = prest.executeUpdate();
+            }
+            return numFilas;
+        }
     }
 
     @Override
     public int insertListAbonado(List<AbonadosVO> lista) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int numFilas = 0;
+
+        for (AbonadosVO tmp : lista) {
+            numFilas += insertAbonado(tmp);
+        }
+
+        return numFilas;
     }
 
     @Override
     public int deleteAbonado() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "delete from Abonado";
+
+        int nfilas = 0;
+
+        // Preparamos el borrado de datos  mediante un Statement
+        // No hay parámetros en la sentencia SQL
+        try (Statement st = con.createStatement()) {
+            // Ejecución de la sentencia
+            nfilas = st.executeUpdate(sql);
+        }
+
+        // El borrado se realizó con éxito, devolvemos filas afectadas
+        return nfilas;
     }
 
-    @Override
     public int deleteAbonados(AbonadosVO abonado) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int numFilas = 0;
+        
+        
+        String sql = "delete from Abonado where codAbono = ?";
+
+        // Sentencia parametrizada
+        try (PreparedStatement prest = con.prepareStatement(sql)) {
+
+            // Establecemos los parámetros de la sentencia
+            prest.setInt(1, abonado.getPk());
+            // Ejecutamos la sentencia
+            numFilas = prest.executeUpdate();
+        }
+        return numFilas;
     }
 
     @Override
     public int updateAbono(int pk, AbonadosVO nuevoABonado) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         int numFilas = 0;
+        String sql = "update Abonado set codcliente = ?, nombre = ?, numTarjeta = ?,tipoAbono = ?, importe = ?, fechaActiva = ?, fechaFin = ? where codABono="+pk;
+
+        if (findByPk(pk) == null) {
+            // La persona a actualizar no existe
+            return numFilas;
+        } else {
+            // Instanciamos el objeto PreparedStatement para inserción
+            // de datos. Sentencia parametrizada
+            try (PreparedStatement prest = con.prepareStatement(sql)) {
+
+                // Establecemos los parámetros de la sentencia
+               
+                prest.setInt(1, nuevoABonado.getCodCliente());
+                prest.setString(2,nuevoABonado.getNombre());
+                prest.setString(3, nuevoABonado.getNumTarjeta());
+                prest.setInt(4, nuevoABonado.getTipoABono());
+                prest.setInt(5, nuevoABonado.getImporte());
+                prest.setDate(6, Date.valueOf(nuevoABonado.getFechaActiva()));
+                prest.setDate(7, Date.valueOf(nuevoABonado.getFechaFin()));
+               
+                numFilas = prest.executeUpdate();
+            }
+            return numFilas;
+        }
     }
     
+     public int cambiarNombres(String newName, String oldName) throws SQLException {
+
+        int res = 0;
+        // Dos ?, uno para newName y otro para oldName
+
+        String sql = "{call cambiar_nombres (?,?)}";
+
+        // Preparamos la llamada al procedimiento almacenado
+        try (CallableStatement call = con.prepareCall(sql)) {
+            // Establecemos parámetros a pasar al procedimiento
+            call.setString(1, newName);
+            call.setString(2, oldName);
+            // Ejecutamos el procedimiento
+            res = call.executeUpdate();
+            
+        }
+        return res;
+    }
 }
