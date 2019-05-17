@@ -8,6 +8,7 @@ package ticket;
 import abonados.AbonadosVO;
 import abonados.Conexion;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -56,7 +57,31 @@ public class TicketDAO implements ITicket{
 
     @Override
     public TicketVO findByPk(int pk) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         ResultSet res = null;
+         TicketVO p = new TicketVO();
+
+        String sql = "select * from Ticket where pin = ?";
+
+        try (PreparedStatement prest = con.prepareStatement(sql)) {
+            // Preparamos la sentencia parametrizada
+            prest.setInt(1, pk);
+
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+            res = prest.executeQuery();
+
+            // Nos posicionamos en el primer registro del Resultset. Sólo debe haber una fila
+            // si existe esa pk
+            if (res.first()) {
+                // Recogemos los datos del ticket, guardamos en un objeto
+                p.setPin(res.getInt("pin"));
+                p.setMatricula(res.getString("matricula"));
+                p.setFecha(res.getDate("fecha").toLocalDate());
+                p.setNumeroPlaza(res.getInt("numeroPlaza"));
+                return p;
+            }
+
+            return null;
+        }
     }
 
     @Override
