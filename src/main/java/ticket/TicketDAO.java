@@ -5,9 +5,11 @@
  */
 package ticket;
 
+
 import abonados.AbonadosVO;
 import abonados.Conexion;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -86,27 +88,100 @@ public class TicketDAO implements ITicket{
 
     @Override
     public int insertTicket(TicketVO ticket) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         int numFilas = 0;
+        String sql = "insert into Ticket values (?,?,?,?)";
+
+        if (findByPk(ticket.getPin()) != null) {
+            // Existe un registro con esa pk
+            // No se hace la inserción
+            return numFilas;
+        } else {
+            // Instanciamos el objeto PreparedStatement para inserción
+            // de datos. Sentencia parametrizada
+            try (PreparedStatement prest = con.prepareStatement(sql)) {
+
+                // Establecemos los parámetros de la sentencia
+                prest.setInt(1, ticket.getPin());
+                prest.setString(2, ticket.getMatricula());          
+                prest.setDate(7, Date.valueOf(ticket.getFecha()));
+                prest.setInt(8, ticket.getNumeroPlaza());
+
+                numFilas = prest.executeUpdate();
+            }
+            return numFilas;
+        }
     }
 
     @Override
     public int insertListaTicket(List<TicketVO> lista) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int numFilas = 0;
+
+        for (TicketVO tmp : lista) {
+            numFilas += insertTicket(tmp);
+        }
+
+        return numFilas;
     }
 
     @Override
     public int deleteTicket() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "delete from Ticket";
+
+        int nfilas = 0;
+
+        // Preparamos el borrado de datos  mediante un Statement
+        // No hay parámetros en la sentencia SQL
+        try (Statement st = con.createStatement()) {
+            // Ejecución de la sentencia
+            nfilas = st.executeUpdate(sql);
+        }
+
+        // El borrado se realizó con éxito, devolvemos filas afectadas
+        return nfilas;
     }
 
     @Override
     public int delete_Tickets(TicketVO ticket) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int numFilas = 0;
+        
+        
+        String sql = "delete from Ticket where pin = ?";
+
+        // Sentencia parametrizada
+        try (PreparedStatement prest = con.prepareStatement(sql)) {
+
+            // Establecemos los parámetros de la sentencia
+            prest.setInt(1, ticket.getPin());
+            // Ejecutamos la sentencia
+            numFilas = prest.executeUpdate();
+        }
+        return numFilas;
     }
 
     @Override
     public int updateTicket(int pk, TicketVO nuevoTicket) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+         int numFilas = 0;
+        String sql = "update Ticket set matricula = ?, fecha = ?, numeroPlaza = ? where codABono="+pk;
+
+        if (findByPk(pk) == null) {
+            // La persona a actualizar no existe
+            return numFilas;
+        } else {
+            // Instanciamos el objeto PreparedStatement para inserción
+            // de datos. Sentencia parametrizada
+            try (PreparedStatement prest = con.prepareStatement(sql)) {
+
+                // Establecemos los parámetros de la sentencia
+               
+                prest.setString(1, nuevoTicket.getMatricula());
+                prest.setDate(2, Date.valueOf(nuevoTicket.getFecha()));
+                prest.setInt(3, nuevoTicket.getNumeroPlaza());
+               
+                numFilas = prest.executeUpdate();
+            }
+            return numFilas;
+        }
     }
     
 }
