@@ -6,6 +6,7 @@
 package ticket;
 
 import java.time.LocalDate;
+import java.util.Random;
 
 /**
  *
@@ -21,7 +22,9 @@ public class TicketVO {
     
     //Constructores
 
-    public TicketVO(int pin, String matricula, LocalDate fecha, int numeroPlaza) {
+    public TicketVO(String matricula) {
+        Random rnd= new Random();
+        
         this.pin = pin;
         this.matricula = matricula;
         this.fecha = fecha;
