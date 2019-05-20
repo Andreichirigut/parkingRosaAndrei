@@ -22,7 +22,6 @@ public class AbonadosVO {
     private LocalDate fechaActiva;
     private LocalDate fechaFin;
     private static int contador=0;
-    private static int contCliente=999;
 
     public AbonadosVO(String nombre, String numTarjeta, int tipoAbono, int importe) {
        
