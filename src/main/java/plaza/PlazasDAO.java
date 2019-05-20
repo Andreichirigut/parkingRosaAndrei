@@ -44,7 +44,6 @@ public class PlazasDAO implements IPlazas {
                 p.setTipoPlaza(res.getString("tipoPlaza"));
                 p.setEstadoPlaza(res.getBoolean("estadoPlaza"));
                 p.setTarifa(res.getDouble("tarifa"));
-                p.setPin(res.getInt("pin"));
 
                 //Añadimos el objeto a la lista
                 lista.add(p);
@@ -77,7 +76,6 @@ public class PlazasDAO implements IPlazas {
                 plaza.setTipoPlaza(res.getString("tipoPlaza"));
                 plaza.setEstadoPlaza(res.getBoolean("estadoPlaza"));
                 plaza.setTarifa(res.getDouble("tarifa"));
-                plaza.setPin(res.getInt("pin"));
                 return plaza;
             }
 
@@ -89,7 +87,7 @@ public class PlazasDAO implements IPlazas {
     public int insertPlaza(PlazasVO plaza) throws SQLException {
 
         int numFilas = 0;
-        String sql = "insert into Plaza values (?,?,?,?,?)";
+        String sql = "insert into Plaza values (?,?,?,?)";
 
         if (findByPk(plaza.getNumPlaza()) != null) {
             // Existe un registro con esa pk
@@ -105,7 +103,6 @@ public class PlazasDAO implements IPlazas {
                 prest.setString(2, plaza.getTipoPlaza());
                 prest.setBoolean(3, plaza.isEstadoPlaza());
                 prest.setDouble(4, plaza.getTarifa());
-                prest.setInt(5, plaza.getPin());
                 numFilas = prest.executeUpdate();
             }
             return numFilas;
@@ -164,7 +161,7 @@ public class PlazasDAO implements IPlazas {
     public int updatePlaza(int numPlaza, PlazasVO nuevosDatos) throws SQLException {
 
         int numFilas = 0;
-        String sql = "update Plaza set tipoPlaza = ?, estadoPlaza = ?, tarifa = ?, pin = ? where numPlaza=?";
+        String sql = "update Plaza set tipoPlaza = ?, estadoPlaza = ?, tarifa = ? where numPlaza=?";
 
         if (findByPk(numPlaza) == null) {
             // La persona a actualizar no existe
