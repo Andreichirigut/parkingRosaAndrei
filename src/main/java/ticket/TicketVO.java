@@ -74,8 +74,6 @@ public class TicketVO {
         this.fechaSalida = fechaSalida;
     }
 
-   
-
     public int getNumeroPlaza() {
         return numeroPlaza;
     }
@@ -84,10 +82,20 @@ public class TicketVO {
         this.numeroPlaza = numeroPlaza;
     }
 
+    public double getCosteFinal() {
+        return costeFinal;
+    }
+
+    public void setCosteFinal(double costeFinal) {
+        this.costeFinal = costeFinal;
+    }
+
     @Override
     public String toString() {
-        return "TicketVO{" + "pin=" + pin + ", matricula=" + matricula + ", fechaEntrada=" + fechaEntrada + ", fechaSalida=" + fechaSalida + ", numeroPlaza=" + numeroPlaza + '}';
+        return "TicketVO{" + "pin=" + pin + ", matricula=" + matricula + ", fechaEntrada=" + fechaEntrada + ", fechaSalida=" + fechaSalida + ", numeroPlaza=" + numeroPlaza + ", costeFinal=" + costeFinal + '}';
     }
+
+   
 
    
     public static void main(String[] args) {
