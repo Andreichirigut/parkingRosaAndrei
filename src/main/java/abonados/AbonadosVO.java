@@ -15,7 +15,6 @@ public class AbonadosVO {
     
   
     private int pk;
-    private int codCliente;
     private String nombre;
     private String numTarjeta;
     private int tipoAbono; //Para que sea 1,2,3,6,12 (meses)
@@ -28,7 +27,6 @@ public class AbonadosVO {
     public AbonadosVO(String nombre, String numTarjeta, int tipoAbono, int importe) {
        
         this.pk = contador;
-        this.codCliente = contCliente--;
         this.nombre = nombre;
         this.numTarjeta = numTarjeta;
         this.tipoAbono = tipoAbono;
@@ -52,13 +50,6 @@ public class AbonadosVO {
         this.pk = pk;
     }
 
-    public int getCodCliente() {
-        return codCliente;
-    }
-
-    public void setCodCliente(int codCliente) {
-        this.codCliente = codCliente;
-    }
 
     public String getNombre() {
         return nombre;
@@ -120,7 +111,7 @@ public class AbonadosVO {
 
     @Override
     public String toString() {
-        return "Abono nº:"+pk+"\t Cliente:"+ codCliente+"\t Nombre:"+ nombre+"\t Num.Tarjeta:"+numTarjeta+"\t Tipo Abono:"+tipoAbono+"\t Importe"+importe+"\t Fecha inicio:"+fechaActiva+"\t Fecha Fin:"+fechaFin;
+        return "Abono nº:"+pk+"\t Nombre:"+ nombre+"\t Num.Tarjeta:"+numTarjeta+"\t Tipo Abono:"+tipoAbono+"\t Importe"+importe+"\t Fecha inicio:"+fechaActiva+"\t Fecha Fin:"+fechaFin;
     }
     
  
