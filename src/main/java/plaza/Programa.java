@@ -19,12 +19,12 @@ public class Programa {
     public static void main(String[] args) {
         PlazasDAO daoPlaza = new PlazasDAO();
         List<PlazasVO> listaPlazas = new ArrayList<>();
-        listaPlazas.add(new PlazasVO(101, "Turismo ", false, 0.12, 123456));
-        listaPlazas.add(new PlazasVO(102, "Motocicleta", false, 0.08, 135790));
-        listaPlazas.add(new PlazasVO(103, "Caravana", false, 0.45, 987654));
-        listaPlazas.add(new PlazasVO(104, "Turismo ", false, 0.12, 192837));
-        listaPlazas.add(new PlazasVO(105, "Motocicleta", false, 0.08, 152860));
-        listaPlazas.add(new PlazasVO(106, "Caravana", false, 0.45, 183764));
+        listaPlazas.add(new PlazasVO(101, "Turismo ", false, 0.12));
+        listaPlazas.add(new PlazasVO(102, "Motocicleta", false, 0.08));
+        listaPlazas.add(new PlazasVO(103, "Caravana", false, 0.45));
+        listaPlazas.add(new PlazasVO(104, "Turismo ", false, 0.12));
+        listaPlazas.add(new PlazasVO(105, "Motocicleta", false, 0.08));
+        listaPlazas.add(new PlazasVO(106, "Caravana", false, 0.45));
 
         try {
 
@@ -40,7 +40,7 @@ public class Programa {
             System.out.println("-----------------------------------------");
             System.out.println("Se va a borrar la plaza con pk 104");
             System.out.println("Nº centros borradas "
-                    + daoPlaza.deletePlaza(new PlazasVO(104, "Turismo", false, 0.12, 192837)));
+                    + daoPlaza.deletePlaza(new PlazasVO(104, "Turismo", false, 0.12)));
             System.out.println("-----------------------------------------");
             nuevaLista = daoPlaza.getAll();
             System.out.println("-------- Lista con datos recogidos desde la B.D despues de borrar un centro -------------");
@@ -48,7 +48,7 @@ public class Programa {
             System.out.println("-----------------------------------------");
             System.out.println("Modificación de la plaza con pk 105");
             System.out.println("Nº plazas modificados "
-                    + daoPlaza.updatePlaza(105, new PlazasVO(106, "Caravana", true, 0.45, 192800)));
+                    + daoPlaza.updatePlaza(105, new PlazasVO(106, "Caravana", true, 0.45)));
             System.out.println("-----------------------------------------");
             nuevaLista = daoPlaza.getAll();
             System.out.println("-------- Lista con datos recogidos desde la B.D despues de modificar una persona -------------");
