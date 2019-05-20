@@ -14,20 +14,16 @@ public class PlazasVO {
     private String tipoPlaza;
     private boolean estadoPlaza;
     private double tarifa;
-    private int pin;
 
-    public PlazasVO(int numPlaza, String tipoPlaza, boolean estadoPlaza, double tarifa, int pin) {
+    public PlazasVO(int numPlaza, String tipoPlaza, boolean estadoPlaza, double tarifa) {
         this.numPlaza = numPlaza;
         this.tipoPlaza = tipoPlaza;
         this.estadoPlaza = estadoPlaza;
         this.tarifa = tarifa;
-        this.pin = pin;
     }
 
     public PlazasVO() {
     }
-    
-    
 
     public int getNumPlaza() {
         return numPlaza;
@@ -61,19 +57,12 @@ public class PlazasVO {
         this.tarifa = tarifa;
     }
 
-    public int getPin() {
-        return pin;
-    }
-
-    public void setPin(int pin) {
-        this.pin = pin;
-    }
-
     @Override
     public String toString() {
-        return "PlazasVO{" + "numPlaza=" + numPlaza + ", tipoPlaza=" + tipoPlaza + ", estadoPlaza=" + estadoPlaza + ", tarifa=" + tarifa + ", pin=" + pin + '}';
+        return "PlazasVO{" + "numPlaza=" + numPlaza + ", tipoPlaza=" + tipoPlaza + ", estadoPlaza=" + estadoPlaza + ", tarifa=" + tarifa + '}';
     }
 
+    
     
     
     
