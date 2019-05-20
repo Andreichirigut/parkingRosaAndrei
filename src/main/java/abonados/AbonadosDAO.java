@@ -42,7 +42,6 @@ public class AbonadosDAO implements IAbonados{
                AbonadosVO p = new AbonadosVO();
                 // Recogemos los datos del abonado, guardamos en un objeto
                 p.setPk(res.getInt("codAbono"));
-                p.setCodCliente(res.getInt("codcliente"));
                 p.setNombre(res.getString("nombre"));
                 p.setNumTarjeta(res.getString("numTarjeta"));
                 p.setTipoABono(res.getInt("tipoAbono"));
@@ -79,7 +78,6 @@ public class AbonadosDAO implements IAbonados{
             if (res.first()) {
                 // Recogemos los datos de la persona, guardamos en un objeto
                 p.setPk(res.getInt("codAbono"));
-                p.setCodCliente(res.getInt("codcliente"));
                 p.setNombre(res.getString("nombre"));
                 p.setNumTarjeta(res.getString("numTarjeta"));
                 p.setTipoABono(res.getInt("tipoAbono"));
@@ -96,7 +94,7 @@ public class AbonadosDAO implements IAbonados{
     @Override
     public int insertAbonado(AbonadosVO abonado) throws SQLException {
         int numFilas = 0;
-        String sql = "insert into Abonado values (?,?,?,?,?,?,?,?)";
+        String sql = "insert into Abonado values (?,?,?,?,?,?,?)";
 
         if (findByPk(abonado.getPk()) != null) {
             // Existe un registro con esa pk
@@ -109,13 +107,12 @@ public class AbonadosDAO implements IAbonados{
 
                 // Establecemos los parámetros de la sentencia
                 prest.setInt(1, abonado.getPk());
-                prest.setInt(2, abonado.getCodCliente());
-                prest.setString(3,abonado.getNombre());
-                prest.setString(4, abonado.getNumTarjeta());
-                prest.setInt(5, abonado.getTipoABono());
-                prest.setInt(6, abonado.getImporte());
-                prest.setDate(7, Date.valueOf(abonado.getFechaActiva()));
-                prest.setDate(8, Date.valueOf(abonado.getFechaFin()));
+                prest.setString(2,abonado.getNombre());
+                prest.setString(3, abonado.getNumTarjeta());
+                prest.setInt(4, abonado.getTipoABono());
+                prest.setInt(5, abonado.getImporte());
+                prest.setDate(6, Date.valueOf(abonado.getFechaActiva()));
+                prest.setDate(7, Date.valueOf(abonado.getFechaFin()));
 
                 numFilas = prest.executeUpdate();
             }
@@ -171,7 +168,7 @@ public class AbonadosDAO implements IAbonados{
     @Override
     public int updateAbono(int pk, AbonadosVO nuevoABonado) throws SQLException {
          int numFilas = 0;
-        String sql = "update Abonado set codcliente = ?, nombre = ?, numTarjeta = ?,tipoAbono = ?, importe = ?, fechaActiva = ?, fechaFin = ? where codABono="+pk;
+        String sql = "update Abonado set nombre = ?, numTarjeta = ?,tipoAbono = ?, importe = ?, fechaActiva = ?, fechaFin = ? where codABono="+pk;
 
         if (findByPk(pk) == null) {
             // La persona a actualizar no existe
@@ -183,13 +180,12 @@ public class AbonadosDAO implements IAbonados{
 
                 // Establecemos los parámetros de la sentencia
                
-                prest.setInt(1, nuevoABonado.getCodCliente());
-                prest.setString(2,nuevoABonado.getNombre());
-                prest.setString(3, nuevoABonado.getNumTarjeta());
-                prest.setInt(4, nuevoABonado.getTipoABono());
-                prest.setInt(5, nuevoABonado.getImporte());
-                prest.setDate(6, Date.valueOf(nuevoABonado.getFechaActiva()));
-                prest.setDate(7, Date.valueOf(nuevoABonado.getFechaFin()));
+                prest.setString(1,nuevoABonado.getNombre());
+                prest.setString(2, nuevoABonado.getNumTarjeta());
+                prest.setInt(3, nuevoABonado.getTipoABono());
+                prest.setInt(4, nuevoABonado.getImporte());
+                prest.setDate(5, Date.valueOf(nuevoABonado.getFechaActiva()));
+                prest.setDate(6, Date.valueOf(nuevoABonado.getFechaFin()));
                
                 numFilas = prest.executeUpdate();
             }
