@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +44,12 @@ public class TicketDAO implements ITicket{
                 
                TicketVO p = new TicketVO();
                 // Recogemos los datos del abonado, guardamos en un objeto
-                p.setPin(res.getInt("pin"));
+                p.setPin(res.getString("pin"));
                 p.setMatricula(res.getString("matricula"));
-                p.setFecha(res.getDate("fecha").toLocalDate());
+                p.setFechaEntrada(res.getTimestamp("fechaEntrada").toLocalDateTime());
+                p.setFechaSalida(res.getTimestamp("fechaSalida").toLocalDateTime());
                 p.setNumeroPlaza(res.getInt("numeroPlaza"));
+                p.setCosteFinal(res.getDouble("costeFinal"));
                 
 
                 //Añadimos el objeto a la lista
@@ -58,7 +61,7 @@ public class TicketDAO implements ITicket{
     }
 
     @Override
-    public TicketVO findByPk(int pk) throws SQLException {
+    public TicketVO findByPk(String pk) throws SQLException {
          ResultSet res = null;
          TicketVO p = new TicketVO();
 
@@ -66,7 +69,7 @@ public class TicketDAO implements ITicket{
 
         try (PreparedStatement prest = con.prepareStatement(sql)) {
             // Preparamos la sentencia parametrizada
-            prest.setInt(1, pk);
+            prest.setString(1, pk);
 
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
             res = prest.executeQuery();
@@ -75,10 +78,12 @@ public class TicketDAO implements ITicket{
             // si existe esa pk
             if (res.first()) {
                 // Recogemos los datos del ticket, guardamos en un objeto
-                p.setPin(res.getInt("pin"));
+                p.setPin(res.getString("pin"));
                 p.setMatricula(res.getString("matricula"));
-                p.setFecha(res.getDate("fecha").toLocalDate());
+                p.setFechaEntrada(res.getTimestamp("fechaEntrada").toLocalDateTime());
+                p.setFechaSalida(res.getTimestamp("fechaSalida").toLocalDateTime());
                 p.setNumeroPlaza(res.getInt("numeroPlaza"));
+                p.setCosteFinal(res.getDouble("costeFinal"));
                 return p;
             }
 
@@ -89,7 +94,7 @@ public class TicketDAO implements ITicket{
     @Override
     public int insertTicket(TicketVO ticket) throws SQLException {
          int numFilas = 0;
-        String sql = "insert into Ticket values (?,?,?,?)";
+        String sql = "insert into Ticket values (?,?,?,?,?,?)";
 
         if (findByPk(ticket.getPin()) != null) {
             // Existe un registro con esa pk
@@ -101,10 +106,12 @@ public class TicketDAO implements ITicket{
             try (PreparedStatement prest = con.prepareStatement(sql)) {
 
                 // Establecemos los parámetros de la sentencia
-                prest.setInt(1, ticket.getPin());
+                prest.setString(1, ticket.getPin());
                 prest.setString(2, ticket.getMatricula());          
-                prest.setDate(7, Date.valueOf(ticket.getFecha()));
-                prest.setInt(8, ticket.getNumeroPlaza());
+                prest.setTimestamp(7, Timestamp.valueOf(ticket.getFechaEntrada()));
+                prest.setTimestamp(8, Timestamp.valueOf(ticket.getFechaSalida()));             
+                prest.setInt(9, ticket.getNumeroPlaza());
+                prest.setDouble(10, ticket.getCosteFinal());
 
                 numFilas = prest.executeUpdate();
             }
@@ -151,7 +158,7 @@ public class TicketDAO implements ITicket{
         try (PreparedStatement prest = con.prepareStatement(sql)) {
 
             // Establecemos los parámetros de la sentencia
-            prest.setInt(1, ticket.getPin());
+            prest.setString(1, ticket.getPin());
             // Ejecutamos la sentencia
             numFilas = prest.executeUpdate();
         }
@@ -159,10 +166,10 @@ public class TicketDAO implements ITicket{
     }
 
     @Override
-    public int updateTicket(int pk, TicketVO nuevoTicket) throws SQLException {
+    public int updateTicket(String pk, TicketVO nuevoTicket) throws SQLException {
         
          int numFilas = 0;
-        String sql = "update Ticket set matricula = ?, fecha = ?, numeroPlaza = ? where codABono="+pk;
+        String sql = "update Ticket set matricula = ?, fechaEntrada = ?, fechaSalida, numeroPlaza = ?, costeFinal = ? where codABono="+pk;
 
         if (findByPk(pk) == null) {
             // La persona a actualizar no existe
@@ -175,8 +182,10 @@ public class TicketDAO implements ITicket{
                 // Establecemos los parámetros de la sentencia
                
                 prest.setString(1, nuevoTicket.getMatricula());
-                prest.setDate(2, Date.valueOf(nuevoTicket.getFecha()));
-                prest.setInt(3, nuevoTicket.getNumeroPlaza());
+                prest.setTimestamp(2, Timestamp.valueOf(nuevoTicket.getFechaEntrada()));
+                prest.setTimestamp(3, Timestamp.valueOf(nuevoTicket.getFechaSalida()));  
+                prest.setInt(4, nuevoTicket.getNumeroPlaza());
+                prest.setDouble(5, nuevoTicket.getCosteFinal());
                
                 numFilas = prest.executeUpdate();
             }
