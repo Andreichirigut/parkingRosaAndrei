@@ -5,7 +5,8 @@
  */
 package ticket;
 
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.util.Random;
 
 /**
@@ -15,30 +16,37 @@ import java.util.Random;
 public class TicketVO {
     
     //Atributos
-    private int pin;
+    private String pin="";
     private String matricula;
-    private LocalDate fecha;
+    private LocalDateTime fechaEntrada;
+    private LocalDateTime fechaSalida;
     private int numeroPlaza;
+    private double costeFinal;
     
     //Constructores
 
     public TicketVO(String matricula) {
         Random rnd= new Random();
-        
-        this.pin = pin;
+        int[] arrayPin= new int[6];
+            for (int i = 0; i <6; i++) {
+            arrayPin[i]=rnd.nextInt(9)+1;
+            pin+=Integer.toString(arrayPin[i]);
+        }
         this.matricula = matricula;
-        this.fecha = fecha;
+        this.fechaEntrada = LocalDateTime.now();
+        this.fechaSalida=LocalDateTime.now();
         this.numeroPlaza = numeroPlaza;
+        this.costeFinal=0;
     }
 
     public TicketVO() {
     }
 
-    public int getPin() {
+    public String getPin() {
         return pin;
     }
 
-    public void setPin(int pin) {
+    public void setPin(String pin) {
         this.pin = pin;
     }
 
@@ -50,13 +58,23 @@ public class TicketVO {
         this.matricula = matricula;
     }
 
-    public LocalDate getFecha() {
-        return fecha;
+    public LocalDateTime getFechaEntrada() {
+        return fechaEntrada;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+    public void setFechaEntrada(LocalDateTime fechaEntrada) {
+        this.fechaEntrada = fechaEntrada;
     }
+
+    public LocalDateTime getFechaSalida() {
+        return fechaSalida;
+    }
+
+    public void setFechaSalida(LocalDateTime fechaSalida) {
+        this.fechaSalida = fechaSalida;
+    }
+
+   
 
     public int getNumeroPlaza() {
         return numeroPlaza;
@@ -68,7 +86,19 @@ public class TicketVO {
 
     @Override
     public String toString() {
-        return "TicketVO{" + "pin=" + pin + ", matricula=" + matricula + ", fecha=" + fecha + ", numeroPlaza=" + numeroPlaza + '}';
+        return "TicketVO{" + "pin=" + pin + ", matricula=" + matricula + ", fechaEntrada=" + fechaEntrada + ", fechaSalida=" + fechaSalida + ", numeroPlaza=" + numeroPlaza + '}';
+    }
+
+   
+    public static void main(String[] args) {
+        
+        TicketVO prueba=new TicketVO("789775");
+        TicketVO prueba2=new TicketVO("789885");
+        
+        System.out.println(prueba.toString());
+                System.out.println(prueba2.toString());
+
+        
     }
     
     
