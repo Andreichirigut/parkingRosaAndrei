@@ -19,7 +19,7 @@ public interface ITicket {
     List<TicketVO> getAll() throws SQLException;
     
     // Método para obtener un registro a partir de la PK
-    TicketVO findByPk(int pk) throws SQLException;
+    TicketVO findByPk(String pk) throws SQLException;
     
     // Método para insertar un registro
     int insertTicket (TicketVO ticket) throws SQLException;
@@ -35,5 +35,5 @@ public interface ITicket {
     
     // Método para modificar un abonado. Se modifica el abono que tenga esa 'pk'
     // con los nuevos datos que traiga el abono nuevoABonado
-    int updateTicket (int pk, TicketVO nuevoTicket) throws SQLException;
+    int updateTicket (String pk, TicketVO nuevoTicket) throws SQLException;
 }
