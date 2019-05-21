@@ -20,10 +20,13 @@ public class TicketVO {
     //Atributos
     private String pin="";
     private String matricula;
-    private LocalDateTime fechaEntrada;
-    private LocalDateTime fechaSalida;
+    private LocalDate fechaEntrada;
+    private LocalDate fechaSalida;
+    private LocalTime hora_Entrada;
+    private LocalTime hora_Salida;
     private int numeroPlaza;
     private double costeFinal;
+    private LocalDateTime aux;
     
     //Constructores
 
@@ -35,8 +38,10 @@ public class TicketVO {
             pin+=Integer.toString(arrayPin[i]);
         }
         this.matricula = matricula;
-        this.fechaEntrada = LocalDateTime.now();
-        this.fechaSalida=LocalDateTime.now();
+        this.fechaEntrada = LocalDate.now();
+        this.fechaSalida=LocalDate.now();
+        this.hora_Entrada=LocalTime.now();
+        this.hora_Salida=LocalTime.now();
         this.numeroPlaza = numeroPlaza;
         this.costeFinal=0;
     }
@@ -60,20 +65,44 @@ public class TicketVO {
         this.matricula = matricula;
     }
 
-    public LocalDateTime getFechaEntrada() {
+    public LocalDate getFechaEntrada() {
         return fechaEntrada;
     }
 
-    public void setFechaEntrada(LocalDateTime fechaEntrada) {
+    public void setFechaEntrada(LocalDate fechaEntrada) {
         this.fechaEntrada = fechaEntrada;
     }
 
-    public LocalDateTime getFechaSalida() {
+    public LocalDate getFechaSalida() {
         return fechaSalida;
     }
 
-    public void setFechaSalida(LocalDateTime fechaSalida) {
+    public void setFechaSalida(LocalDate fechaSalida) {
         this.fechaSalida = fechaSalida;
+    }
+
+    public LocalDateTime getAux() {
+        return aux;
+    }
+
+    public void setAux(LocalDateTime aux) {
+        this.aux = aux;
+    }
+
+    public LocalTime getHora_Entrada() {
+        return hora_Entrada;
+    }
+
+    public void setHora_Entrada(LocalTime hora_Entrada) {
+        this.hora_Entrada = hora_Entrada;
+    }
+
+    public LocalTime getHora_Salida() {
+        return hora_Salida;
+    }
+
+    public void setHora_Salida(LocalTime hora_Salida) {
+        this.hora_Salida = hora_Salida;
     }
 
 
@@ -97,8 +126,10 @@ public class TicketVO {
 
     @Override
     public String toString() {
-        return "TicketVO{" + "pin=" + pin + ", matricula=" + matricula + ", fechaEntrada=" + fechaEntrada + ", fechaSalida=" + fechaSalida + ", numeroPlaza=" + numeroPlaza + ", costeFinal=" + costeFinal + '}';
+        return "TicketVO{" + "pin=" + pin + ", matricula=" + matricula + ", fechaEntrada=" + fechaEntrada + ", fechaSalida=" + fechaSalida + ", hora_Entrada=" + hora_Entrada + ", hora_Salida=" + hora_Salida + ", numeroPlaza=" + numeroPlaza + ", costeFinal=" + costeFinal + ", aux=" + aux + '}';
     }
+
+   
 
    
 
