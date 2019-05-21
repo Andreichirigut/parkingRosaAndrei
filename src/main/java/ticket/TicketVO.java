@@ -26,7 +26,6 @@ public class TicketVO {
     private LocalTime hora_Salida;
     private int numeroPlaza;
     private double costeFinal;
-    private LocalDateTime aux;
     private static int contador=45;
     
     //Constructores
@@ -83,13 +82,6 @@ public class TicketVO {
         this.fechaSalida = fechaSalida;
     }
 
-    public LocalDateTime getAux() {
-        return aux;
-    }
-
-    public void setAux(LocalDateTime aux) {
-        this.aux = aux;
-    }
 
     public LocalTime getHora_Entrada() {
         return hora_Entrada;
@@ -128,7 +120,7 @@ public class TicketVO {
 
     @Override
     public String toString() {
-        return "TicketVO{" + "pin=" + pin + ", matricula=" + matricula + ", fechaEntrada=" + fechaEntrada + ", fechaSalida=" + fechaSalida + ", hora_Entrada=" + hora_Entrada + ", hora_Salida=" + hora_Salida + ", numeroPlaza=" + numeroPlaza + ", costeFinal=" + costeFinal + ", aux=" + aux + '}';
+        return "TicketVO{" + "pin=" + pin + ", matricula=" + matricula + ", fechaEntrada=" + fechaEntrada + ", fechaSalida=" + fechaSalida + ", hora_Entrada=" + hora_Entrada + ", hora_Salida=" + hora_Salida + ", numeroPlaza=" + numeroPlaza + ", costeFinal=" + costeFinal;
     }
 
    
