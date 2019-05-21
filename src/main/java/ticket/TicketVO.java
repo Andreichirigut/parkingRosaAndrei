@@ -6,7 +6,9 @@
 package ticket;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Random;
 
 /**
@@ -74,13 +76,7 @@ public class TicketVO {
         this.fechaSalida = fechaSalida;
     }
 
-    public int getNumeroPlaza() {
-        return numeroPlaza;
-    }
 
-    public void setNumeroPlaza(int numeroPlaza) {
-        this.numeroPlaza = numeroPlaza;
-    }
 
     public double getCosteFinal() {
         return costeFinal;
@@ -88,6 +84,15 @@ public class TicketVO {
 
     public void setCosteFinal(double costeFinal) {
         this.costeFinal = costeFinal;
+    }
+
+   
+    public int getNumeroPlaza() {
+        return numeroPlaza;
+    }
+
+    public void setNumeroPlaza(int numeroPlaza) {
+        this.numeroPlaza = numeroPlaza;
     }
 
     @Override

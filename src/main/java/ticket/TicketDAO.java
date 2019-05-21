@@ -46,8 +46,12 @@ public class TicketDAO implements ITicket{
                 // Recogemos los datos del abonado, guardamos en un objeto
                 p.setPin(res.getString("pin"));
                 p.setMatricula(res.getString("matricula"));
+<<<<<<< Updated upstream
                 p.setFechaEntrada(res.getTimestamp("fechaEntrada").toLocalDateTime());
                 p.setFechaSalida(res.getTimestamp("fechaSalida").toLocalDateTime());
+=======
+                p.setFechaEntrada(res.getDate("fechaEntrada").toLocalDate());
+>>>>>>> Stashed changes
                 p.setNumeroPlaza(res.getInt("numeroPlaza"));
                 p.setCosteFinal(res.getDouble("costeFinal"));
                 
@@ -192,5 +196,7 @@ public class TicketDAO implements ITicket{
             return numFilas;
         }
     }
+    
+    
     
 }
