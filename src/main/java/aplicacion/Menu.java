@@ -61,7 +61,27 @@ public class Menu {
                     default:
                         throw new AssertionError();
                 }
-                
+            case 2:
+                System.out.println("------------------------");
+                System.out.println("¿Que acción desea realizar?");
+                System.out.println("--------------------------");
+                System.out.println("0.- Depositar vehiculo");
+                System.out.println("1.- Retirar vehiculo");
+                System.out.println("2.- Depositar abonos");
+                System.out.println("3.- Retirar abonos");
+                int opcion3 = teclado.nextInt();
+                switch (opcion3) {
+                    case 0:
+                        return Comando.DEPOSITAR_VEHICULO;
+                    case 1:
+                        return Comando.RETIRAR_VEHICULO;
+                    case 2:
+                        return Comando.DEPOSITAR_ABONOS;
+                    case 3: 
+                        return Comando.RETIRAR_ABONOS;
+                    default:
+                        throw new AssertionError();
+                }
             default:
                 throw new AssertionError();
         }
