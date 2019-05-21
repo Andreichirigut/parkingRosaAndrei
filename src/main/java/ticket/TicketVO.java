@@ -27,6 +27,7 @@ public class TicketVO {
     private int numeroPlaza;
     private double costeFinal;
     private LocalDateTime aux;
+    private static int contador=45;
     
     //Constructores
 
@@ -42,8 +43,9 @@ public class TicketVO {
         this.fechaSalida=LocalDate.now();
         this.hora_Entrada=LocalTime.now();
         this.hora_Salida=LocalTime.now();
-        this.numeroPlaza = numeroPlaza;
+        this.numeroPlaza = contador;
         this.costeFinal=0;
+        contador--;
     }
 
     public TicketVO() {
