@@ -5,9 +5,7 @@
  */
 package plaza;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,6 +25,26 @@ public class PlazasDAO implements IPlazas {
         con = Conexion.getInstance();
     }
 
+    public void getEstados() throws SQLException{
+             String sql="select count(*) from Plaza where estadoPlaza='0'";
+         try (PreparedStatement prest = con.prepareStatement(sql)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+                 res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+            
+              int aux=res.getInt(1);
+               
+               
+                System.out.println("Plazas libres :"+aux);
+            }
+        }
+        
+    }
+    
+    
     @Override
     public List<PlazasVO> getAll() throws SQLException {
         List<PlazasVO> lista = new ArrayList<>();
@@ -183,4 +201,8 @@ public class PlazasDAO implements IPlazas {
         }
     }
 
+    public static void main(String[] args) throws SQLException {
+        PlazasDAO aux= new PlazasDAO();
+        aux.getEstados();
+    }
 }
