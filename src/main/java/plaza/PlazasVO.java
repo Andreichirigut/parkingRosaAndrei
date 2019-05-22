@@ -12,10 +12,10 @@ package plaza;
 public class PlazasVO {
     private int numPlaza;
     private String tipoPlaza;
-    private int estadoPlaza;
+    private boolean estadoPlaza;
     private double tarifa;
 
-    public PlazasVO(int numPlaza, String tipoPlaza, int estadoPlaza, double tarifa) {
+    public PlazasVO(int numPlaza, String tipoPlaza, boolean estadoPlaza, double tarifa) {
         this.numPlaza = numPlaza;
         this.tipoPlaza = tipoPlaza;
         this.estadoPlaza = estadoPlaza;
@@ -41,11 +41,11 @@ public class PlazasVO {
         this.tipoPlaza = tipoPlaza;
     }
 
-    public int isEstadoPlaza() {
+    public boolean isEstadoPlaza() {
         return estadoPlaza;
     }
 
-    public void setEstadoPlaza(int estadoPlaza) {
+    public void setEstadoPlaza(boolean estadoPlaza) {
         this.estadoPlaza = estadoPlaza;
     }
 
