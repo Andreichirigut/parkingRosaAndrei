@@ -25,26 +25,59 @@ public class PlazasDAO implements IPlazas {
         con = Conexion.getInstance();
     }
 
-    public void getEstados() throws SQLException{
-             String sql="select count(*) from Plaza where estadoPlaza='0'";
-         try (PreparedStatement prest = con.prepareStatement(sql)) {
+    public void getEstados() throws SQLException {
+        // El sistema informa en todo momento del número de plazas libres que existen de cada tipo.
+
+        String sql = "select count(*) from Plaza where estadoPlaza='0'and tipoPlaza='Turismo'";
+        String sql2 = "select count(*) from Plaza where estadoPlaza='0'and tipoPlaza='Caravana'";
+        String sql3 = "select count(*) from Plaza where estadoPlaza='0'and tipoPlaza='Motocicleta'";
+        
+        try (PreparedStatement prest = con.prepareStatement(sql)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
             ResultSet res = null;
-                 res = prest.executeQuery();
+            res = prest.executeQuery();
             // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
             if (res.next()) {
-            
-              int aux=res.getInt(1);
-               
-               
-                System.out.println("Plazas libres :"+aux);
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de turismo libres :" + aux);
             }
         }
         
+        try (PreparedStatement prest = con.prepareStatement(sql2)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de caravana libres :" + aux);
+            }
+        }
+        
+        try (PreparedStatement prest = con.prepareStatement(sql3)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de motocicleta libres :" + aux);
+            }
+        }
+
+
+
     }
-    
-    
+
     @Override
     public List<PlazasVO> getAll() throws SQLException {
         List<PlazasVO> lista = new ArrayList<>();
@@ -202,7 +235,7 @@ public class PlazasDAO implements IPlazas {
     }
 
     public static void main(String[] args) throws SQLException {
-        PlazasDAO aux= new PlazasDAO();
+        PlazasDAO aux = new PlazasDAO();
         aux.getEstados();
     }
 }
