@@ -5,6 +5,7 @@
  */
 package plaza;
 
+import abonados.AbonadosVO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  *
@@ -31,7 +33,7 @@ public class PlazasDAO implements IPlazas {
         String sql = "select count(*) from Plaza where estadoPlaza='0'and tipoPlaza='Turismo'";
         String sql2 = "select count(*) from Plaza where estadoPlaza='0'and tipoPlaza='Caravana'";
         String sql3 = "select count(*) from Plaza where estadoPlaza='0'and tipoPlaza='Motocicleta'";
-        
+
         try (PreparedStatement prest = con.prepareStatement(sql)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
@@ -45,7 +47,6 @@ public class PlazasDAO implements IPlazas {
                 System.out.println("Plazas de turismo libres :" + aux);
             }
         }
-        
         try (PreparedStatement prest = con.prepareStatement(sql2)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
@@ -59,7 +60,6 @@ public class PlazasDAO implements IPlazas {
                 System.out.println("Plazas de caravana libres :" + aux);
             }
         }
-        
         try (PreparedStatement prest = con.prepareStatement(sql3)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
@@ -74,10 +74,21 @@ public class PlazasDAO implements IPlazas {
             }
         }
 
-
-
     }
 
+    public void asignarPlaza(AbonadosVO abo){
+        
+        Scanner teclado= new Scanner(System.in);
+        System.out.println("Introduzca matrícula");
+        String matri=teclado.nextLine();
+        System.out.println("Introduzca tipo de vehículo");
+        String tipo=teclado.nextLine();
+        
+        PlazasVO aux= new PlazasVO();
+        
+    }
+    
+    
     @Override
     public List<PlazasVO> getAll() throws SQLException {
         List<PlazasVO> lista = new ArrayList<>();
