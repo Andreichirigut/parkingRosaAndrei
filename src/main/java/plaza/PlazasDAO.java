@@ -30,9 +30,9 @@ public class PlazasDAO implements IPlazas {
     public void getEstados() throws SQLException {
         // El sistema informa en todo momento del número de plazas libres que existen de cada tipo.
 
-        String sql = "select count(*) from Plaza where estadoPlaza='0'and tipoPlaza='Turismo'";
-        String sql2 = "select count(*) from Plaza where estadoPlaza='0'and tipoPlaza='Caravana'";
-        String sql3 = "select count(*) from Plaza where estadoPlaza='0'and tipoPlaza='Motocicleta'";
+        String sql = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Turismo'";
+        String sql2 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Caravana'";
+        String sql3 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Motocicleta'";
 
         try (PreparedStatement prest = con.prepareStatement(sql)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
