@@ -12,12 +12,13 @@ package vehiculos;
  * @author Chiri
  */
 public class VehiculosVO {
+    
     private int codAbono;
     private String matricula;
     private String tipoVehiculo;
 
-    public VehiculosVO(int codAbono, String matricula, String tipoVehiculo) {
-        this.codAbono = codAbono;
+    public VehiculosVO(String matricula, String tipoVehiculo) {
+        this.codAbono = 0000;
         this.matricula = matricula;
         this.tipoVehiculo = tipoVehiculo;
     }
@@ -56,12 +57,5 @@ public class VehiculosVO {
 
     
 
-    
-   
-    
-    
-
-   
-    
     
 }
