@@ -20,9 +20,9 @@ public class Programa {
     public static void main(String[] args) {
         VehiculosDAO daoVehiculo = new VehiculosDAO();
         List<VehiculosVO> listaVehiculos = new ArrayList<>();
-        listaVehiculos.add(new VehiculosVO(100, "23456XCP", "Turismo"));
-        listaVehiculos.add(new VehiculosVO(101, "23456XCX", "Motocicleta"));
-        listaVehiculos.add(new VehiculosVO(102, "23456XCR", "Caravana"));
+        listaVehiculos.add(new VehiculosVO("23456XCP", "Turismo"));
+        listaVehiculos.add(new VehiculosVO("23456XCX", "Motocicleta"));
+        listaVehiculos.add(new VehiculosVO("23456XCR", "Caravana"));
 
         try {
 
