@@ -26,7 +26,7 @@ public interface IPlazas {
     int insertPlaza (List<PlazasVO> lista) throws SQLException;
     
     // Método para borrar un centro
-    int deletePlaza (PlazasVO p) throws SQLException;
+    int deletePlaza (int pk) throws SQLException;
     
     // Método para borrar toda la tabla
     int deletePlaza() throws SQLException;
