@@ -20,7 +20,7 @@ public class PlazasVO {
         //por lo tanto solo le pasamos el tipo de plaza que es
         this.numPlaza = contador;
         this.tipoPlaza = tipoPlaza;
-        this.estadoPlaza = false;
+        this.estadoPlaza = true;
         //Aquí hay que poner ifs dependiendo del tipoPlaza para asignarle un valor a la tarifa
         this.tarifa = 0;
         contador--;
