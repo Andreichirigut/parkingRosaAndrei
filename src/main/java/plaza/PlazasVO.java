@@ -14,12 +14,16 @@ public class PlazasVO {
     private String tipoPlaza;
     private boolean estadoPlaza;
     private double tarifa;
+    private static int contador=45; //Usamos este contador para instanciar la clave primaria, es decir, el número de plaza
 
-    public PlazasVO(int numPlaza, String tipoPlaza, boolean estadoPlaza, double tarifa) {
-        this.numPlaza = numPlaza;
+    public PlazasVO(String tipoPlaza) { //Al constructor no debemos decirle el numPlaza, lo debe asignar él
+        //por lo tanto solo le pasamos el tipo de plaza que es
+        this.numPlaza = contador;
         this.tipoPlaza = tipoPlaza;
-        this.estadoPlaza = estadoPlaza;
-        this.tarifa = tarifa;
+        this.estadoPlaza = false;
+        //Aquí hay que poner ifs dependiendo del tipoPlaza para asignarle un valor a la tarifa
+        this.tarifa = 0;
+        contador--;
     }
 
     public PlazasVO() {
