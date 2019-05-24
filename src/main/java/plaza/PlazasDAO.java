@@ -84,7 +84,7 @@ public class PlazasDAO implements IPlazas {
         System.out.println("Introduzca tipo de vehículo");
         String tipo=teclado.nextLine();
         
-        PlazasVO aux= new PlazasVO();
+        
         
     }
     
@@ -202,8 +202,7 @@ public class PlazasDAO implements IPlazas {
 
     }
 
-    @Override
-    public int deletePlaza(PlazasVO plaza) throws SQLException {
+    public int deletePlaza(int pk) throws SQLException {
         int numFilas = 0;
 
         String sql = "delete from Plaza where numPlaza = ?";
@@ -212,7 +211,7 @@ public class PlazasDAO implements IPlazas {
         try (PreparedStatement prest = con.prepareStatement(sql)) {
 
             // Establecemos los parámetros de la sentencia
-            prest.setInt(1, plaza.getNumPlaza());
+            prest.setInt(1, pk);
             // Ejecutamos la sentencia
             numFilas = prest.executeUpdate();
         }
