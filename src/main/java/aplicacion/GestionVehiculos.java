@@ -301,6 +301,67 @@ public class GestionVehiculos {
         daoPlaza.getEstados();
 
     }
+    
+    public static void depositarVehiculoAbonado(){
+        //Se declaran distintos objetos generales necesarios
+        Boolean[] plazasEstado = new Boolean[45];
+        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+        PlazasDAO plazas = new PlazasDAO();
+        VehiculosDAO vehiculos = new VehiculosDAO();
+        Scanner teclado = new Scanner(System.in);
+        
+        System.out.println("Dime tu matricula: ");
+        String matricula = teclado.nextLine();
+        while (matricula.length() > 8 || matricula.length() < 8) {
+            System.out.println("ERROR: Vuelve a introducir la matricula");
+            matricula = teclado.nextLine();
+
+        }
+        
+        System.out.println("Dime tu DNI");
+        String dni = teclado.nextLine();
+        while (dni.length() > 9 || dni.length() < 9) {
+            System.out.println("ERROR: Vuelve a introducir la matricula");
+        }
+        
+    }
+    
+    
+    public static void retirarVehiculoAbonado(){
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Introduce tu matricula: ");
+        String matricula = teclado.nextLine();
+//        for (TicketVO ticketVO : listaTicket) {
+//            while (!(matricula.equalsIgnoreCase(ticketVO.getMatricula()))) {
+//                System.out.println("ERROR: No se encuentra su matricula ----- Vuelve a introducirla: ");
+//                matricula = teclado.nextLine();
+//            }
+//        }
+        System.out.println("Dime tu tipo de vehiculo: ");
+        String tipo = teclado.nextLine();
+        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
+            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
+            tipo = teclado.nextLine();
+        }
+
+        System.out.println("Introduce el pin de tu ticket: ");
+        String pin = teclado.nextLine();
+//        for (TicketVO ticketVO : listaTicket) {
+//            while (!(pin.equalsIgnoreCase(ticketVO.getPin()))) {
+//                System.out.println("ERROR: No se encuentra su pin ------ Vuelve a introducirlo: ");
+//                pin = teclado.nextLine();
+//            }
+//        }
+
+        System.out.println("Introduce tu numero de Plaza: ");
+        int numPlaza = teclado.nextInt();
+//        for (TicketVO ticketVO : listaTicket) {
+//            while (!(numPlaza == ticketVO.getNumeroPlaza())) {
+//                System.out.println("ERROR: No se encuentra su numero de plaza ------ Vuelve a introducirla: ");
+//                numPlaza = teclado.nextInt();
+//            }
+//        }
+    }
 
     public static void modificarAbonado() throws SQLException {
 
