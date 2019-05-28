@@ -21,17 +21,17 @@ import java.util.Scanner;
  *
  * @author rosa
  */
-public class AbonadosDAO implements IAbonados{
-    
-     private Connection con = null;
+public class AbonadosDAO implements IAbonados {
+
+    private Connection con = null;
 
     public AbonadosDAO() {
         con = Conexion.getInstance();
     }
-     
+
     @Override
     public List<AbonadosVO> getAll() throws SQLException {
-       List<AbonadosVO> lista = new ArrayList<>();
+        List<AbonadosVO> lista = new ArrayList<>();
 
         // Preparamos la consulta de datos mediante un objeto Statement
         // ya que no necesitamos parametrizar la sentencia SQL
@@ -40,8 +40,8 @@ public class AbonadosDAO implements IAbonados{
             ResultSet res = st.executeQuery("select * from Abonado");
             // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
             while (res.next()) { //para movernos a la primera fila, devuelve true mientras haya filas sino false
-                
-               AbonadosVO p = new AbonadosVO();
+
+                AbonadosVO p = new AbonadosVO();
                 // Recogemos los datos del abonado, guardamos en un objeto
                 p.setPk(res.getInt("codAbono"));
                 p.setNombre(res.getString("nombre"));
@@ -50,7 +50,6 @@ public class AbonadosDAO implements IAbonados{
                 p.setImporte(res.getInt("importe"));
                 p.setFechaActiva(res.getDate("fechaActiva").toLocalDate());
                 p.setFechaFin(res.getDate("fechaFin").toLocalDate());
-                
 
                 //Añadimos el objeto a la lista
                 lista.add(p);
@@ -60,11 +59,11 @@ public class AbonadosDAO implements IAbonados{
         return lista;
     }
 
-   @Override
+    @Override
     public AbonadosVO findByPk(int pk) throws SQLException {
-        
-         ResultSet res = null;
-         AbonadosVO p = new AbonadosVO();
+
+        ResultSet res = null;
+        AbonadosVO p = new AbonadosVO();
 
         String sql = "select * from Abonado where codAbono=?";
 
@@ -92,40 +91,41 @@ public class AbonadosDAO implements IAbonados{
             return null;
         }
     }
-     public int altaAbonado() throws SQLException{
-         int numFilas=0;
-        Scanner teclado= new Scanner(System.in);
-        AbonadosVO aux= new AbonadosVO();
+
+    // Método para dar de alta  un abonado previa solicitud de datos, dentro contiene un
+    //switch para establecer el importe en la tabla de abonados
+    public int altaAbonado() throws SQLException {
+        int numFilas = 0;
+        Scanner teclado = new Scanner(System.in);
+        AbonadosVO aux = new AbonadosVO();
         System.out.println("Introduzca su nombre");
         aux.setNombre(teclado.nextLine());
         System.out.println("Introduzca número de tarjeta");
         aux.setNumTarjeta(teclado.nextLine());
         System.out.println("Introduzca tipo abono (1,3,6,12)");
-        int tipoAbono=teclado.nextInt();
+        int tipoAbono = teclado.nextInt();
         aux.setTipoABono(tipoAbono);
-         switch (tipoAbono) {
-             case 1:
-                 aux.setImporte(25);
-                 aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
-                 break;
-             case 3:
-                 aux.setImporte(70);
-                 aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
-                 break;
-                  case 6:
-                 aux.setImporte(130);
-                 aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
-                 break;
-                 case 12:
-                 aux.setImporte(200);
-                 aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
-                 break;
-             default:
-                 throw new AssertionError();
-         }
-        
-        
-        
+        switch (tipoAbono) {
+            case 1:
+                aux.setImporte(25);
+                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                break;
+            case 3:
+                aux.setImporte(70);
+                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                break;
+            case 6:
+                aux.setImporte(130);
+                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                break;
+            case 12:
+                aux.setImporte(200);
+                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                break;
+            default:
+                throw new AssertionError();
+        }
+
         String sql = "insert into Abonado values (?,?,?,?,?,?,?)";
 
         if (findByPk(aux.getPk()) != null) {
@@ -133,15 +133,15 @@ public class AbonadosDAO implements IAbonados{
             // No se hace la inserción
             System.out.println("No se ha podido realizar el alta con éxito");
             return numFilas;
-           
+
         } else {
             // Instanciamos el objeto PreparedStatement para inserción
             // de datos. Sentencia parametrizada
-           try (PreparedStatement prest = con.prepareStatement(sql)) {
+            try (PreparedStatement prest = con.prepareStatement(sql)) {
 
                 // Establecemos los parámetros de la sentencia
                 prest.setInt(1, aux.getPk());
-                prest.setString(2,aux.getNombre());
+                prest.setString(2, aux.getNombre());
                 prest.setString(3, aux.getNumTarjeta());
                 prest.setInt(4, aux.getTipoABono());
                 prest.setInt(5, aux.getImporte());
@@ -151,11 +151,69 @@ public class AbonadosDAO implements IAbonados{
                 numFilas = prest.executeUpdate();
             }
             System.out.println("Se ha realizado el alta con éxito");
-           return numFilas;
+            return numFilas;
         }
-        
+
     }
-    
+
+    //Método para modificar los datos de un abonado ya existente, hacemos uso del método findbypk para localizarlo
+    // y a continuación elegimos una de las opciones posibles para modificarlo
+    public int modificarAbonado() throws SQLException {
+        /*
+         Modificación. Existirá la opción de cambiar los datos personales del abonado 
+         o bien cambiar la fecha de cancelación del abono, porque el abono ha sido renovado.
+         */
+        int numFilas = 0;
+
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Introduzca el código de abono que desea modificar");
+        int cod = teclado.nextInt();
+
+        System.out.println("--1.Modificar Nombre");
+        System.out.println("--2.Modificar Num Tarjeta");
+        System.out.println("--3.Modificar fecha de cancelación");
+        int opcion = teclado.nextInt();
+        if (findByPk(cod) == null) {
+            // La persona a actualizar no existe
+            return numFilas;
+        } else {
+            AbonadosVO auxi = findByPk(cod);
+            switch (opcion) {
+                case 1:
+
+                    System.out.println("Introduzca nuevo nombre");
+                    auxi.setNombre(teclado.nextLine());
+                    updateAbono(cod, auxi);
+
+                    System.out.println("Modificación realizada con éxito");
+                    teclado.nextLine();
+                    break;
+                case 2:
+
+                    System.out.println("Introduzca nuevo número de tarjeta");
+                    auxi.setNumTarjeta(teclado.nextLine());
+                    updateAbono(cod, auxi);
+
+                    System.out.println("Modificación realizada con éxito");
+                    teclado.nextLine();
+                    break;
+                case 3:
+                    System.out.println("Introduzca cantidad de meses a ampliar (1,3,6,12)");
+                    auxi.setFechaFin(auxi.getFechaFin().plusMonths(teclado.nextInt()));
+                    updateAbono(cod, auxi);
+
+                    System.out.println("Modificación realizada con éxito");
+                    teclado.nextLine();
+                    break;
+
+                default:
+                    throw new AssertionError();
+            }
+            return numFilas;
+        }
+
+    }
+
     @Override
     public int insertAbonado(AbonadosVO abonado) throws SQLException {
         int numFilas = 0;
@@ -167,12 +225,12 @@ public class AbonadosDAO implements IAbonados{
             return numFilas;
         } else {
             // Instanciamos el objeto PreparedStatement para inserción
-            // de datos. Sentencia parametrizada
+            // de datos. Sentencia parametrizada              
             try (PreparedStatement prest = con.prepareStatement(sql)) {
 
                 // Establecemos los parámetros de la sentencia
                 prest.setInt(1, abonado.getPk());
-                prest.setString(2,abonado.getNombre());
+                prest.setString(2, abonado.getNombre());
                 prest.setString(3, abonado.getNumTarjeta());
                 prest.setInt(4, abonado.getTipoABono());
                 prest.setInt(5, abonado.getImporte());
@@ -215,8 +273,7 @@ public class AbonadosDAO implements IAbonados{
 
     public int deleteAbonados(AbonadosVO abonado) throws SQLException {
         int numFilas = 0;
-        
-        
+
         String sql = "delete from Abonado where codAbono = ?";
 
         // Sentencia parametrizada
@@ -232,8 +289,8 @@ public class AbonadosDAO implements IAbonados{
 
     @Override
     public int updateAbono(int pk, AbonadosVO nuevoABonado) throws SQLException {
-         int numFilas = 0;
-        String sql = "update Abonado set nombre = ?, numTarjeta = ?,tipoAbono = ?, importe = ?, fechaActiva = ?, fechaFin = ? where codABono="+pk;
+        int numFilas = 0;
+        String sql = "update Abonado set nombre = ?, numTarjeta = ?,tipoAbono = ?, importe = ?, fechaActiva = ?, fechaFin = ? where codABono=" + pk;
 
         if (findByPk(pk) == null) {
             // La persona a actualizar no existe
@@ -244,21 +301,20 @@ public class AbonadosDAO implements IAbonados{
             try (PreparedStatement prest = con.prepareStatement(sql)) {
 
                 // Establecemos los parámetros de la sentencia
-               
-                prest.setString(1,nuevoABonado.getNombre());
+                prest.setString(1, nuevoABonado.getNombre());
                 prest.setString(2, nuevoABonado.getNumTarjeta());
                 prest.setInt(3, nuevoABonado.getTipoABono());
                 prest.setInt(4, nuevoABonado.getImporte());
                 prest.setDate(5, Date.valueOf(nuevoABonado.getFechaActiva()));
                 prest.setDate(6, Date.valueOf(nuevoABonado.getFechaFin()));
-               
+
                 numFilas = prest.executeUpdate();
             }
             return numFilas;
         }
     }
-    
-     public int cambiarNombres(String newName, String oldName) throws SQLException {
+
+    public int cambiarNombres(String newName, String oldName) throws SQLException {
 
         int res = 0;
         // Dos ?, uno para newName y otro para oldName
@@ -272,10 +328,9 @@ public class AbonadosDAO implements IAbonados{
             call.setString(2, oldName);
             // Ejecutamos el procedimiento
             res = call.executeUpdate();
-            
+
         }
         return res;
     }
-     
-   
+
 }
