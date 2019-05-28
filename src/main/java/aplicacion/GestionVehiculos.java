@@ -174,12 +174,12 @@ public class GestionVehiculos {
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
         String matricula = teclado.nextLine();
-        for (TicketVO ticketVO : listaTicket) {
-            while (!(matricula.equalsIgnoreCase(ticketVO.getMatricula()))) {
-                System.out.println("ERROR: No se encuentra su matricula ----- Vuelve a introducirla: ");
-                matricula = teclado.nextLine();
-            }
-        }
+//        for (TicketVO ticketVO : listaTicket) {
+//            while (!(matricula.equalsIgnoreCase(ticketVO.getMatricula()))) {
+//                System.out.println("ERROR: No se encuentra su matricula ----- Vuelve a introducirla: ");
+//                matricula = teclado.nextLine();
+//            }
+//        }
         System.out.println("Dime tu tipo de vehiculo: ");
         String tipo = teclado.nextLine();
         while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
@@ -189,21 +189,21 @@ public class GestionVehiculos {
 
         System.out.println("Introduce el pin de tu ticket: ");
         String pin = teclado.nextLine();
-        for (TicketVO ticketVO : listaTicket) {
-            while (!(pin.equalsIgnoreCase(ticketVO.getPin()))) {
-                System.out.println("ERROR: No se encuentra su pin ------ Vuelve a introducirlo: ");
-                pin = teclado.nextLine();
-            }
-        }
+//        for (TicketVO ticketVO : listaTicket) {
+//            while (!(pin.equalsIgnoreCase(ticketVO.getPin()))) {
+//                System.out.println("ERROR: No se encuentra su pin ------ Vuelve a introducirlo: ");
+//                pin = teclado.nextLine();
+//            }
+//        }
 
         System.out.println("Introduce tu numero de Plaza: ");
         int numPlaza = teclado.nextInt();
-        for (TicketVO ticketVO : listaTicket) {
-            while (!(numPlaza == ticketVO.getNumeroPlaza())) {
-                System.out.println("ERROR: No se encuentra su numero de plaza ------ Vuelve a introducirla: ");
-                numPlaza = teclado.nextInt();
-            }
-        }
+//        for (TicketVO ticketVO : listaTicket) {
+//            while (!(numPlaza == ticketVO.getNumeroPlaza())) {
+//                System.out.println("ERROR: No se encuentra su numero de plaza ------ Vuelve a introducirla: ");
+//                numPlaza = teclado.nextInt();
+//            }
+//        }
 
         System.out.println("--------------");
 
@@ -395,7 +395,7 @@ public class GestionVehiculos {
     public static void main(String[] args) throws SQLException {
 
 //        Menu.menu();
-        GestionVehiculos.depositarVehiculo();
+//        GestionVehiculos.depositarVehiculo();
         GestionVehiculos.retirarVehiculo();
 
         // Menu.menu();
