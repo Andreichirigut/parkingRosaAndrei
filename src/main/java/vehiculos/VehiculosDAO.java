@@ -98,9 +98,9 @@ public class VehiculosDAO implements IVehiculos {
             try (PreparedStatement prest = con.prepareStatement(sql)) {
 
                 // Establecemos los parámetros de la sentencia
-                prest.setInt(2, vehiculo.getCodAbono());
-                prest.setString(3, vehiculo.getMatricula());
-                prest.setString(4, vehiculo.getTipoVehiculo());
+                prest.setInt(1, vehiculo.getCodAbono());
+                prest.setString(2, vehiculo.getMatricula());
+                prest.setString(3, vehiculo.getTipoVehiculo());
 
                 numFilas = prest.executeUpdate();
             }
