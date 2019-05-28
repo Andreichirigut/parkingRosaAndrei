@@ -37,6 +37,15 @@ public class AbonadosVO {
     }
 
     public AbonadosVO() {
+        this.pk = contador;
+        this.nombre = "Cliente";
+        this.numTarjeta = "0000000000000000";
+        this.tipoAbono = 1;
+        this.importe = 0;
+        this.fechaActiva = LocalDate.now(); //Cuando se crea un abono se pone la fecha actual
+        this.fechaFin=LocalDate.now().plusMonths(tipoAbono);//le sumo los meses que esté abonado
+        contador++;
+        
     }
     
     //GETTERS Y SETTERS
