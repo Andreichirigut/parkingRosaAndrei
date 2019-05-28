@@ -94,8 +94,8 @@ public class AbonadosDAO implements IAbonados {
 
     // Método para dar de alta  un abonado previa solicitud de datos, dentro contiene un
     //switch para establecer el importe en la tabla de abonados
-    public int altaAbonado() throws SQLException {
-        int numFilas = 0;
+    public void altaAbonado() throws SQLException {
+       
         Scanner teclado = new Scanner(System.in);
         AbonadosVO aux = new AbonadosVO();
         System.out.println("Introduzca su nombre");
@@ -125,40 +125,14 @@ public class AbonadosDAO implements IAbonados {
             default:
                 throw new AssertionError();
         }
-
-        String sql = "insert into Abonado values (?,?,?,?,?,?,?)";
-
-        if (findByPk(aux.getPk()) != null) {
-            // Existe un registro con esa pk
-            // No se hace la inserción
-            System.out.println("No se ha podido realizar el alta con éxito");
-            return numFilas;
-
-        } else {
-            // Instanciamos el objeto PreparedStatement para inserción
-            // de datos. Sentencia parametrizada
-            try (PreparedStatement prest = con.prepareStatement(sql)) {
-
-                // Establecemos los parámetros de la sentencia
-                prest.setInt(1, aux.getPk());
-                prest.setString(2, aux.getNombre());
-                prest.setString(3, aux.getNumTarjeta());
-                prest.setInt(4, aux.getTipoABono());
-                prest.setInt(5, aux.getImporte());
-                prest.setDate(6, Date.valueOf(aux.getFechaActiva()));
-                prest.setDate(7, Date.valueOf(aux.getFechaFin()));
-
-                numFilas = prest.executeUpdate();
-            }
-            System.out.println("Se ha realizado el alta con éxito");
-            return numFilas;
-        }
+        
+        insertAbonado(aux);
 
     }
 
     //Método para modificar los datos de un abonado ya existente, hacemos uso del método findbypk para localizarlo
     // y a continuación elegimos una de las opciones posibles para modificarlo
-    public int modificarAbonado() throws SQLException {
+    public void modificarAbonado() throws SQLException {
         /*
          Modificación. Existirá la opción de cambiar los datos personales del abonado 
          o bien cambiar la fecha de cancelación del abono, porque el abono ha sido renovado.
@@ -175,7 +149,7 @@ public class AbonadosDAO implements IAbonados {
         int opcion = teclado.nextInt();
         if (findByPk(cod) == null) {
             // La persona a actualizar no existe
-            return numFilas;
+            System.out.println("No se encuentra ese abonado");
         } else {
             AbonadosVO auxi = findByPk(cod);
             switch (opcion) {
@@ -209,10 +183,13 @@ public class AbonadosDAO implements IAbonados {
                 default:
                     throw new AssertionError();
             }
-            return numFilas;
+           
         }
 
     }
+    
+    
+    
 
     @Override
     public int insertAbonado(AbonadosVO abonado) throws SQLException {
