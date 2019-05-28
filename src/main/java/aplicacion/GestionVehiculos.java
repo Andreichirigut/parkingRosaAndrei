@@ -62,7 +62,7 @@ public class GestionVehiculos {
 
         if (respuesta2.equalsIgnoreCase("Turismo")) {
             int contador = 1;
-            for (int i = 30; i < 45; i++) {
+            for (int i = 31; i < 45; i++) {
                 //Hacemos k si la plaza esta ocupada la salte
                 if (plazasEstado[i] == false) {
                     i = i + contador;
@@ -78,21 +78,24 @@ public class GestionVehiculos {
                     //Cambiamos el estado de la plaza a ocupada
                     plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
                     System.out.println("Plaza actualizada");
+
+                    //Generamos un ticket
+                    TicketVO ticketVO = new TicketVO(respuesta, i);
+                    TicketDAO ticketDAO = new TicketDAO();
+                    ticketDAO.insertTicket(ticketVO);
+                    System.out.println("Ticket creado: " + ticketVO);
+
                     break;
 
                 }
 
             }
-            //Generamos un ticket
-            TicketVO ticketVO = new TicketVO(respuesta);
-            TicketDAO ticketDAO = new TicketDAO();
-            ticketDAO.insertTicket(ticketVO);
-            System.out.println("Ticket creado: " + ticketVO);
+
         }
 
         if (respuesta2.equalsIgnoreCase("Motocicleta")) {
             int contador = 1;
-            for (int i = 0; i < 14; i++) {
+            for (int i = 0; i < 15; i++) {
                 //Hacemos k si la plaza esta ocupada la salte
                 if (plazasEstado[i] == false) {
                     i = i + contador;
@@ -108,19 +111,21 @@ public class GestionVehiculos {
                     //Cambiamos el estado de la plaza a ocupada
                     plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
                     System.out.println("Plaza actualizada");
+
+                    TicketVO ticketVO = new TicketVO(respuesta, i);
+                    TicketDAO ticketDAO = new TicketDAO();
+                    ticketDAO.insertTicket(ticketVO);
+                    System.out.println("Ticket creado: " + ticketVO);
+
                     break;
                 }
             }
 
-            TicketVO ticketVO = new TicketVO(respuesta);
-            TicketDAO ticketDAO = new TicketDAO();
-            ticketDAO.insertTicket(ticketVO);
-            System.out.println("Ticket creado: " + ticketVO);
         }
 
         if (respuesta2.equalsIgnoreCase("Caravana")) {
             int contador = 1;
-            for (int i = 15; i < 29; i++) {
+            for (int i = 16; i < 30; i++) {
                 //Hacemos k si la plaza esta ocupada la salte
                 if (plazasEstado[i] == false) {
                     i = i + contador;
@@ -136,14 +141,16 @@ public class GestionVehiculos {
                     //Cambiamos el estado de la plaza a ocupada
                     plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
                     System.out.println("Plaza actualizada");
+
+                    TicketVO ticketVO = new TicketVO(respuesta, i);
+                    TicketDAO ticketDAO = new TicketDAO();
+                    ticketDAO.insertTicket(ticketVO);
+                    System.out.println("Ticket creado: " + ticketVO);
+
                     break;
                 }
             }
 
-            TicketVO ticketVO = new TicketVO(respuesta);
-            TicketDAO ticketDAO = new TicketDAO();
-            ticketDAO.insertTicket(ticketVO);
-            System.out.println("Ticket creado: " + ticketVO);
         }
     }
 
@@ -213,7 +220,7 @@ public class GestionVehiculos {
             if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
                 if (tipo.equalsIgnoreCase("Motocicleta")) {
                     int contador = 1;
-                    for (int i = 0; i < 14; i++) {
+                    for (int i = 0; i < 15; i++) {
                         //Hacemos k si la plaza esta ocupada la salte
                         if (plazasEstado[i] == true) {
                             i = i + contador;
@@ -236,7 +243,7 @@ public class GestionVehiculos {
 
                 if (tipo.equalsIgnoreCase("Turismo")) {
                     int contador = 1;
-                    for (int i = 30; i < 45; i++) {
+                    for (int i = 31; i < 45; i++) {
                         //Hacemos k si la plaza esta ocupada la salte
                         if (plazasEstado[i] == true) {
                             i = i + contador;
@@ -259,7 +266,7 @@ public class GestionVehiculos {
 
                 if (tipo.equalsIgnoreCase("Caravana")) {
                     int contador = 1;
-                    for (int i = 15; i < 29; i++) {
+                    for (int i = 16; i < 30; i++) {
                         //Hacemos k si la plaza esta ocupada la salte
                         if (plazasEstado[i] == true) {
                             i = i + contador;
@@ -393,8 +400,7 @@ public class GestionVehiculos {
 
         // Menu.menu();
         // GestionVehiculos.depositarVehiculo();
-        GestionVehiculos.altaAbonado();
+//        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-
     }
 }
