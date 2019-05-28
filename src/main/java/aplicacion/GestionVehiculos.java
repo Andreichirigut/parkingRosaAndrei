@@ -106,10 +106,8 @@ public class GestionVehiculos {
                     //Cambiamos el estado de la plaza a ocupada
                     plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
                     System.out.println("Plaza actualizada");
-
-                } else {
-                    System.out.println("Plaza ocupada");
-                }
+                    break;
+                } 
             }
 
 //            TicketVO ticketVO = new TicketVO(respuesta);
@@ -136,10 +134,8 @@ public class GestionVehiculos {
                     //Cambiamos el estado de la plaza a ocupada
                     plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
                     System.out.println("Plaza actualizada");
-
-                } else {
-                    System.out.println("Plaza ocupada");
-                }
+                    break;
+                } 
             }
 
 //            TicketVO ticketVO = new TicketVO(respuesta);
