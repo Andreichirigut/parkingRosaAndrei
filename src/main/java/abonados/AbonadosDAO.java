@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -99,16 +100,40 @@ public class AbonadosDAO implements IAbonados{
         aux.setNombre(teclado.nextLine());
         System.out.println("Introduzca número de tarjeta");
         aux.setNumTarjeta(teclado.nextLine());
-        System.out.println("Introduzca tipo abono (1,2,3,6,12)");
-        aux.setTipoABono(teclado.nextInt());
-        aux.setImporte(0);
+        System.out.println("Introduzca tipo abono (1,3,6,12)");
+        int tipoAbono=teclado.nextInt();
+        aux.setTipoABono(tipoAbono);
+         switch (tipoAbono) {
+             case 1:
+                 aux.setImporte(25);
+                 aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                 break;
+             case 3:
+                 aux.setImporte(70);
+                 aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                 break;
+                  case 6:
+                 aux.setImporte(130);
+                 aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                 break;
+                 case 12:
+                 aux.setImporte(200);
+                 aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                 break;
+             default:
+                 throw new AssertionError();
+         }
+        
+        
         
         String sql = "insert into Abonado values (?,?,?,?,?,?,?)";
 
         if (findByPk(aux.getPk()) != null) {
             // Existe un registro con esa pk
             // No se hace la inserción
+            System.out.println("No se ha podido realizar el alta con éxito");
             return numFilas;
+           
         } else {
             // Instanciamos el objeto PreparedStatement para inserción
             // de datos. Sentencia parametrizada
@@ -125,6 +150,7 @@ public class AbonadosDAO implements IAbonados{
 
                 numFilas = prest.executeUpdate();
             }
+            System.out.println("Se ha realizado el alta con éxito");
            return numFilas;
         }
         
