@@ -77,8 +77,7 @@ public class GestionVehiculos {
                     System.out.println("Plaza actualizada");
                     break;
 
-                } 
-                
+                }
 
             }
             //Generamos un ticket
@@ -89,8 +88,8 @@ public class GestionVehiculos {
         }
 
         if (respuesta2.equalsIgnoreCase("Motocicleta")) {
-            int contador = 1; 
-            for (int i = 0; i < 14; i++) {                        
+            int contador = 1;
+            for (int i = 0; i < 14; i++) {
                 //Hacemos k si la plaza esta ocupada la salte
                 if (plazasEstado[i] == false) {
                     i = i + contador;
@@ -107,7 +106,7 @@ public class GestionVehiculos {
                     plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
                     System.out.println("Plaza actualizada");
                     break;
-                } 
+                }
             }
 
             TicketVO ticketVO = new TicketVO(respuesta);
@@ -135,7 +134,7 @@ public class GestionVehiculos {
                     plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
                     System.out.println("Plaza actualizada");
                     break;
-                } 
+                }
             }
 
             TicketVO ticketVO = new TicketVO(respuesta);
@@ -146,38 +145,126 @@ public class GestionVehiculos {
     }
 
     public static void retirarVehiculo() throws SQLException {
+
+        System.out.println("-------Numero de plazas libres-------");
+        PlazasDAO daoPlaza = new PlazasDAO();
+        daoPlaza.getEstados();
+        System.out.println("-----------------------");
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
         String matricula = teclado.nextLine();
+        System.out.println("Dime tu tipo de vehiculo: ");
+        String tipo = teclado.nextLine();
         System.out.println("Introduce tu numero de Plaza: ");
         int numPlaza = teclado.nextInt();
-        System.out.println("Introduce el pin de tu ticket: ");
-        String pin = teclado.nextLine();
+//        System.out.println("Introduce el pin de tu ticket: ");
+//        String pin = teclado.nextLine();
+
+        System.out.println("--------------");
 
         //Antes se debe calcular el importe
-        
-        
         VehiculosDAO vehiculo = new VehiculosDAO();
         TicketDAO ticket = new TicketDAO();
-        VehiculosVO vehiculoVO = new VehiculosVO();
+        PlazasDAO plazas = new PlazasDAO();
+        Boolean[] plazasEstado = new Boolean[45];
+        VehiculosVO vehiculoVO = new VehiculosVO(matricula, tipo);
         ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
         ArrayList<TicketVO> listaTicket = new ArrayList<>();
-       
+        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+
         listaTicket = (ArrayList<TicketVO>) ticket.getAll();
-        
-//        for (TicketVO ticketVO : listaTicket) {
-//            for (VehiculosVO vehiculos : listaVehiculo) {
-//                if (vehiculos.getMatricula().equalsIgnoreCase(ticketVO.getMatricula())) {
-//                        vehiculoVO = vehiculos;
-//                    }
-//            }
-//            
-//        }
+        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
+
+        for (int i = 0; i < listaPlaza.size(); i++) {
+            plazasEstado[i] = listaPlaza.get(i).isEstadoPlaza();
+        }
+
+        if (tipo.equalsIgnoreCase("Motocicleta")) {
+            int contador = 1;
+            for (int i = 0; i < 14; i++) {
+                //Hacemos k si la plaza esta ocupada la salte
+                if (plazasEstado[i] == true) {
+                    i = i + contador;
+                    contador++;
+                }
+
+                if (plazasEstado[i] == false) {
+                    //Se actualiza la plaza
+                    PlazasVO plazaModificada = listaPlaza.get(i);
+                    plazaModificada.setEstadoPlaza(true);
+                    //Cambiamos el estado de la plaza a ocupada
+                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                    System.out.println("Plaza actualizada");
+                    break;
+
+                }
+
+            }
+        }
+
+        if (tipo.equalsIgnoreCase("Turismo")) {
+            int contador = 1;
+            for (int i = 30; i < 45; i++) {
+                //Hacemos k si la plaza esta ocupada la salte
+                if (plazasEstado[i] == true) {
+                    i = i + contador;
+                    contador++;
+                }
+
+                if (plazasEstado[i] == false) {
+                    //Se actualiza la plaza
+                    PlazasVO plazaModificada = listaPlaza.get(i);
+                    plazaModificada.setEstadoPlaza(true);
+                    //Cambiamos el estado de la plaza a ocupada
+                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                    System.out.println("Plaza actualizada");
+                    break;
+
+                }
+
+            }
+        }
+
+        if (tipo.equalsIgnoreCase("Caravana")) {
+            int contador = 1;
+            for (int i = 15; i < 29; i++) {
+                //Hacemos k si la plaza esta ocupada la salte
+                if (plazasEstado[i] == true) {
+                    i = i + contador;
+                    contador++;
+                }
+
+                if (plazasEstado[i] == false) {
+                    //Se actualiza la plaza
+                    PlazasVO plazaModificada = listaPlaza.get(i);
+                    plazaModificada.setEstadoPlaza(true);
+                    //Cambiamos el estado de la plaza a ocupada
+                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                    System.out.println("Plaza actualizada");
+                    break;
+
+                }
+
+            }
+        }
+
+        for (TicketVO ticketVO : listaTicket) {
+            if (matricula.equalsIgnoreCase(ticketVO.getMatricula())) {
+                vehiculo.deleteVehiculo(vehiculoVO);
+                System.out.println("Vehiculo retirado");
+
+            }
+        }
+
+        System.out.println("-------Numero de plazas libres-------");
+        daoPlaza = new PlazasDAO();
+        daoPlaza.getEstados();
 
     }
 
     public static void main(String[] args) throws SQLException {
-        Menu.menu();
+//        Menu.menu();
         GestionVehiculos.depositarVehiculo();
+        GestionVehiculos.retirarVehiculo();
     }
 }
