@@ -58,38 +58,48 @@ public class GestionVehiculos {
         }
 
         if (respuesta2.equalsIgnoreCase("Turismo")) {
-
-            for (int i = 0; i < 14; i++) {
+            int contador = 1;
+            for (int i = 30; i < 45; i++) {
+                //Hacemos k si la plaza esta ocupada la salte
+                if (plazasEstado[i] == false) {
+                    i = i + contador;
+                    contador++;
+                }
 
                 if (plazasEstado[i] == true) {
                     //Insertamos un nuevo vehiculo
-                    vehiculos.insertVehiculo(vehiculo);
+                    //vehiculos.insertVehiculo(vehiculo);
                     //Se actualiza la plaza
                     PlazasVO plazaModificada = listaPlaza.get(i);
                     plazaModificada.setEstadoPlaza(false);
                     //Cambiamos el estado de la plaza a ocupada
                     plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
                     System.out.println("Plaza actualizada");
+                    break;
 
-                } else {
-                    System.out.println("Plaza ocupada");
-                }
+                } 
+                
 
             }
             //Generamos un ticket
-            TicketVO ticketVO = new TicketVO(respuesta);
-            TicketDAO ticketDAO = new TicketDAO();
-            ticketDAO.insertTicket(ticketVO);
-            System.out.println("Ticket creado: " + ticketVO);
+//            TicketVO ticketVO = new TicketVO(respuesta);
+//            TicketDAO ticketDAO = new TicketDAO();
+//            ticketDAO.insertTicket(ticketVO);
+//            System.out.println("Ticket creado: " + ticketVO);
         }
 
         if (respuesta2.equalsIgnoreCase("Motocicleta")) {
-
-            for (int i = 15; i < 29; i++) {
+            int contador = 1; 
+            for (int i = 0; i < 14; i++) {                        
+                //Hacemos k si la plaza esta ocupada la salte
+                if (plazasEstado[i] == false) {
+                    i = i + contador;
+                    contador++;
+                }
 
                 if (plazasEstado[i] == true) {
                     //Insertamos un nuevo vehiculo
-                    vehiculos.insertVehiculo(vehiculo);
+                    //vehiculos.insertVehiculo(vehiculo);
                     //Se actualiza la plaza
                     PlazasVO plazaModificada = listaPlaza.get(i);
                     plazaModificada.setEstadoPlaza(false);
@@ -102,19 +112,24 @@ public class GestionVehiculos {
                 }
             }
 
-            TicketVO ticketVO = new TicketVO(respuesta);
-            TicketDAO ticketDAO = new TicketDAO();
-            ticketDAO.insertTicket(ticketVO);
-            System.out.println("Ticket creado: " + ticketVO);
+//            TicketVO ticketVO = new TicketVO(respuesta);
+//            TicketDAO ticketDAO = new TicketDAO();
+//            ticketDAO.insertTicket(ticketVO);
+//            System.out.println("Ticket creado: " + ticketVO);
         }
 
         if (respuesta2.equalsIgnoreCase("Caravana")) {
-
-            for (int i = 30; i < 44; i++) {
+            int contador = 1;
+            for (int i = 15; i < 29; i++) {
+                //Hacemos k si la plaza esta ocupada la salte
+                if (plazasEstado[i] == false) {
+                    i = i + contador;
+                    contador++;
+                }
 
                 if (plazasEstado[i] == true) {
                     //Insertamos un nuevo vehiculo
-                    vehiculos.insertVehiculo(vehiculo);
+                    //vehiculos.insertVehiculo(vehiculo);
                     //Se actualiza la plaza
                     PlazasVO plazaModificada = listaPlaza.get(i);
                     plazaModificada.setEstadoPlaza(false);
@@ -127,10 +142,10 @@ public class GestionVehiculos {
                 }
             }
 
-            TicketVO ticketVO = new TicketVO(respuesta);
-            TicketDAO ticketDAO = new TicketDAO();
-            ticketDAO.insertTicket(ticketVO);
-            System.out.println("Ticket creado: " + ticketVO);
+//            TicketVO ticketVO = new TicketVO(respuesta);
+//            TicketDAO ticketDAO = new TicketDAO();
+//            ticketDAO.insertTicket(ticketVO);
+//            System.out.println("Ticket creado: " + ticketVO);
         }
     }
 
