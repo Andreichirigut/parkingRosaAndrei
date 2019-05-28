@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  *
@@ -90,7 +91,45 @@ public class AbonadosDAO implements IAbonados{
             return null;
         }
     }
+     public int altaAbonado() throws SQLException{
+         int numFilas=0;
+        Scanner teclado= new Scanner(System.in);
+        AbonadosVO aux= new AbonadosVO();
+        System.out.println("Introduzca su nombre");
+        aux.setNombre(teclado.nextLine());
+        System.out.println("Introduzca número de tarjeta");
+        aux.setNumTarjeta(teclado.nextLine());
+        System.out.println("Introduzca tipo abono (1,2,3,6,12)");
+        aux.setTipoABono(teclado.nextInt());
+        aux.setImporte(0);
+        
+        String sql = "insert into Abonado values (?,?,?,?,?,?,?)";
 
+        if (findByPk(aux.getPk()) != null) {
+            // Existe un registro con esa pk
+            // No se hace la inserción
+            return numFilas;
+        } else {
+            // Instanciamos el objeto PreparedStatement para inserción
+            // de datos. Sentencia parametrizada
+           try (PreparedStatement prest = con.prepareStatement(sql)) {
+
+                // Establecemos los parámetros de la sentencia
+                prest.setInt(1, aux.getPk());
+                prest.setString(2,aux.getNombre());
+                prest.setString(3, aux.getNumTarjeta());
+                prest.setInt(4, aux.getTipoABono());
+                prest.setInt(5, aux.getImporte());
+                prest.setDate(6, Date.valueOf(aux.getFechaActiva()));
+                prest.setDate(7, Date.valueOf(aux.getFechaFin()));
+
+                numFilas = prest.executeUpdate();
+            }
+           return numFilas;
+        }
+        
+    }
+    
     @Override
     public int insertAbonado(AbonadosVO abonado) throws SQLException {
         int numFilas = 0;
@@ -211,4 +250,6 @@ public class AbonadosDAO implements IAbonados{
         }
         return res;
     }
+     
+   
 }
