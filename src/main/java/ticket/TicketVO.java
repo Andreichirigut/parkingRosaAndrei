@@ -25,11 +25,11 @@ public class TicketVO {
     private LocalTime hora_Salida;
     private int numeroPlaza;
     private double costeFinal;
-    private static int contador=45;
+ 
     
     //Constructores
 
-    public TicketVO(String matricula) {
+    public TicketVO(String matricula, int numeroPlaza) {
         Random rnd= new Random();
         int[] arrayPin= new int[6];
             for (int i = 0; i <6; i++) {
@@ -41,9 +41,8 @@ public class TicketVO {
         this.fechaSalida=LocalDate.now();
         this.hora_Entrada=LocalTime.now();
         this.hora_Salida=LocalTime.now();
-        this.numeroPlaza = contador;
+        this.numeroPlaza = numeroPlaza;
         this.costeFinal=0;
-        contador--;
     }
 
     public TicketVO() {
@@ -129,8 +128,8 @@ public class TicketVO {
    
     public static void main(String[] args) {
         
-        TicketVO prueba=new TicketVO("789775");
-        TicketVO prueba2=new TicketVO("789885");
+        TicketVO prueba=new TicketVO("789775", 9);
+        TicketVO prueba2=new TicketVO("789885", 7);
         
         System.out.println(prueba.toString());
                 System.out.println(prueba2.toString());
