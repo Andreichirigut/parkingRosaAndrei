@@ -82,10 +82,10 @@ public class GestionVehiculos {
 
             }
             //Generamos un ticket
-//            TicketVO ticketVO = new TicketVO(respuesta);
-//            TicketDAO ticketDAO = new TicketDAO();
-//            ticketDAO.insertTicket(ticketVO);
-//            System.out.println("Ticket creado: " + ticketVO);
+            TicketVO ticketVO = new TicketVO(respuesta);
+            TicketDAO ticketDAO = new TicketDAO();
+            ticketDAO.insertTicket(ticketVO);
+            System.out.println("Ticket creado: " + ticketVO);
         }
 
         if (respuesta2.equalsIgnoreCase("Motocicleta")) {
