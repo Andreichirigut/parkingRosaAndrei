@@ -68,7 +68,7 @@ public class GestionVehiculos {
 
                 if (plazasEstado[i] == true) {
                     //Insertamos un nuevo vehiculo
-                    //vehiculos.insertVehiculo(vehiculo);
+                    vehiculos.insertVehiculo(vehiculo);
                     //Se actualiza la plaza
                     PlazasVO plazaModificada = listaPlaza.get(i);
                     plazaModificada.setEstadoPlaza(false);
@@ -99,7 +99,7 @@ public class GestionVehiculos {
 
                 if (plazasEstado[i] == true) {
                     //Insertamos un nuevo vehiculo
-                    //vehiculos.insertVehiculo(vehiculo);
+                    vehiculos.insertVehiculo(vehiculo);
                     //Se actualiza la plaza
                     PlazasVO plazaModificada = listaPlaza.get(i);
                     plazaModificada.setEstadoPlaza(false);
@@ -127,7 +127,7 @@ public class GestionVehiculos {
 
                 if (plazasEstado[i] == true) {
                     //Insertamos un nuevo vehiculo
-                    //vehiculos.insertVehiculo(vehiculo);
+                    vehiculos.insertVehiculo(vehiculo);
                     //Se actualiza la plaza
                     PlazasVO plazaModificada = listaPlaza.get(i);
                     plazaModificada.setEstadoPlaza(false);
