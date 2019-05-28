@@ -6,6 +6,7 @@
 package abonados;
 
 import java.time.LocalDate;
+import java.util.Random;
 
 /**
  *
@@ -21,30 +22,33 @@ public class AbonadosVO {
     private int importe;
     private LocalDate fechaActiva;
     private LocalDate fechaFin;
-    private static int contador=0;
+
 
     public AbonadosVO(String nombre, String numTarjeta, int tipoAbono, int importe) {
-       
-        this.pk = contador;
+        Random rnd=new Random();
+        int num=rnd.nextInt(999);
+        this.pk =num;
         this.nombre = nombre;
         this.numTarjeta = numTarjeta;
         this.tipoAbono = tipoAbono;
         this.importe = importe;
         this.fechaActiva = LocalDate.now(); //Cuando se crea un abono se pone la fecha actual
         this.fechaFin=LocalDate.now().plusMonths(tipoAbono);//le sumo los meses que esté abonado
-        contador++;
+        
         
     }
 
     public AbonadosVO() {
-        this.pk = contador;
+        Random rnd=new Random();
+        int num=rnd.nextInt(999);
+        this.pk =num;
         this.nombre = "Cliente";
         this.numTarjeta = "0000000000000000";
         this.tipoAbono = 1;
         this.importe = 0;
         this.fechaActiva = LocalDate.now(); //Cuando se crea un abono se pone la fecha actual
         this.fechaFin=LocalDate.now().plusMonths(tipoAbono);//le sumo los meses que esté abonado
-        contador++;
+        
         
     }
     
@@ -107,13 +111,7 @@ public class AbonadosVO {
         this.fechaFin = fechaFin;
     }
 
-    public static int getContador() {
-        return contador;
-    }
 
-    public static void setContador(int contador) {
-        AbonadosVO.contador = contador;
-    }
     
     //ToString
 

@@ -63,7 +63,9 @@ public class Programa {
             System.out.println("-------- Lista con datos recogidos desde la B.D despues de ejecutar proced. -------------");
             nuevaLista.forEach(System.out::println);
             System.out.println("-----------------------------------------");
-            
+       
+            System.out.println("-----------------");
+      
         
         }catch (SQLException sqle) {
             System.out.println("No se ha podido realizar la operación:");

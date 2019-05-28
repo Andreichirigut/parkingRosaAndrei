@@ -5,7 +5,10 @@
  */
 package aplicacion;
 
+import abonados.AbonadosDAO;
+import abonados.AbonadosVO;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import plaza.PlazasDAO;
@@ -170,6 +173,7 @@ public class GestionVehiculos {
         VehiculosVO vehiculoVO = new VehiculosVO(matricula, tipo);
         ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
         ArrayList<TicketVO> listaTicket = new ArrayList<>();
+<<<<<<< Updated upstream
         ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
 
         listaTicket = (ArrayList<TicketVO>) ticket.getAll();
@@ -259,12 +263,122 @@ public class GestionVehiculos {
         System.out.println("-------Numero de plazas libres-------");
         daoPlaza = new PlazasDAO();
         daoPlaza.getEstados();
+=======
+
+        listaTicket = (ArrayList<TicketVO>) ticket.getAll();
+
+//        for (TicketVO ticketVO : listaTicket) {
+//            for (VehiculosVO vehiculos : listaVehiculo) {
+//                if (vehiculos.getMatricula().equalsIgnoreCase(ticketVO.getMatricula())) {
+//                        vehiculoVO = vehiculos;
+//                    }
+//            }
+//            
+//        }
+    }
+
+    public static void modificarAbonado() throws SQLException {
+
+        AbonadosDAO abo = new AbonadosDAO();
+        /*
+         Modificación. Existirá la opción de cambiar los datos personales del abonado 
+         o bien cambiar la fecha de cancelación del abono, porque el abono ha sido renovado.
+         */
+        Scanner teclado = new Scanner(System.in);
+        Scanner tec2=new Scanner(System.in);
+        System.out.println("Código a modificar");
+        int cod = teclado.nextInt();
+        teclado.nextLine();
+
+        AbonadosVO aux = new AbonadosVO();
+        aux = abo.findByPk(cod);
+        System.out.println("-----------------------------------");
+        System.out.println("Menú Modificar");
+        System.out.println("--1.Modificar nombre");
+        System.out.println("--2.Modificar número de tarjeta");
+        System.out.println("--3.Ampliar fecha de cancelación");
+        System.out.println("-----------------------------------");
+        int opcion=teclado.nextInt();
+        switch (opcion) {
+            case 1:
+                  System.out.println("Introduzca nuevo nombre");
+                   String nom = tec2.nextLine();
+                    aux.setNombre(nom);
+                    abo.updateAbono(cod, aux);
+                    System.out.println("Modificado con éxito");
+                break;
+                case 2:
+                  System.out.println("Introduzca nuevo número de tarjeta");
+                   String num = tec2.nextLine();
+                    aux.setNumTarjeta(num);
+                    abo.updateAbono(cod, aux);
+                    System.out.println("Modificado con éxito");
+                break;
+                case 3:
+                  System.out.println("Introduzca meses a ampliar (1,3,6,12)");
+                   int mes = teclado.nextInt();
+                    LocalDate vieja= aux.getFechaFin();
+                    aux.setFechaFin(vieja.plusMonths(mes));
+                    abo.updateAbono(cod, aux);
+                    System.out.println("Modificado con éxito");
+                break;
+            default:
+                throw new AssertionError();
+        }
+      
+
+    }
+
+    public static void altaAbonado() throws SQLException {
+
+        AbonadosDAO abo = new AbonadosDAO();
+
+        Scanner teclado = new Scanner(System.in);
+
+        System.out.println("Introduzca su nombre");
+        String nom = teclado.nextLine();
+        System.out.println("Introduzca número de tarjeta");
+        String tarjeta = teclado.nextLine();
+        AbonadosVO aux = new AbonadosVO(nom, tarjeta, 1, 0);
+        System.out.println("Introduzca tipo abono (1,3,6,12)");
+        int tipoAbono = teclado.nextInt();
+        aux.setTipoABono(tipoAbono);
+        switch (tipoAbono) {
+            case 1:
+                aux.setImporte(25);
+                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                break;
+            case 3:
+                aux.setImporte(70);
+                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                break;
+            case 6:
+                aux.setImporte(130);
+                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                break;
+            case 12:
+                aux.setImporte(200);
+                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+        abo.insertAbonado(aux);
+>>>>>>> Stashed changes
 
     }
 
     public static void main(String[] args) throws SQLException {
+<<<<<<< Updated upstream
 //        Menu.menu();
         GestionVehiculos.depositarVehiculo();
         GestionVehiculos.retirarVehiculo();
+=======
+        // Menu.menu();
+        // GestionVehiculos.depositarVehiculo();
+       GestionVehiculos.altaAbonado();
+      //  GestionVehiculos.modificarAbonado();
+>>>>>>> Stashed changes
     }
 }

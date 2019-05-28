@@ -12,10 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  *
@@ -92,161 +90,67 @@ public class AbonadosDAO implements IAbonados {
         }
     }
 
-    // Método para dar de alta  un abonado previa solicitud de datos, dentro contiene un
-    //switch para establecer el importe en la tabla de abonados
-    public void altaAbonado() throws SQLException {
-       
-        Scanner teclado = new Scanner(System.in);
-        AbonadosVO aux = new AbonadosVO();
-        System.out.println("Introduzca su nombre");
-        aux.setNombre(teclado.nextLine());
-        System.out.println("Introduzca número de tarjeta");
-        aux.setNumTarjeta(teclado.nextLine());
-        System.out.println("Introduzca tipo abono (1,3,6,12)");
-        int tipoAbono = teclado.nextInt();
-        aux.setTipoABono(tipoAbono);
-        switch (tipoAbono) {
-            case 1:
-                aux.setImporte(25);
-                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
-                break;
-            case 3:
-                aux.setImporte(70);
-                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
-                break;
-            case 6:
-                aux.setImporte(130);
-                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
-                break;
-            case 12:
-                aux.setImporte(200);
-                aux.setFechaFin(LocalDate.now().plusMonths(tipoAbono));
-                break;
-            default:
-                throw new AssertionError();
-        }
-        
-        insertAbonado(aux);
 
-    }
+        @Override
+        public int insertAbonado
+        (AbonadosVO abonado) throws SQLException {
+            int numFilas = 0;
+            String sql = "insert into Abonado values (?,?,?,?,?,?,?)";
 
-    //Método para modificar los datos de un abonado ya existente, hacemos uso del método findbypk para localizarlo
-    // y a continuación elegimos una de las opciones posibles para modificarlo
-    public void modificarAbonado() throws SQLException {
-        /*
-         Modificación. Existirá la opción de cambiar los datos personales del abonado 
-         o bien cambiar la fecha de cancelación del abono, porque el abono ha sido renovado.
-         */
-        int numFilas = 0;
+            if (findByPk(abonado.getPk()) != null) {
+                // Existe un registro con esa pk
+                // No se hace la inserción
+                return numFilas;
+            } else {
+                // Instanciamos el objeto PreparedStatement para inserción
+                // de datos. Sentencia parametrizada              
+                try (PreparedStatement prest = con.prepareStatement(sql)) {
 
-        Scanner teclado = new Scanner(System.in);
-        System.out.println("Introduzca el código de abono que desea modificar");
-        int cod = teclado.nextInt();
+                    // Establecemos los parámetros de la sentencia
+                    prest.setInt(1, abonado.getPk());
+                    prest.setString(2, abonado.getNombre());
+                    prest.setString(3, abonado.getNumTarjeta());
+                    prest.setInt(4, abonado.getTipoABono());
+                    prest.setInt(5, abonado.getImporte());
+                    prest.setDate(6, Date.valueOf(abonado.getFechaActiva()));
+                    prest.setDate(7, Date.valueOf(abonado.getFechaFin()));
 
-        System.out.println("--1.Modificar Nombre");
-        System.out.println("--2.Modificar Num Tarjeta");
-        System.out.println("--3.Modificar fecha de cancelación");
-        int opcion = teclado.nextInt();
-        if (findByPk(cod) == null) {
-            // La persona a actualizar no existe
-            System.out.println("No se encuentra ese abonado");
-        } else {
-            AbonadosVO auxi = findByPk(cod);
-            switch (opcion) {
-                case 1:
-
-                    System.out.println("Introduzca nuevo nombre");
-                    auxi.setNombre(teclado.nextLine());
-                    updateAbono(cod, auxi);
-
-                    System.out.println("Modificación realizada con éxito");
-                    teclado.nextLine();
-                    break;
-                case 2:
-
-                    System.out.println("Introduzca nuevo número de tarjeta");
-                    auxi.setNumTarjeta(teclado.nextLine());
-                    updateAbono(cod, auxi);
-
-                    System.out.println("Modificación realizada con éxito");
-                    teclado.nextLine();
-                    break;
-                case 3:
-                    System.out.println("Introduzca cantidad de meses a ampliar (1,3,6,12)");
-                    auxi.setFechaFin(auxi.getFechaFin().plusMonths(teclado.nextInt()));
-                    updateAbono(cod, auxi);
-
-                    System.out.println("Modificación realizada con éxito");
-                    teclado.nextLine();
-                    break;
-
-                default:
-                    throw new AssertionError();
+                    numFilas = prest.executeUpdate();
+                }
+                return numFilas;
             }
-           
         }
 
-    }
-    
-    
-    
+        @Override
+        public int insertListAbonado
+        (List<AbonadosVO> lista) throws SQLException {
+            int numFilas = 0;
 
-    @Override
-    public int insertAbonado(AbonadosVO abonado) throws SQLException {
-        int numFilas = 0;
-        String sql = "insert into Abonado values (?,?,?,?,?,?,?)";
-
-        if (findByPk(abonado.getPk()) != null) {
-            // Existe un registro con esa pk
-            // No se hace la inserción
-            return numFilas;
-        } else {
-            // Instanciamos el objeto PreparedStatement para inserción
-            // de datos. Sentencia parametrizada              
-            try (PreparedStatement prest = con.prepareStatement(sql)) {
-
-                // Establecemos los parámetros de la sentencia
-                prest.setInt(1, abonado.getPk());
-                prest.setString(2, abonado.getNombre());
-                prest.setString(3, abonado.getNumTarjeta());
-                prest.setInt(4, abonado.getTipoABono());
-                prest.setInt(5, abonado.getImporte());
-                prest.setDate(6, Date.valueOf(abonado.getFechaActiva()));
-                prest.setDate(7, Date.valueOf(abonado.getFechaFin()));
-
-                numFilas = prest.executeUpdate();
+            for (AbonadosVO tmp : lista) {
+                numFilas += insertAbonado(tmp);
             }
+
             return numFilas;
         }
-    }
 
-    @Override
-    public int insertListAbonado(List<AbonadosVO> lista) throws SQLException {
-        int numFilas = 0;
+        @Override
+        public int deleteAbonado() throws SQLException {
+            String sql = "delete from Abonado";
 
-        for (AbonadosVO tmp : lista) {
-            numFilas += insertAbonado(tmp);
+            int nfilas = 0;
+
+            // Preparamos el borrado de datos  mediante un Statement
+            // No hay parámetros en la sentencia SQL
+            try (Statement st = con.createStatement()) {
+                // Ejecución de la sentencia
+                nfilas = st.executeUpdate(sql);
+            }
+
+            // El borrado se realizó con éxito, devolvemos filas afectadas
+            return nfilas;
         }
 
-        return numFilas;
-    }
-
-    @Override
-    public int deleteAbonado() throws SQLException {
-        String sql = "delete from Abonado";
-
-        int nfilas = 0;
-
-        // Preparamos el borrado de datos  mediante un Statement
-        // No hay parámetros en la sentencia SQL
-        try (Statement st = con.createStatement()) {
-            // Ejecución de la sentencia
-            nfilas = st.executeUpdate(sql);
-        }
-
-        // El borrado se realizó con éxito, devolvemos filas afectadas
-        return nfilas;
-    }
+    
 
     public int deleteAbonados(AbonadosVO abonado) throws SQLException {
         int numFilas = 0;
