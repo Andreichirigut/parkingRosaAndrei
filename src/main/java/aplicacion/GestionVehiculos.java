@@ -149,6 +149,17 @@ public class GestionVehiculos {
 
     public static void retirarVehiculo() throws SQLException {
 
+        VehiculosDAO vehiculo = new VehiculosDAO();
+        TicketDAO ticket = new TicketDAO();
+        PlazasDAO plazas = new PlazasDAO();
+        Boolean[] plazasEstado = new Boolean[45];
+        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
+        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+
+        listaTicket = (ArrayList<TicketVO>) ticket.getAll();
+        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
+
         System.out.println("-------Numero de plazas libres-------");
         PlazasDAO daoPlaza = new PlazasDAO();
         daoPlaza.getEstados();
@@ -156,25 +167,41 @@ public class GestionVehiculos {
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
         String matricula = teclado.nextLine();
+        for (TicketVO ticketVO : listaTicket) {
+            while (!(matricula.equalsIgnoreCase(ticketVO.getMatricula()))) {
+                System.out.println("ERROR: No se encuentra su matricula ----- Vuelve a introducirla: ");
+                matricula = teclado.nextLine();
+            }
+        }
         System.out.println("Dime tu tipo de vehiculo: ");
         String tipo = teclado.nextLine();
+        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
+            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
+            tipo = teclado.nextLine();
+        }
+
         System.out.println("Introduce el pin de tu ticket: ");
         String pin = teclado.nextLine();
+        for (TicketVO ticketVO : listaTicket) {
+            while (!(pin.equalsIgnoreCase(ticketVO.getPin()))) {
+                System.out.println("ERROR: No se encuentra su pin ------ Vuelve a introducirlo: ");
+                pin = teclado.nextLine();
+            }
+        }
+
         System.out.println("Introduce tu numero de Plaza: ");
         int numPlaza = teclado.nextInt();
+        for (TicketVO ticketVO : listaTicket) {
+            while (!(numPlaza == ticketVO.getNumeroPlaza())) {
+                System.out.println("ERROR: No se encuentra su numero de plaza ------ Vuelve a introducirla: ");
+                numPlaza = teclado.nextInt();
+            }
+        }
 
         System.out.println("--------------");
 
         //Antes se debe calcular el importe
-        VehiculosDAO vehiculo = new VehiculosDAO();
-        TicketDAO ticket = new TicketDAO();
-        PlazasDAO plazas = new PlazasDAO();
-        Boolean[] plazasEstado = new Boolean[45];
         VehiculosVO vehiculoVO = new VehiculosVO(matricula, tipo);
-        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
-        ArrayList<TicketVO> listaTicket = new ArrayList<>();
-
-        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
 
         listaTicket = (ArrayList<TicketVO>) ticket.getAll();
         listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
