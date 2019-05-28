@@ -158,10 +158,10 @@ public class GestionVehiculos {
         String matricula = teclado.nextLine();
         System.out.println("Dime tu tipo de vehiculo: ");
         String tipo = teclado.nextLine();
+        System.out.println("Introduce el pin de tu ticket: ");
+        String pin = teclado.nextLine();
         System.out.println("Introduce tu numero de Plaza: ");
         int numPlaza = teclado.nextInt();
-//        System.out.println("Introduce el pin de tu ticket: ");
-//        String pin = teclado.nextLine();
 
         System.out.println("--------------");
 
@@ -173,7 +173,7 @@ public class GestionVehiculos {
         VehiculosVO vehiculoVO = new VehiculosVO(matricula, tipo);
         ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
         ArrayList<TicketVO> listaTicket = new ArrayList<>();
-<<<<<<< Updated upstream
+
         ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
 
         listaTicket = (ArrayList<TicketVO>) ticket.getAll();
@@ -182,78 +182,80 @@ public class GestionVehiculos {
         for (int i = 0; i < listaPlaza.size(); i++) {
             plazasEstado[i] = listaPlaza.get(i).isEstadoPlaza();
         }
-
-        if (tipo.equalsIgnoreCase("Motocicleta")) {
-            int contador = 1;
-            for (int i = 0; i < 14; i++) {
-                //Hacemos k si la plaza esta ocupada la salte
-                if (plazasEstado[i] == true) {
-                    i = i + contador;
-                    contador++;
-                }
-
-                if (plazasEstado[i] == false) {
-                    //Se actualiza la plaza
-                    PlazasVO plazaModificada = listaPlaza.get(i);
-                    plazaModificada.setEstadoPlaza(true);
-                    //Cambiamos el estado de la plaza a ocupada
-                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                    System.out.println("Plaza actualizada");
-                    break;
-
-                }
-
-            }
-        }
-
-        if (tipo.equalsIgnoreCase("Turismo")) {
-            int contador = 1;
-            for (int i = 30; i < 45; i++) {
-                //Hacemos k si la plaza esta ocupada la salte
-                if (plazasEstado[i] == true) {
-                    i = i + contador;
-                    contador++;
-                }
-
-                if (plazasEstado[i] == false) {
-                    //Se actualiza la plaza
-                    PlazasVO plazaModificada = listaPlaza.get(i);
-                    plazaModificada.setEstadoPlaza(true);
-                    //Cambiamos el estado de la plaza a ocupada
-                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                    System.out.println("Plaza actualizada");
-                    break;
-
-                }
-
-            }
-        }
-
-        if (tipo.equalsIgnoreCase("Caravana")) {
-            int contador = 1;
-            for (int i = 15; i < 29; i++) {
-                //Hacemos k si la plaza esta ocupada la salte
-                if (plazasEstado[i] == true) {
-                    i = i + contador;
-                    contador++;
-                }
-
-                if (plazasEstado[i] == false) {
-                    //Se actualiza la plaza
-                    PlazasVO plazaModificada = listaPlaza.get(i);
-                    plazaModificada.setEstadoPlaza(true);
-                    //Cambiamos el estado de la plaza a ocupada
-                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                    System.out.println("Plaza actualizada");
-                    break;
-
-                }
-
-            }
-        }
-
         for (TicketVO ticketVO : listaTicket) {
-            if (matricula.equalsIgnoreCase(ticketVO.getMatricula())) {
+            if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
+                if (tipo.equalsIgnoreCase("Motocicleta")) {
+                    int contador = 1;
+                    for (int i = 0; i < 14; i++) {
+                        //Hacemos k si la plaza esta ocupada la salte
+                        if (plazasEstado[i] == true) {
+                            i = i + contador;
+                            contador++;
+                        }
+
+                        if (plazasEstado[i] == false) {
+                            //Se actualiza la plaza
+                            PlazasVO plazaModificada = listaPlaza.get(i);
+                            plazaModificada.setEstadoPlaza(true);
+                            //Cambiamos el estado de la plaza a ocupada
+                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                            System.out.println("Plaza actualizada");
+                            break;
+
+                        }
+
+                    }
+                }
+
+                if (tipo.equalsIgnoreCase("Turismo")) {
+                    int contador = 1;
+                    for (int i = 30; i < 45; i++) {
+                        //Hacemos k si la plaza esta ocupada la salte
+                        if (plazasEstado[i] == true) {
+                            i = i + contador;
+                            contador++;
+                        }
+
+                        if (plazasEstado[i] == false) {
+                            //Se actualiza la plaza
+                            PlazasVO plazaModificada = listaPlaza.get(i);
+                            plazaModificada.setEstadoPlaza(true);
+                            //Cambiamos el estado de la plaza a ocupada
+                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                            System.out.println("Plaza actualizada");
+                            break;
+
+                        }
+
+                    }
+                }
+
+                if (tipo.equalsIgnoreCase("Caravana")) {
+                    int contador = 1;
+                    for (int i = 15; i < 29; i++) {
+                        //Hacemos k si la plaza esta ocupada la salte
+                        if (plazasEstado[i] == true) {
+                            i = i + contador;
+                            contador++;
+                        }
+
+                        if (plazasEstado[i] == false) {
+                            //Se actualiza la plaza
+                            PlazasVO plazaModificada = listaPlaza.get(i);
+                            plazaModificada.setEstadoPlaza(true);
+                            //Cambiamos el estado de la plaza a ocupada
+                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                            System.out.println("Plaza actualizada");
+                            break;
+
+                        }
+
+                    }
+                }
+            }
+        }
+        for (TicketVO ticketVO : listaTicket) {
+            if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
                 vehiculo.deleteVehiculo(vehiculoVO);
                 System.out.println("Vehiculo retirado");
 
@@ -263,18 +265,7 @@ public class GestionVehiculos {
         System.out.println("-------Numero de plazas libres-------");
         daoPlaza = new PlazasDAO();
         daoPlaza.getEstados();
-=======
 
-        listaTicket = (ArrayList<TicketVO>) ticket.getAll();
-
-//        for (TicketVO ticketVO : listaTicket) {
-//            for (VehiculosVO vehiculos : listaVehiculo) {
-//                if (vehiculos.getMatricula().equalsIgnoreCase(ticketVO.getMatricula())) {
-//                        vehiculoVO = vehiculos;
-//                    }
-//            }
-//            
-//        }
     }
 
     public static void modificarAbonado() throws SQLException {
@@ -285,7 +276,7 @@ public class GestionVehiculos {
          o bien cambiar la fecha de cancelación del abono, porque el abono ha sido renovado.
          */
         Scanner teclado = new Scanner(System.in);
-        Scanner tec2=new Scanner(System.in);
+        Scanner tec2 = new Scanner(System.in);
         System.out.println("Código a modificar");
         int cod = teclado.nextInt();
         teclado.nextLine();
@@ -298,34 +289,33 @@ public class GestionVehiculos {
         System.out.println("--2.Modificar número de tarjeta");
         System.out.println("--3.Ampliar fecha de cancelación");
         System.out.println("-----------------------------------");
-        int opcion=teclado.nextInt();
+        int opcion = teclado.nextInt();
         switch (opcion) {
             case 1:
-                  System.out.println("Introduzca nuevo nombre");
-                   String nom = tec2.nextLine();
-                    aux.setNombre(nom);
-                    abo.updateAbono(cod, aux);
-                    System.out.println("Modificado con éxito");
+                System.out.println("Introduzca nuevo nombre");
+                String nom = tec2.nextLine();
+                aux.setNombre(nom);
+                abo.updateAbono(cod, aux);
+                System.out.println("Modificado con éxito");
                 break;
-                case 2:
-                  System.out.println("Introduzca nuevo número de tarjeta");
-                   String num = tec2.nextLine();
-                    aux.setNumTarjeta(num);
-                    abo.updateAbono(cod, aux);
-                    System.out.println("Modificado con éxito");
+            case 2:
+                System.out.println("Introduzca nuevo número de tarjeta");
+                String num = tec2.nextLine();
+                aux.setNumTarjeta(num);
+                abo.updateAbono(cod, aux);
+                System.out.println("Modificado con éxito");
                 break;
-                case 3:
-                  System.out.println("Introduzca meses a ampliar (1,3,6,12)");
-                   int mes = teclado.nextInt();
-                    LocalDate vieja= aux.getFechaFin();
-                    aux.setFechaFin(vieja.plusMonths(mes));
-                    abo.updateAbono(cod, aux);
-                    System.out.println("Modificado con éxito");
+            case 3:
+                System.out.println("Introduzca meses a ampliar (1,3,6,12)");
+                int mes = teclado.nextInt();
+                LocalDate vieja = aux.getFechaFin();
+                aux.setFechaFin(vieja.plusMonths(mes));
+                abo.updateAbono(cod, aux);
+                System.out.println("Modificado con éxito");
                 break;
             default:
                 throw new AssertionError();
         }
-      
 
     }
 
@@ -365,20 +355,19 @@ public class GestionVehiculos {
         }
 
         abo.insertAbonado(aux);
->>>>>>> Stashed changes
 
     }
 
     public static void main(String[] args) throws SQLException {
-<<<<<<< Updated upstream
+
 //        Menu.menu();
         GestionVehiculos.depositarVehiculo();
         GestionVehiculos.retirarVehiculo();
-=======
+
         // Menu.menu();
         // GestionVehiculos.depositarVehiculo();
-       GestionVehiculos.altaAbonado();
-      //  GestionVehiculos.modificarAbonado();
->>>>>>> Stashed changes
+        GestionVehiculos.altaAbonado();
+        //  GestionVehiculos.modificarAbonado();
+
     }
 }
