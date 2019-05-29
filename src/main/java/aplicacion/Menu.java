@@ -20,6 +20,10 @@ public class Menu {
         System.out.println("1) Como Admin");
         System.out.println("2) Como Cliente");
         int opcion = teclado.nextInt();
+        while (!(opcion == 1 || opcion == 2)) {
+            System.out.println("ERROR: Vuelva a introducir la opción: ");
+            opcion = teclado.nextInt();
+        }
         
         switch (opcion) {
             case 1:
@@ -37,6 +41,10 @@ public class Menu {
                 System.out.println("12.- Crear copia de seguridad");
                 System.out.println("13.- Restaurar copia de seguridad");
                 int opcion2 = teclado.nextInt();
+                while (opcion2 < 4 || opcion2 > 13) {
+                    System.out.println("ERROR: Vuelve a introducir una accion corecta: ");
+                    opcion2 = teclado.nextInt();
+                }
                 switch (opcion2) {
                     case 4:
                         return Comando.VER_ESTADO_PARKING;
@@ -70,6 +78,10 @@ public class Menu {
                 System.out.println("2.- Depositar abonos");
                 System.out.println("3.- Retirar abonos");
                 int opcion3 = teclado.nextInt();
+                while (opcion3 < 0 || opcion3 > 3) {
+                    System.out.println("ERROR: Vuelve a introducir una accion corecta: ");
+                    opcion2 = teclado.nextInt();
+                }
                 switch (opcion3) {
                     case 0:
                         return Comando.DEPOSITAR_VEHICULO;
