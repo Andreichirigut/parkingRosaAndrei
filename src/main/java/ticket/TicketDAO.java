@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,10 +111,10 @@ public class TicketDAO implements ITicket{
                 // Establecemos los parámetros de la sentencia
                 prest.setString(1, ticket.getPin());
                 prest.setString(2, ticket.getMatricula());          
-                prest.setDate(3, Date.valueOf(ticket.getFechaEntrada()));
-                prest.setDate(4, Date.valueOf(ticket.getFechaSalida()));
-                prest.setTime(5,Time.valueOf(ticket.getHora_Entrada()));
-                prest.setTime(6,Time.valueOf(ticket.getHora_Salida()));           
+                prest.setDate(3, Date.valueOf(ticket.getFechaEntrada()));              
+                prest.setTime(4,Time.valueOf(ticket.getHora_Entrada()));
+                prest.setTime(5,Time.valueOf(ticket.getHora_Salida()));
+                prest.setDate(6, Date.valueOf(ticket.getFechaSalida()));
                 prest.setInt(7, ticket.getNumeroPlaza());
                 prest.setDouble(8, ticket.getCosteFinal());
 
