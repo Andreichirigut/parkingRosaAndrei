@@ -398,6 +398,10 @@ public class GestionVehiculos {
         System.out.println("--3.Ampliar fecha de cancelación");
         System.out.println("-----------------------------------");
         int opcion = teclado.nextInt();
+        while (opcion != 1 || opcion != 2 || opcion != 3) {
+            System.out.println("ERROR: Vuelva a introducir la opción: ");
+            opcion = teclado.nextInt();
+        }
         switch (opcion) {
             case 1:
                 System.out.println("Introduzca nuevo nombre");
@@ -409,6 +413,11 @@ public class GestionVehiculos {
             case 2:
                 System.out.println("Introduzca nuevo número de tarjeta");
                 String num = tec2.nextLine();
+                while (num.length() > 16 || num.length() < 16) {
+                    System.out.println("ERROR: Vuelva a introducir el número de tarjeta");
+                    num = teclado.nextLine();
+
+                }
                 aux.setNumTarjeta(num);
                 abo.updateAbono(cod, aux);
                 System.out.println("Modificado con éxito");
@@ -416,6 +425,10 @@ public class GestionVehiculos {
             case 3:
                 System.out.println("Introduzca meses a ampliar (1,3,6,12)");
                 int mes = teclado.nextInt();
+                while (mes != 1 || mes != 3 || mes != 6 || mes != 12) {
+                    System.out.println("ERROR: Vuelva a introducir el tipo de abono");
+                    mes = teclado.nextInt();
+                }
                 LocalDate vieja = aux.getFechaFin();
                 aux.setFechaFin(vieja.plusMonths(mes));
                 abo.updateAbono(cod, aux);
@@ -431,13 +444,22 @@ public class GestionVehiculos {
         AbonadosDAO abo = new AbonadosDAO();
         VehiculosDAO ve = new VehiculosDAO();
         PlazasDAO pla = new PlazasDAO();
-        TicketDAO tic=new TicketDAO();
+        TicketDAO tic = new TicketDAO();
         AbonadosVO cliente = new AbonadosVO();
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduzca matrícula");
         String matri = teclado.nextLine();
+        while (matri.length() > 7 || matri.length() < 7) {
+            System.out.println("ERROR: Vuelve a introducir la matricula");
+            matri = teclado.nextLine();
+
+        }
         System.out.println("Introduzca el tipo de vehículo");
         String tipo = teclado.nextLine();
+        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
+            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
+            tipo = teclado.nextLine();
+        }
         VehiculosVO aux = new VehiculosVO(matri, tipo);
         aux.setCodAbono(cliente.getPk());
         abo.insertAbonado(cliente);
@@ -474,9 +496,18 @@ public class GestionVehiculos {
         String nom = teclado.nextLine();
         System.out.println("Introduzca número de tarjeta");
         String tarjeta = teclado.nextLine();
+        while (tarjeta.length() > 16 || tarjeta.length() < 16) {
+            System.out.println("ERROR: Vuelva a introducir el número de tarjeta");
+            tarjeta = teclado.nextLine();
+
+        }
         AbonadosVO aux = new AbonadosVO(nom, tarjeta, 1, 0);
         System.out.println("Introduzca tipo abono (1,3,6,12)");
         int tipoAbono = teclado.nextInt();
+        while (tipoAbono != 1 || tipoAbono != 3 || tipoAbono != 6 || tipoAbono != 12) {
+            System.out.println("ERROR: Vuelva a introducir el tipo de abono");
+            tipoAbono = teclado.nextInt();
+        }
         aux.setTipoABono(tipoAbono);
         switch (tipoAbono) {
             case 1:
@@ -503,8 +534,17 @@ public class GestionVehiculos {
         System.out.println("-----------------------------");
         System.out.println("Datos del Vehículo: Introduzca matrícula");
         String matri = tec2.nextLine();
+        while (matri.length() > 7 || matri.length() < 7) {
+            System.out.println("ERROR: Vuelve a introducir la matricula");
+            matri = teclado.nextLine();
+
+        }
         System.out.println("Introduzca tipo de vehículo");
         String tipo = tec2.nextLine();
+        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
+            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
+            tipo = teclado.nextLine();
+        }
         VehiculosVO vehi = new VehiculosVO(matri, tipo);
         vehi.setCodAbono(aux.getPk());
         VehiculosDAO veDao = new VehiculosDAO();
@@ -553,6 +593,10 @@ public class GestionVehiculos {
         System.out.println("Introduzca un mes (número)");
         Scanner teclado = new Scanner(System.in);
         int mes = teclado.nextInt();
+        while (mes < 1 || mes > 12) {
+            System.out.println("ERROR: Vuelva a introducir el mes: ");
+            mes = teclado.nextInt();                
+        }
 
         List<AbonadosVO> lista = abo.getAll();
         System.out.println("Número de abono/s que caduca/n en el mes " + mes);
@@ -585,6 +629,10 @@ public class GestionVehiculos {
         System.out.println("¿Desea enviar un e-mail a los abonados que están próximos a caducar?   S/N");
         Scanner teclado = new Scanner(System.in);
         String respuesta = teclado.nextLine();
+        while (!(respuesta.equalsIgnoreCase("s") || respuesta.equalsIgnoreCase("n"))) {
+            System.out.println("ERROR: Vuelva a responder: ");
+            respuesta = teclado.nextLine();
+        }
         if (respuesta.equalsIgnoreCase("S")) {
 
             for (AbonadosVO vo : mail) {
@@ -666,15 +714,14 @@ public class GestionVehiculos {
         }
 
     }
-    
-    
+
     //Método que genera un fichero-Copia de seguridad- de todos los Vehiculos
-    public static void copiasVehiculos() throws SQLException{
-        
-        VehiculosDAO ve=new VehiculosDAO();
-        
-        List<VehiculosVO> lista =ve.getAll();
-        
+    public static void copiasVehiculos() throws SQLException {
+
+        VehiculosDAO ve = new VehiculosDAO();
+
+        List<VehiculosVO> lista = ve.getAll();
+
         String idfichero = "./Copias_Seg/Vehiculos_" + LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond() + ".txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
@@ -689,7 +736,7 @@ public class GestionVehiculos {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        
+
     }
 
     //Método que genera un fichero-Copia de seguridad- de todos los Tickets
