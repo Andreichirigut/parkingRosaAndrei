@@ -7,6 +7,9 @@ package aplicacion;
 
 import abonados.AbonadosDAO;
 import abonados.AbonadosVO;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -481,6 +484,7 @@ public class GestionVehiculos {
             System.out.println("Vehículo estacionado correctamente");
             TicketVO ticket = new TicketVO(matri, num);
             tic.insertTicket(ticket);
+            imprimirTicket(ticket);
         } else {
             System.out.println("No hemos podido estacionar el vehículo");
         }
@@ -560,6 +564,20 @@ public class GestionVehiculos {
         System.out.println("Ninguna plaza libre para este tipo");
         return -1;
     }
+    
+    public static void imprimirTicket(TicketVO ticket){
+        
+        String idfichero=ticket.getPin()+"-"+ticket.getMatricula()+".txt";
+        
+        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))){
+         flujo.write(ticket.toString());
+         flujo.flush();	
+			
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} 
+        
+    }
 
     public static void main(String[] args) throws SQLException {
 
@@ -570,11 +588,11 @@ public class GestionVehiculos {
         // GestionVehiculos.depositarVehiculo();
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-        //GestionVehiculos.altaAbonado();
+        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
         //GestionVehiculos.bajaAbonado();
         //GestionVehiculos.caducidad();
-        GestionVehiculos.ultimosDias();
+       // GestionVehiculos.ultimosDias();
     }
 }
