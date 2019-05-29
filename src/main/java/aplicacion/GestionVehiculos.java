@@ -8,10 +8,14 @@ package aplicacion;
 import abonados.AbonadosDAO;
 import abonados.AbonadosVO;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -427,36 +431,34 @@ public class GestionVehiculos {
     }
 
     public static void altaCliente() throws SQLException {
-        AbonadosDAO abo=new AbonadosDAO();
-        VehiculosDAO ve= new VehiculosDAO();
-        PlazasDAO pla=new PlazasDAO();
+        AbonadosDAO abo = new AbonadosDAO();
+        VehiculosDAO ve = new VehiculosDAO();
+        PlazasDAO pla = new PlazasDAO();
         AbonadosVO cliente = new AbonadosVO();
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduzca matrícula");
-        String matri=teclado.nextLine();
+        String matri = teclado.nextLine();
         System.out.println("Introduzca el tipo de vehículo");
-        String tipo=teclado.nextLine();
-        VehiculosVO aux= new VehiculosVO(matri, tipo);
+        String tipo = teclado.nextLine();
+        VehiculosVO aux = new VehiculosVO(matri, tipo);
         aux.setCodAbono(cliente.getPk());
         abo.insertAbonado(cliente);
         ve.insertVehiculo(aux);
-        
+
         //Aquí llamaremos al método que nos indica el número de plazas libres
-        
-        int num=plazaVacia(tipo);
-        
-          if (num != -1) {
+        int num = plazaVacia(tipo);
+
+        if (num != -1) {
             PlazasVO auxi = pla.findByPk(num);
             auxi.setEstadoPlaza(false);
             pla.updatePlaza(num, auxi);
             System.out.println("Vehículo estacionado correctamente");
             TicketVO ticket = new TicketVO(matri, num);
             imprimirTicket(ticket);
-              System.out.println(ticket.toString());
+            System.out.println(ticket.toString());
         } else {
             System.out.println("No hemos podido estacionar el vehículo");
         }
-        
 
     }
 
@@ -629,10 +631,33 @@ public class GestionVehiculos {
 
     public static void imprimirTicket(TicketVO ticket) {
 
-        String idfichero = ticket.getPin() + "-" + ticket.getMatricula() + ".txt";
+        String idfichero = "./Tickets/" + ticket.getPin() + "-" + ticket.getMatricula() + ".txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
             flujo.write(ticket.toString());
+            flujo.flush();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    static void copiaAbonados() throws SQLException {
+        AbonadosDAO abo = new AbonadosDAO();
+
+        List<AbonadosVO> lista = abo.getAll();
+        int contador = 1;
+
+        String idfichero = "./Copias_Seg/Abonados_" + LocalDate.now() + "_" + contador + ".txt";
+
+        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
+
+            for (AbonadosVO abonados : lista) {
+                flujo.write(abonados.toString());
+                flujo.newLine();
+            }
+
             flujo.flush();
 
         } catch (IOException e) {
@@ -655,7 +680,8 @@ public class GestionVehiculos {
         // GestionVehiculos.plazaVacia("Motocicleta");
         //GestionVehiculos.bajaAbonado();
         //GestionVehiculos.caducidad();
-       // GestionVehiculos.ultimosDias();
-       GestionVehiculos.altaCliente();
+        // GestionVehiculos.ultimosDias();
+        // GestionVehiculos.altaCliente();
+        GestionVehiculos.copiaAbonados();
     }
 }
