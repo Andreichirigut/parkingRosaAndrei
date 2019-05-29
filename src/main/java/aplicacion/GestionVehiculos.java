@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -643,13 +644,38 @@ public class GestionVehiculos {
 
     }
 
+    public static void copiasTickets() throws SQLException{
+        
+        TicketDAO tic= new TicketDAO();
+        
+        List<TicketVO> lista=tic.getAll();
+        
+         String idfichero = "./Copias_Seg/Ticket_"+LocalTime.now().getHour()+"_"+LocalTime.now().getMinute()+"_"+LocalTime.now().getSecond()+ ".txt";
+
+        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
+
+            for (TicketVO ticket : lista) {
+                flujo.write(ticket.toString());
+                flujo.newLine();
+            }
+
+            flujo.flush();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        
+    }
+    
+    
     static void copiaAbonados() throws SQLException {
         AbonadosDAO abo = new AbonadosDAO();
 
         List<AbonadosVO> lista = abo.getAll();
         int contador = 1;
 
-        String idfichero = "./Copias_Seg/Abonados_" + LocalDate.now() + "_" + contador + ".txt";
+        String idfichero = "./Copias_Seg/Abonados_"+LocalTime.now().getHour()+"_"+LocalTime.now().getMinute()+"_"+LocalTime.now().getSecond()+ ".txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
 
@@ -682,6 +708,7 @@ public class GestionVehiculos {
         //GestionVehiculos.caducidad();
         // GestionVehiculos.ultimosDias();
         // GestionVehiculos.altaCliente();
-        GestionVehiculos.copiaAbonados();
+        //GestionVehiculos.copiaAbonados();
+        GestionVehiculos.copiasTickets();
     }
 }
