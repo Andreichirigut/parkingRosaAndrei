@@ -484,6 +484,23 @@ public class GestionVehiculos {
         }
 
     }
+    
+    public static void bajaAbonado() throws SQLException{
+        AbonadosDAO abo=new AbonadosDAO();
+        System.out.println("Introduzca el código de abonado que desea eliminar:");
+        Scanner teclado = new Scanner(System.in);
+        int codigo=teclado.nextInt();
+        AbonadosVO auxiliar=abo.findByPk(codigo);
+            auxiliar.setFechaActiva(LocalDate.now());
+            auxiliar.setFechaFin(LocalDate.now());
+            auxiliar.setNombre(" ");
+            auxiliar.setTipoABono(0);
+            auxiliar.setNumTarjeta("----------------");
+            auxiliar.setImporte(-1);
+        abo.updateAbono(codigo, auxiliar);
+        System.out.println("Abono eliminado con éxito");
+   
+    }
 
     //Método que nos devuelve el número de la primera plaza vacía en función del tipo de plaza que le pasemos
     public static int plazaVacia(String tipoPlaza) throws SQLException {
@@ -513,9 +530,10 @@ public class GestionVehiculos {
         // GestionVehiculos.depositarVehiculo();
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-        GestionVehiculos.altaAbonado();
+       // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
 
         // GestionVehiculos.plazaVacia("Motocicleta");
+        GestionVehiculos.bajaAbonado();
     }
 }
