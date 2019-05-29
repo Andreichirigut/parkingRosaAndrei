@@ -118,7 +118,7 @@ public class TicketVO {
 
     @Override
     public String toString() {
-        return "TicketVO{" + "pin=" + pin + ", matricula=" + matricula + ", fechaEntrada=" + fechaEntrada + ", fechaSalida=" + fechaSalida + ", hora_Entrada=" + hora_Entrada + ", hora_Salida=" + hora_Salida + ", numeroPlaza=" + numeroPlaza + ", costeFinal=" + costeFinal;
+        return "Ticket:\n" + "Pin: " + pin + "\tMatrícula: " + matricula + "\tFecha Entrada:" + fechaEntrada + "\tFecha Salida:" + fechaSalida + "\nHora Entrada:" + hora_Entrada + "\tHora_Salida:" + hora_Salida + "\tNumeroPlaza=" + numeroPlaza + "\tCosteFinal:" + costeFinal;
     }
 
    
