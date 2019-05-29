@@ -534,14 +534,42 @@ public class GestionVehiculos {
 
         AbonadosDAO abo = new AbonadosDAO();
         List<AbonadosVO> lista = abo.getAll();
+        List<AbonadosVO>mail=new ArrayList <>();
 
         System.out.println("Abonos que caducan en los próximos 10 días");
         for (AbonadosVO abon : lista) {
             if ((abon.getFechaFin().isEqual(LocalDate.now())) || (abon.getFechaFin().isAfter(LocalDate.now()) && abon.getFechaFin().isBefore(LocalDate.now().plusDays(11)))) {
 
                 System.out.println("->  " + abon.getPk());
+                mail.add(abon);
 
             }
+        }
+        
+        System.out.println("¿Desea enviar un e-mail a los abonados que están próximos a caducar?   S/N");
+        Scanner teclado = new Scanner(System.in);
+        String respuesta=teclado.nextLine();
+        if(respuesta.equalsIgnoreCase("S")){
+            
+            for (AbonadosVO vo : mail) {
+                System.out.println("Introduzca e-mail del abonado número "+vo.getPk());
+                String em=teclado.nextLine();
+                String idfichero=em+".txt";
+                
+        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))){
+         flujo.write("Su abono está próximo a caducar. Fecha de fin de abono: "+vo.getFechaFin());
+         flujo.flush();	
+			
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} 
+            }
+            System.out.println("Emails enviados correctamente");
+            
+        }else if(respuesta.equalsIgnoreCase("N")){
+            
+        }else{
+            System.out.println("No se ha reconocido la respuesta. No se ha enviado ningún email.");
         }
 
     }
@@ -579,6 +607,7 @@ public class GestionVehiculos {
         
     }
 
+
     public static void main(String[] args) throws SQLException {
 
 //        Menu.menu();
@@ -588,11 +617,11 @@ public class GestionVehiculos {
         // GestionVehiculos.depositarVehiculo();
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-        GestionVehiculos.altaAbonado();
+       // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
         //GestionVehiculos.bajaAbonado();
         //GestionVehiculos.caducidad();
-       // GestionVehiculos.ultimosDias();
+        GestionVehiculos.ultimosDias();
     }
 }
