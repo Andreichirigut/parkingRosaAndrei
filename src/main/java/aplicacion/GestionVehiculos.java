@@ -398,7 +398,7 @@ public class GestionVehiculos {
         System.out.println("--3.Ampliar fecha de cancelación");
         System.out.println("-----------------------------------");
         int opcion = teclado.nextInt();
-        while (opcion != 1 || opcion != 2 || opcion != 3) {
+        while ((opcion == 1 || opcion == 2 || opcion == 3)) {
             System.out.println("ERROR: Vuelva a introducir la opción: ");
             opcion = teclado.nextInt();
         }
@@ -425,7 +425,7 @@ public class GestionVehiculos {
             case 3:
                 System.out.println("Introduzca meses a ampliar (1,3,6,12)");
                 int mes = teclado.nextInt();
-                while (mes != 1 || mes != 3 || mes != 6 || mes != 12) {
+                while ((mes == 1 || mes == 3 || mes == 6 || mes == 12)) {
                     System.out.println("ERROR: Vuelva a introducir el tipo de abono");
                     mes = teclado.nextInt();
                 }
@@ -504,7 +504,7 @@ public class GestionVehiculos {
         AbonadosVO aux = new AbonadosVO(nom, tarjeta, 1, 0);
         System.out.println("Introduzca tipo abono (1,3,6,12)");
         int tipoAbono = teclado.nextInt();
-        while (tipoAbono != 1 || tipoAbono != 3 || tipoAbono != 6 || tipoAbono != 12) {
+        while ((tipoAbono == 1 || tipoAbono == 3 || tipoAbono == 6 || tipoAbono == 12)) {
             System.out.println("ERROR: Vuelva a introducir el tipo de abono");
             tipoAbono = teclado.nextInt();
         }
