@@ -209,6 +209,13 @@ public class GestionVehiculos {
 
         //Antes se debe calcular el importe
         VehiculosVO vehiculoVO = new VehiculosVO(matricula, tipo);
+<<<<<<< Updated upstream
+=======
+        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
+        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+
+        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+>>>>>>> Stashed changes
 
         listaTicket = (ArrayList<TicketVO>) ticket.getAll();
         listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
@@ -299,6 +306,10 @@ public class GestionVehiculos {
         System.out.println("-------Numero de plazas libres-------");
         daoPlaza = new PlazasDAO();
         daoPlaza.getEstados();
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
     }
     
@@ -450,6 +461,10 @@ public class GestionVehiculos {
         }
 
         abo.insertAbonado(aux);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
     }
 
@@ -461,7 +476,13 @@ public class GestionVehiculos {
 
         // Menu.menu();
         // GestionVehiculos.depositarVehiculo();
+<<<<<<< Updated upstream
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
+=======
+       GestionVehiculos.altaAbonado();
+      //  GestionVehiculos.modificarAbonado();
+
+>>>>>>> Stashed changes
     }
 }
