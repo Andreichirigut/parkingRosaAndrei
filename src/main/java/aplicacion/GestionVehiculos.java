@@ -8,14 +8,10 @@ package aplicacion;
 import abonados.AbonadosDAO;
 import abonados.AbonadosVO;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -435,6 +431,7 @@ public class GestionVehiculos {
         AbonadosDAO abo = new AbonadosDAO();
         VehiculosDAO ve = new VehiculosDAO();
         PlazasDAO pla = new PlazasDAO();
+        TicketDAO tic=new TicketDAO();
         AbonadosVO cliente = new AbonadosVO();
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduzca matrícula");
@@ -456,6 +453,7 @@ public class GestionVehiculos {
             System.out.println("Vehículo estacionado correctamente");
             TicketVO ticket = new TicketVO(matri, num);
             imprimirTicket(ticket);
+            tic.insertTicket(ticket);
             System.out.println(ticket.toString());
         } else {
             System.out.println("No hemos podido estacionar el vehículo");
@@ -522,6 +520,7 @@ public class GestionVehiculos {
             TicketVO ticket = new TicketVO(matri, num);
             tic.insertTicket(ticket);
             imprimirTicket(ticket);
+            System.out.println(ticket.toString());
         } else {
             System.out.println("No hemos podido estacionar el vehículo");
         }
@@ -643,14 +642,15 @@ public class GestionVehiculos {
         }
 
     }
-    
-    public static void copiasPlazas() throws SQLException{
-        
-        PlazasDAO pla= new PlazasDAO();
-        
-        List<PlazasVO> lista=pla.getAll();
-        
-        String idfichero = "./Copias_Seg/Plazas_"+LocalTime.now().getHour()+"_"+LocalTime.now().getMinute()+"_"+LocalTime.now().getSecond()+ ".txt";
+
+    //Método que genera un fichero-Copia de seguridad- de todas las plazas
+    public static void copiasPlazas() throws SQLException {
+
+        PlazasDAO pla = new PlazasDAO();
+
+        List<PlazasVO> lista = pla.getAll();
+
+        String idfichero = "./Copias_Seg/Plazas_" + LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond() + ".txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
 
@@ -664,21 +664,42 @@ public class GestionVehiculos {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        
-        
-        
-        
-        
+
     }
     
+    
+    //Método que genera un fichero-Copia de seguridad- de todos los Vehiculos
+    public static void copiasVehiculos() throws SQLException{
+        
+        VehiculosDAO ve=new VehiculosDAO();
+        
+        List<VehiculosVO> lista =ve.getAll();
+        
+        String idfichero = "./Copias_Seg/Vehiculos_" + LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond() + ".txt";
 
-    public static void copiasTickets() throws SQLException{
+        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
+
+            for (VehiculosVO vehiculo : lista) {
+                flujo.write(vehiculo.toString());
+                flujo.newLine();
+            }
+
+            flujo.flush();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
         
-        TicketDAO tic= new TicketDAO();
-        
-        List<TicketVO> lista=tic.getAll();
-        
-         String idfichero = "./Copias_Seg/Ticket_"+LocalTime.now().getHour()+"_"+LocalTime.now().getMinute()+"_"+LocalTime.now().getSecond()+ ".txt";
+    }
+
+    //Método que genera un fichero-Copia de seguridad- de todos los Tickets
+    public static void copiasTickets() throws SQLException {
+
+        TicketDAO tic = new TicketDAO();
+
+        List<TicketVO> lista = tic.getAll();
+
+        String idfichero = "./Copias_Seg/Ticket_" + LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond() + ".txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
 
@@ -692,18 +713,16 @@ public class GestionVehiculos {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        
-        
+
     }
-    
-    
+
+    //Método que genera un fichero-Copia de seguridad- de todos los abonados
     static void copiaAbonados() throws SQLException {
         AbonadosDAO abo = new AbonadosDAO();
 
         List<AbonadosVO> lista = abo.getAll();
-        int contador = 1;
 
-        String idfichero = "./Copias_Seg/Abonados_"+LocalTime.now().getHour()+"_"+LocalTime.now().getMinute()+"_"+LocalTime.now().getSecond()+ ".txt";
+        String idfichero = "./Copias_Seg/Abonados_" + LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond() + ".txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
 
@@ -729,7 +748,7 @@ public class GestionVehiculos {
         // GestionVehiculos.depositarVehiculo();
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-        //GestionVehiculos.altaAbonado();
+        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
         //GestionVehiculos.bajaAbonado();
@@ -737,6 +756,6 @@ public class GestionVehiculos {
         // GestionVehiculos.ultimosDias();
         // GestionVehiculos.altaCliente();
         //GestionVehiculos.copiaAbonados();
-        GestionVehiculos.copiasPlazas();
+        //GestionVehiculos.copiasVehiculos();
     }
 }
