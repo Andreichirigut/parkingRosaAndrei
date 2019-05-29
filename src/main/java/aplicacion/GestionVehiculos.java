@@ -10,6 +10,7 @@ import abonados.AbonadosVO;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import plaza.PlazasDAO;
 import plaza.PlazasVO;
@@ -159,6 +160,10 @@ public class GestionVehiculos {
         VehiculosDAO vehiculo = new VehiculosDAO();
         TicketDAO ticket = new TicketDAO();
         PlazasDAO plazas = new PlazasDAO();
+//        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
+//        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+//
+//        ArrayList<PlazasVO> listaPlaza = new ArrayLi
         Boolean[] plazasEstado = new Boolean[45];
         ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
         ArrayList<TicketVO> listaTicket = new ArrayList<>();
@@ -209,13 +214,11 @@ public class GestionVehiculos {
 
         //Antes se debe calcular el importe
         VehiculosVO vehiculoVO = new VehiculosVO(matricula, tipo);
-<<<<<<< Updated upstream
-=======
-        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
-        ArrayList<TicketVO> listaTicket = new ArrayList<>();
-
-        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
->>>>>>> Stashed changes
+//
+//        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
+//        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+//
+//        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
 
         listaTicket = (ArrayList<TicketVO>) ticket.getAll();
         listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
@@ -306,21 +309,17 @@ public class GestionVehiculos {
         System.out.println("-------Numero de plazas libres-------");
         daoPlaza = new PlazasDAO();
         daoPlaza.getEstados();
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 
     }
-    
-    public static void depositarVehiculoAbonado(){
+
+    public static void depositarVehiculoAbonado() {
         //Se declaran distintos objetos generales necesarios
         Boolean[] plazasEstado = new Boolean[45];
         ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
         PlazasDAO plazas = new PlazasDAO();
         VehiculosDAO vehiculos = new VehiculosDAO();
         Scanner teclado = new Scanner(System.in);
-        
+
         System.out.println("Dime tu matricula: ");
         String matricula = teclado.nextLine();
         while (matricula.length() > 8 || matricula.length() < 8) {
@@ -328,17 +327,16 @@ public class GestionVehiculos {
             matricula = teclado.nextLine();
 
         }
-        
+
         System.out.println("Dime tu DNI");
         String dni = teclado.nextLine();
         while (dni.length() > 9 || dni.length() < 9) {
             System.out.println("ERROR: Vuelve a introducir la matricula");
         }
-        
+
     }
-    
-    
-    public static void retirarVehiculoAbonado(){
+
+    public static void retirarVehiculoAbonado() {
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
         String matricula = teclado.nextLine();
@@ -430,6 +428,7 @@ public class GestionVehiculos {
         AbonadosDAO abo = new AbonadosDAO();
 
         Scanner teclado = new Scanner(System.in);
+        Scanner tec2 = new Scanner(System.in);
 
         System.out.println("Introduzca su nombre");
         String nom = teclado.nextLine();
@@ -461,28 +460,62 @@ public class GestionVehiculos {
         }
 
         abo.insertAbonado(aux);
-<<<<<<< Updated upstream
-=======
+        System.out.println("-----------------------------");
+        System.out.println("Datos del Vehículo: Introduzca matrícula");
+        String matri = tec2.nextLine();
+        System.out.println("Introduzca tipo de vehículo");
+        String tipo = tec2.nextLine();
+        VehiculosVO vehi = new VehiculosVO(matri, tipo);
+        vehi.setCodAbono(aux.getPk());
+        VehiculosDAO veDao = new VehiculosDAO();
+        TicketDAO tic = new TicketDAO();
+        veDao.insertVehiculo(vehi);
+        PlazasDAO plaza = new PlazasDAO();
+        int num = plazaVacia(tipo);
+        if (num != -1) {
+            PlazasVO auxi = plaza.findByPk(num);
+            auxi.setEstadoPlaza(false);
+            plaza.updatePlaza(num, auxi);
+            System.out.println("Vehículo estacionado correctamente");
+            TicketVO ticket = new TicketVO(matri, num);
+            tic.insertTicket(ticket);
+        } else {
+            System.out.println("No hemos podido estacionar el vehículo");
+        }
 
->>>>>>> Stashed changes
+    }
 
+    //Método que nos devuelve el número de la primera plaza vacía en función del tipo de plaza que le pasemos
+    public static int plazaVacia(String tipoPlaza) throws SQLException {
+        PlazasDAO plazas = new PlazasDAO();
+        List<PlazasVO> lista = plazas.getAll();
+
+        for (PlazasVO pla : lista) {
+
+            if ((pla.isEstadoPlaza() == true) & (pla.getTipoPlaza().equalsIgnoreCase(tipoPlaza))) {
+
+                System.out.println("Plaza libre número " + pla.getNumPlaza());
+                return pla.getNumPlaza();
+
+            }
+
+        }
+        System.out.println("Ninguna plaza libre para este tipo");
+        return -1;
     }
 
     public static void main(String[] args) throws SQLException {
 
 //        Menu.menu();
 //        GestionVehiculos.depositarVehiculo();
-        GestionVehiculos.retirarVehiculo();
-
+        // GestionVehiculos.retirarVehiculo();
         // Menu.menu();
         // GestionVehiculos.depositarVehiculo();
-<<<<<<< Updated upstream
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-=======
-       GestionVehiculos.altaAbonado();
-      //  GestionVehiculos.modificarAbonado();
+        GestionVehiculos.altaAbonado();
+        //  GestionVehiculos.modificarAbonado();
 
->>>>>>> Stashed changes
+        // GestionVehiculos.plazaVacia("Motocicleta");
     }
 }
