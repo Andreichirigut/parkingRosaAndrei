@@ -643,6 +643,34 @@ public class GestionVehiculos {
         }
 
     }
+    
+    public static void copiasPlazas() throws SQLException{
+        
+        PlazasDAO pla= new PlazasDAO();
+        
+        List<PlazasVO> lista=pla.getAll();
+        
+        String idfichero = "./Copias_Seg/Plazas_"+LocalTime.now().getHour()+"_"+LocalTime.now().getMinute()+"_"+LocalTime.now().getSecond()+ ".txt";
+
+        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
+
+            for (PlazasVO plaza : lista) {
+                flujo.write(plaza.toString());
+                flujo.newLine();
+            }
+
+            flujo.flush();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        
+        
+        
+        
+    }
+    
 
     public static void copiasTickets() throws SQLException{
         
@@ -709,6 +737,6 @@ public class GestionVehiculos {
         // GestionVehiculos.ultimosDias();
         // GestionVehiculos.altaCliente();
         //GestionVehiculos.copiaAbonados();
-        GestionVehiculos.copiasTickets();
+        GestionVehiculos.copiasPlazas();
     }
 }
