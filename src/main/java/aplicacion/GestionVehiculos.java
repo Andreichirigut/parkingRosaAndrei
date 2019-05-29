@@ -426,6 +426,40 @@ public class GestionVehiculos {
 
     }
 
+    public static void altaCliente() throws SQLException {
+        AbonadosDAO abo=new AbonadosDAO();
+        VehiculosDAO ve= new VehiculosDAO();
+        PlazasDAO pla=new PlazasDAO();
+        AbonadosVO cliente = new AbonadosVO();
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Introduzca matrícula");
+        String matri=teclado.nextLine();
+        System.out.println("Introduzca el tipo de vehículo");
+        String tipo=teclado.nextLine();
+        VehiculosVO aux= new VehiculosVO(matri, tipo);
+        aux.setCodAbono(cliente.getPk());
+        abo.insertAbonado(cliente);
+        ve.insertVehiculo(aux);
+        
+        //Aquí llamaremos al método que nos indica el número de plazas libres
+        
+        int num=plazaVacia(tipo);
+        
+          if (num != -1) {
+            PlazasVO auxi = pla.findByPk(num);
+            auxi.setEstadoPlaza(false);
+            pla.updatePlaza(num, auxi);
+            System.out.println("Vehículo estacionado correctamente");
+            TicketVO ticket = new TicketVO(matri, num);
+            imprimirTicket(ticket);
+              System.out.println(ticket.toString());
+        } else {
+            System.out.println("No hemos podido estacionar el vehículo");
+        }
+        
+
+    }
+
     //Método para dar de alta a un abonado junto con su vehículo y generamos un ticket
     //que también se almacena en la BBDD
     public static void altaAbonado() throws SQLException {
@@ -534,7 +568,7 @@ public class GestionVehiculos {
 
         AbonadosDAO abo = new AbonadosDAO();
         List<AbonadosVO> lista = abo.getAll();
-        List<AbonadosVO>mail=new ArrayList <>();
+        List<AbonadosVO> mail = new ArrayList<>();
 
         System.out.println("Abonos que caducan en los próximos 10 días");
         for (AbonadosVO abon : lista) {
@@ -545,30 +579,30 @@ public class GestionVehiculos {
 
             }
         }
-        
+
         System.out.println("¿Desea enviar un e-mail a los abonados que están próximos a caducar?   S/N");
         Scanner teclado = new Scanner(System.in);
-        String respuesta=teclado.nextLine();
-        if(respuesta.equalsIgnoreCase("S")){
-            
+        String respuesta = teclado.nextLine();
+        if (respuesta.equalsIgnoreCase("S")) {
+
             for (AbonadosVO vo : mail) {
-                System.out.println("Introduzca e-mail del abonado número "+vo.getPk());
-                String em=teclado.nextLine();
-                String idfichero=em+".txt";
-                
-        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))){
-         flujo.write("Su abono está próximo a caducar. Fecha de fin de abono: "+vo.getFechaFin());
-         flujo.flush();	
-			
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} 
+                System.out.println("Introduzca e-mail del abonado número " + vo.getPk());
+                String em = teclado.nextLine();
+                String idfichero = em + ".txt";
+
+                try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
+                    flujo.write("Su abono está próximo a caducar. Fecha de fin de abono: " + vo.getFechaFin());
+                    flujo.flush();
+
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
             }
             System.out.println("Emails enviados correctamente");
-            
-        }else if(respuesta.equalsIgnoreCase("N")){
-            
-        }else{
+
+        } else if (respuesta.equalsIgnoreCase("N")) {
+
+        } else {
             System.out.println("No se ha reconocido la respuesta. No se ha enviado ningún email.");
         }
 
@@ -592,21 +626,20 @@ public class GestionVehiculos {
         System.out.println("Ninguna plaza libre para este tipo");
         return -1;
     }
-    
-    public static void imprimirTicket(TicketVO ticket){
-        
-        String idfichero=ticket.getPin()+"-"+ticket.getMatricula()+".txt";
-        
-        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))){
-         flujo.write(ticket.toString());
-         flujo.flush();	
-			
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} 
-        
-    }
 
+    public static void imprimirTicket(TicketVO ticket) {
+
+        String idfichero = ticket.getPin() + "-" + ticket.getMatricula() + ".txt";
+
+        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
+            flujo.write(ticket.toString());
+            flujo.flush();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
 
     public static void main(String[] args) throws SQLException {
 
@@ -617,11 +650,12 @@ public class GestionVehiculos {
         // GestionVehiculos.depositarVehiculo();
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-       // GestionVehiculos.altaAbonado();
+        //GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
         //GestionVehiculos.bajaAbonado();
         //GestionVehiculos.caducidad();
-        GestionVehiculos.ultimosDias();
+       // GestionVehiculos.ultimosDias();
+       GestionVehiculos.altaCliente();
     }
 }
