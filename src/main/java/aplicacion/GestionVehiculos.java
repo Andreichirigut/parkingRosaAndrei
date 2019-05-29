@@ -506,19 +506,38 @@ public class GestionVehiculos {
 
     }
 
+    //Método que nos indica el número de abonados que caducan en el mes indicado
     public static void caducidad() throws SQLException {
         //El sistema solicita un mes y nos informa de los abonos que caducan en ese mes.
-        AbonadosDAO abo= new AbonadosDAO();
+        AbonadosDAO abo = new AbonadosDAO();
         System.out.println("Introduzca un mes (número)");
         Scanner teclado = new Scanner(System.in);
         int mes = teclado.nextInt();
-        
-        List <AbonadosVO> lista=abo.getAll();
-        System.out.println("Número de abono/s que caduca/n en el mes "+mes);
+
+        List<AbonadosVO> lista = abo.getAll();
+        System.out.println("Número de abono/s que caduca/n en el mes " + mes);
         for (AbonadosVO abona : lista) {
-           if(abona.getFechaFin().getMonthValue()==mes){
-               System.out.println(""+abona.getPk());
-           }
+            if (abona.getFechaFin().getMonthValue() == mes) {
+                System.out.println("" + abona.getPk());
+            }
+        }
+
+    }
+
+    //Consultar últimos 10 días. El programa informa por consola de los abonos que caducan en los siguientes 10 días a
+    //la fecha actual. Posibilidad de envío de un email al abonado recordando que su abono va a caducar.
+    public static void ultimosDias() throws SQLException {
+
+        AbonadosDAO abo = new AbonadosDAO();
+        List<AbonadosVO> lista = abo.getAll();
+
+        System.out.println("Abonos que caducan en los próximos 10 días");
+        for (AbonadosVO abon : lista) {
+            if ((abon.getFechaFin().isEqual(LocalDate.now())) || (abon.getFechaFin().isAfter(LocalDate.now()) && abon.getFechaFin().isBefore(LocalDate.now().plusDays(11)))) {
+
+                System.out.println("->  " + abon.getPk());
+
+            }
         }
 
     }
@@ -551,10 +570,11 @@ public class GestionVehiculos {
         // GestionVehiculos.depositarVehiculo();
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-         //GestionVehiculos.altaAbonado();
+        //GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
         //GestionVehiculos.bajaAbonado();
-        GestionVehiculos.caducidad();
+        //GestionVehiculos.caducidad();
+        GestionVehiculos.ultimosDias();
     }
 }
