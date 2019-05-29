@@ -7,13 +7,24 @@ package aplicacion;
 
 import abonados.AbonadosDAO;
 import abonados.AbonadosVO;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Period;
+import java.util.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 import plaza.PlazasDAO;
@@ -504,7 +515,7 @@ public class GestionVehiculos {
         AbonadosVO aux = new AbonadosVO(nom, tarjeta, 1, 0);
         System.out.println("Introduzca tipo abono (1,3,6,12)");
         int tipoAbono = teclado.nextInt();
-        while ((tipoAbono == 1 || tipoAbono == 3 || tipoAbono == 6 || tipoAbono == 12)) {
+        while (tipoAbono != 1 && tipoAbono != 3 && tipoAbono != 6 && tipoAbono != 12) {
             System.out.println("ERROR: Vuelva a introducir el tipo de abono");
             tipoAbono = teclado.nextInt();
         }
@@ -595,7 +606,7 @@ public class GestionVehiculos {
         int mes = teclado.nextInt();
         while (mes < 1 || mes > 12) {
             System.out.println("ERROR: Vuelva a introducir el mes: ");
-            mes = teclado.nextInt();                
+            mes = teclado.nextInt();
         }
 
         List<AbonadosVO> lista = abo.getAll();
@@ -686,6 +697,81 @@ public class GestionVehiculos {
             flujo.flush();
 
         } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+    
+    public static void calcularTarifa(TicketVO ticket) throws ParseException{
+        //LocalDate fechaInicio = LocalDate.now();
+        //LocalDate fechaFin = LocalDate.now();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+ 
+        
+        //TODO Recupear deBBDD y pasar a Sting y concatenar
+        Date fechaInicial=dateFormat.parse(ticket.getFechaEntrada()+" "+ticket.getHora_Entrada());
+        Date fechaFin=dateFormat.parse(ticket.getFechaSalida()+" "+ticket.getHora_Salida());
+
+        //Calendar calIni = Calendar.getInstance();
+        //cal.setTime(fechaInicial);
+               
+        
+        long secs = (fechaFin.getTime() - fechaInicial.getTime()) / 1000;
+        //long hours = secs / 3600;    
+        //secs = secs % 3600;
+        long mins = secs / 60;
+        //secs = secs % 60;
+    }
+
+    
+    //Método que restaura una copia de seguridad en la BBDD, para ello se solicita por teclado el nombre del fichero
+    public static void restaurarAbonados() throws UnsupportedEncodingException, IOException, SQLException {
+        String linea = "hola";
+        AbonadosDAO abo = new AbonadosDAO();
+        Scanner teclado = new Scanner(System.in);
+       
+        ArrayList<AbonadosVO> lista = new ArrayList<>();
+        System.out.println("Introduzca el nombre del fichero que desea restaurar");
+        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+
+        try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
+
+            while (datosFichero.hasNextLine()) {
+
+                linea = datosFichero.nextLine(); 
+                 AbonadosVO aux = new AbonadosVO();
+ 
+                    //Abonados_2019-05-29_1
+                    String[] cortarString = linea.split("\t");
+                    String[] cortarPuntos = cortarString[0].split(":");
+                    String pk = cortarPuntos[1];
+                    aux.setPk(Integer.parseInt(pk.trim()));
+                    cortarPuntos = cortarString[1].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setNombre(pk);
+                    cortarPuntos = cortarString[2].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setNumTarjeta(pk);
+                    cortarPuntos = cortarString[3].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setTipoABono(Integer.parseInt(pk.trim()));
+                    cortarPuntos = cortarString[4].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setImporte(Integer.parseInt(pk.trim()));
+                    cortarPuntos = cortarString[5].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setFechaActiva(LocalDate.parse(pk));
+                    cortarPuntos = cortarString[6].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setFechaFin(LocalDate.parse(pk));
+                    lista.add(aux);
+                
+
+            }
+            abo.insertListAbonado(lista);
+            System.out.println("Restauración completada");
+
+        } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
         }
 
@@ -786,7 +872,7 @@ public class GestionVehiculos {
 
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IOException, ParseException {
 
 //        Menu.menu();
 //        GestionVehiculos.depositarVehiculo();
@@ -795,7 +881,7 @@ public class GestionVehiculos {
         // GestionVehiculos.depositarVehiculo();
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-        GestionVehiculos.altaAbonado();
+       // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
         //GestionVehiculos.bajaAbonado();
@@ -804,5 +890,15 @@ public class GestionVehiculos {
         // GestionVehiculos.altaCliente();
         //GestionVehiculos.copiaAbonados();
         //GestionVehiculos.copiasVehiculos();
+       // GestionVehiculos.restaurarAbonados();
+       
+       TicketVO ticket=new TicketVO("iokluyt", 7);
+       ticket.setHora_Salida(LocalTime.of(17, 30));
+       ticket.setFechaSalida(LocalDate.of(2019, 6, 03));
+       
+       GestionVehiculos.calcularTarifa(ticket);
+       
+    
+    
     }
 }
