@@ -5,15 +5,16 @@
  */
 package aplicacion;
 
+import java.sql.SQLException;
 /**
  *
  * @author andrei
  */
 public class Central {
-    public static void ejecutarOrden(Comando comando){
+    public static void ejecutarOrden(Comando comando) throws SQLException{
         switch (comando) {
             case DEPOSITAR_VEHICULO:
-                System.out.println("");
+                GestionVehiculos.altaCliente();
                 break;
             case RETIRAR_VEHICULO:
                 System.out.println("");
@@ -34,19 +35,19 @@ public class Central {
                 System.out.println("");
                 break;
             case DAR_DE_ALTA:
-                System.out.println("");
+                GestionVehiculos.altaAbonado();
                 break;
             case MODIFICAR_ABONO:
-                System.out.println("");
+                GestionVehiculos.modificarAbonado();
                 break;
             case DAR_DE_BAJA:
-                System.out.println("");
+                GestionVehiculos.bajaAbonado();
                 break;
             case CONSULTAR_CADUCIDAD_ABONADOS:
-                System.out.println("");
+                
                 break;
             case CONSULTAR_CADUCIDAD_ABONADOS_10DIAS:
-                System.out.println("");
+               GestionVehiculos.altaAbonado();
                 break;
             case CREAR_COPIA_SEGURIDAD:
                 System.out.println("");
@@ -57,5 +58,9 @@ public class Central {
             default:
                 throw new AssertionError();
         }
+    }
+    
+    public static void main(String[] args) throws SQLException {
+        Central.ejecutarOrden(Menu.menu());
     }
 }
