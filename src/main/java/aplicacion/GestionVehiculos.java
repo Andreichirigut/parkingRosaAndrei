@@ -423,6 +423,8 @@ public class GestionVehiculos {
 
     }
 
+    //Método para dar de alta a un abonado junto con su vehículo y generamos un ticket
+    //que también se almacena en la BBDD
     public static void altaAbonado() throws SQLException {
 
         AbonadosDAO abo = new AbonadosDAO();
@@ -484,22 +486,41 @@ public class GestionVehiculos {
         }
 
     }
-    
-    public static void bajaAbonado() throws SQLException{
-        AbonadosDAO abo=new AbonadosDAO();
+
+    //Método para dar de baja a un abonado, solicitamos pk del abono y si existe
+    // hacemos un update de ese abonado borrándole sus datos personales
+    public static void bajaAbonado() throws SQLException {
+        AbonadosDAO abo = new AbonadosDAO();
         System.out.println("Introduzca el código de abonado que desea eliminar:");
         Scanner teclado = new Scanner(System.in);
-        int codigo=teclado.nextInt();
-        AbonadosVO auxiliar=abo.findByPk(codigo);
-            auxiliar.setFechaActiva(LocalDate.now());
-            auxiliar.setFechaFin(LocalDate.now());
-            auxiliar.setNombre(" ");
-            auxiliar.setTipoABono(0);
-            auxiliar.setNumTarjeta("----------------");
-            auxiliar.setImporte(-1);
+        int codigo = teclado.nextInt();
+        AbonadosVO auxiliar = abo.findByPk(codigo);
+        auxiliar.setFechaActiva(LocalDate.now());
+        auxiliar.setFechaFin(LocalDate.now());
+        auxiliar.setNombre(" ");
+        auxiliar.setTipoABono(0);
+        auxiliar.setNumTarjeta("----------------");
+        auxiliar.setImporte(-1);
         abo.updateAbono(codigo, auxiliar);
         System.out.println("Abono eliminado con éxito");
-   
+
+    }
+
+    public static void caducidad() throws SQLException {
+        //El sistema solicita un mes y nos informa de los abonos que caducan en ese mes.
+        AbonadosDAO abo= new AbonadosDAO();
+        System.out.println("Introduzca un mes (número)");
+        Scanner teclado = new Scanner(System.in);
+        int mes = teclado.nextInt();
+        
+        List <AbonadosVO> lista=abo.getAll();
+        System.out.println("Número de abono/s que caduca/n en el mes "+mes);
+        for (AbonadosVO abona : lista) {
+           if(abona.getFechaFin().getMonthValue()==mes){
+               System.out.println(""+abona.getPk());
+           }
+        }
+
     }
 
     //Método que nos devuelve el número de la primera plaza vacía en función del tipo de plaza que le pasemos
@@ -530,10 +551,10 @@ public class GestionVehiculos {
         // GestionVehiculos.depositarVehiculo();
 //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-       // GestionVehiculos.altaAbonado();
+         //GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-
         // GestionVehiculos.plazaVacia("Motocicleta");
-        GestionVehiculos.bajaAbonado();
+        //GestionVehiculos.bajaAbonado();
+        GestionVehiculos.caducidad();
     }
 }
