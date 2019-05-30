@@ -26,13 +26,13 @@ public class Central {
                         
                 break;
             case RETIRAR_VEHICULO:
-                System.out.println("");
+                GestionVehiculos.retirarVehiculo();
                 break;
             case DEPOSITAR_ABONOS:
-                System.out.println("");
+                GestionVehiculos.depositarVehiculoAbonado();
                 break;
             case RETIRAR_ABONOS:
-                System.out.println("");
+                GestionVehiculos.retirarVehiculoAbonado();
                 break;
             case VER_ESTADO_PARKING:
                 GestionVehiculos.getEstados();
