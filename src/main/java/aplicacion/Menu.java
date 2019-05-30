@@ -40,8 +40,9 @@ public class Menu {
                 System.out.println("11.- Consultar caducidad abonados ultimos 10 dias");
                 System.out.println("12.- Crear copia de seguridad");
                 System.out.println("13.- Restaurar copia de seguridad");
+                System.out.println("14.-Salir");
                 int opcion2 = teclado.nextInt();
-                while (opcion2 < 4 || opcion2 > 13) {
+                while (opcion2 < 4 || opcion2 > 14) {
                     System.out.println("ERROR: Vuelve a introducir una accion corecta: ");
                     opcion2 = teclado.nextInt();
                 }
@@ -66,6 +67,8 @@ public class Menu {
                         return Comando.CREAR_COPIA_SEGURIDAD;
                     case 13:
                         return Comando.RESTAURAR_COPIA_SEGURIDAD;
+                    case 14:
+                        return Comando.SALIR;
                     default:
                         throw new AssertionError();
                 }
@@ -77,8 +80,9 @@ public class Menu {
                 System.out.println("1.- Retirar vehiculo");
                 System.out.println("2.- Depositar abonos");
                 System.out.println("3.- Retirar abonos");
+                System.out.println("4.-Salir");
                 int opcion3 = teclado.nextInt();
-                while (opcion3 < 0 || opcion3 > 3) {
+                while (opcion3 < 0 || opcion3 > 4) {
                     System.out.println("ERROR: Vuelve a introducir una accion corecta: ");
                     opcion2 = teclado.nextInt();
                 }
@@ -91,6 +95,8 @@ public class Menu {
                         return Comando.DEPOSITAR_ABONOS;
                     case 3: 
                         return Comando.RETIRAR_ABONOS;
+                    case 4:
+                        return Comando.SALIR;
                     default:
                         throw new AssertionError();
                 }
