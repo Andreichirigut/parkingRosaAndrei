@@ -784,7 +784,7 @@ public class GestionVehiculos {
             }
         }
 
-        System.out.println("Total facturación: "+total);
+        System.out.println("Total facturación: " + total);
 
     }
 
@@ -826,7 +826,7 @@ public class GestionVehiculos {
         }
     }
 
-    public static void restaurarTickets() throws FileNotFoundException, UnsupportedEncodingException {
+    public static void restaurarTickets() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
         String linea = "hola";
         TicketDAO tic = new TicketDAO();
         Scanner teclado = new Scanner(System.in);
@@ -861,26 +861,23 @@ public class GestionVehiculos {
                     pk = cortarPuntos[1];
                     aux.setFechaSalida(LocalDate.parse(pk));
                     cortarPuntos = cortarString[4].split(":");
-                    pk = cortarPuntos[1];
+                    pk = cortarPuntos[1] + ":" + cortarPuntos[2] + ":" + cortarPuntos[3];
                     aux.setHora_Entrada(LocalTime.parse(pk));
                     cortarPuntos = cortarString[5].split(":");
-                    pk = cortarPuntos[1];
+                    pk = cortarPuntos[1] + ":" + cortarPuntos[2] + ":" + cortarPuntos[3];
                     aux.setHora_Salida(LocalTime.parse(pk));
                     cortarPuntos = cortarString[6].split(":");
                     pk = cortarPuntos[1];
                     aux.setNumeroPlaza(Integer.parseInt(pk));
-//                cortarPuntos = cortarString[7].split(":");
-//                pk = cortarPuntos[1];
-//                aux.setCosteFinal(Double.parseDouble(pk));
-                    lista.add(aux);
+                    cortarPuntos = cortarString[7].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setCosteFinal(Double.parseDouble(pk));
+                       lista.add(aux);
 
                 }
 
-                for (TicketVO ticketVO : lista) {
-
-                    System.out.println(ticketVO.toString());
-
-                }
+              tic.insertListaTicket(lista);
+                System.out.println("Restauración completada");
             }
 
         }
@@ -994,6 +991,7 @@ public class GestionVehiculos {
             }
 
             flujo.flush();
+             System.out.println("Copia de seguridad completada");
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -1069,8 +1067,9 @@ public class GestionVehiculos {
                 flujo.write(vehiculo.toString());
                 flujo.newLine();
             }
-
+            
             flujo.flush();
+            System.out.println("Copia de seguridad completada");
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -1095,6 +1094,7 @@ public class GestionVehiculos {
             }
 
             flujo.flush();
+             System.out.println("Copia de seguridad completada");
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -1118,6 +1118,7 @@ public class GestionVehiculos {
             }
 
             flujo.flush();
+             System.out.println("Copia de seguridad completada");
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -1154,7 +1155,7 @@ public class GestionVehiculos {
 //       GestionVehiculos.calcularTarifa(ticket);
 //       
         //  GestionVehiculos.copiasTickets();
-        // GestionVehiculos.restaurarTickets();
+        GestionVehiculos.restaurarTickets();
         // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
@@ -1162,6 +1163,6 @@ public class GestionVehiculos {
         // GestionVehiculos.caducidad();
         //GestionVehiculos.ultimosDias();
         //GestionVehiculos.altaCliente();
-        GestionVehiculos.calcularTarifa();
+        // GestionVehiculos.calcularTarifa();
     }
 }
