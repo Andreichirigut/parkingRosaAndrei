@@ -174,7 +174,7 @@ public class GestionVehiculos {
         }
     }
 
-    public static void retirarVehiculo() throws SQLException {
+    public static void retirarVehiculo() throws SQLException, ParseException {
 
         VehiculosDAO vehiculo = new VehiculosDAO();
         TicketDAO ticket = new TicketDAO();
@@ -247,6 +247,7 @@ public class GestionVehiculos {
         }
         for (TicketVO ticketVO : listaTicket) {
             if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
+                GestionVehiculos.calcularTarifa();
                 if (tipo.equalsIgnoreCase("Motocicleta")) {
                     int contador = 1;
                     for (int i = 0; i < 15; i++) {
@@ -331,7 +332,7 @@ public class GestionVehiculos {
 
     }
 
-    public static void depositarVehiculoAbonado() {
+    public static void depositarVehiculoAbonado() throws SQLException {
         //Se declaran distintos objetos generales necesarios
         Boolean[] plazasEstado = new Boolean[45];
         ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
@@ -352,7 +353,33 @@ public class GestionVehiculos {
         while (dni.length() > 9 || dni.length() < 9) {
             System.out.println("ERROR: Vuelve a introducir la matricula");
         }
+        
+        System.out.println("Dime tu tipo de vehiculo: ");
+        String tipo = teclado.nextLine();
+        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
+            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
+            tipo = teclado.nextLine();
+        }
 
+        VehiculosVO vehi = new VehiculosVO(matricula, tipo);
+        VehiculosDAO veDao = new VehiculosDAO();
+        TicketDAO tic = new TicketDAO();
+        veDao.insertVehiculo(vehi);
+        PlazasDAO plaza = new PlazasDAO();
+        int num = plazaVacia(tipo);
+        if (num != -1) {
+            PlazasVO auxi = plaza.findByPk(num);
+            auxi.setEstadoPlaza(false);
+            plaza.updatePlaza(num, auxi);
+            System.out.println("Vehículo estacionado correctamente");
+            TicketVO ticket = new TicketVO(matricula, num);
+            tic.insertTicket(ticket);
+            imprimirTicket(ticket);
+            System.out.println(ticket.toString());
+        } else {
+            System.out.println("No hemos podido estacionar el vehículo");
+        }
+        
     }
 
     public static void retirarVehiculoAbonado() {
