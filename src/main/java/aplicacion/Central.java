@@ -53,6 +53,10 @@ public class Central {
                 System.out.println("1.-Consultar caducidad según mes");
                 System.out.println("2.-Consultar próximos 10 días");
                 opcion=teclado.nextInt();
+                while (!(opcion == 1 || opcion ==2)) {
+                    System.out.println("ERROR: Vuelva a introducir la opcion");
+                    opcion=teclado.nextInt();
+                }
                 switch (opcion) {
                     case 1:
                         GestionVehiculos.caducidad();
@@ -72,8 +76,11 @@ public class Central {
                 System.out.println("2.-De Vehiculos");
                 System.out.println("3.-De Plazas");
                 System.out.println("4.-De tickets");
-
                 opcion = teclado.nextInt();
+                while (opcion < 1 || opcion > 4) {
+                    System.out.println("ERROR: Vuelva a introducir la opcion: ");
+                    opcion = teclado.nextInt();
+                }
                 switch (opcion) {
                     case 1:
                         GestionVehiculos.copiaAbonados();
@@ -98,6 +105,10 @@ public class Central {
                 System.out.println("3.-Restaurar plazas");
                 System.out.println("4.-Restaurar tickets");
                 opcion=teclado.nextInt();
+                while (opcion < 1 || opcion > 4) {
+                    System.out.println("ERROR: Vuelva a introducir la opcion: ");
+                    opcion = teclado.nextInt();
+                }
                 switch (opcion) {
                     case 1:
                         GestionVehiculos.restaurarAbonados();
