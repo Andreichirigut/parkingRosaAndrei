@@ -231,7 +231,7 @@ public class GestionVehiculos {
 
         System.out.println("--------------");
 
-        //Antes se debe calcular el importe
+        
         VehiculosVO vehiculoVO = new VehiculosVO(matricula, tipo);
 //
 //        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
@@ -382,7 +382,7 @@ public class GestionVehiculos {
         
     }
 
-    public static void retirarVehiculoAbonado() {
+    public static void retirarVehiculoAbonado() throws SQLException {
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
         String matricula = teclado.nextLine();
@@ -416,6 +416,97 @@ public class GestionVehiculos {
 //                numPlaza = teclado.nextInt();
 //            }
 //        }
+
+        VehiculosDAO vehiculo = new VehiculosDAO();
+        TicketDAO ticket = new TicketDAO();
+        PlazasDAO plazas = new PlazasDAO();
+        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+        
+        Boolean[] plazasEstado = new Boolean[45];
+        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
+        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+
+
+        VehiculosVO vehi = new VehiculosVO(matricula, tipo);
+        listaTicket = (ArrayList<TicketVO>) ticket.getAll();
+        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
+
+        for (int i = 0; i < listaPlaza.size(); i++) {
+            plazasEstado[i] = listaPlaza.get(i).isEstadoPlaza();
+        }
+        for (TicketVO ticketVO : listaTicket) {
+            if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {               
+                if (tipo.equalsIgnoreCase("Motocicleta")) {
+                    int contador = 1;
+                    for (int i = 0; i < 15; i++) {
+                        //Hacemos k si la plaza esta ocupada la salte
+                        if (plazasEstado[i] == true) {
+                            i = i + contador;
+                            contador++;
+                        }
+
+                        if (plazasEstado[i] == false) {
+                            //Se actualiza la plaza
+                            PlazasVO plazaModificada = listaPlaza.get(i);
+                            plazaModificada.setEstadoPlaza(true);
+                            //Cambiamos el estado de la plaza a ocupada
+                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                            System.out.println("Plaza actualizada");
+                            break;
+
+                        }
+
+                    }
+                }
+
+                if (tipo.equalsIgnoreCase("Turismo")) {
+                    int contador = 1;
+                    for (int i = 31; i < 45; i++) {
+                        //Hacemos k si la plaza esta ocupada la salte
+                        if (plazasEstado[i] == true) {
+                            i = i + contador;
+                            contador++;
+                        }
+
+                        if (plazasEstado[i] == false) {
+                            //Se actualiza la plaza
+                            PlazasVO plazaModificada = listaPlaza.get(i);
+                            plazaModificada.setEstadoPlaza(true);
+                            //Cambiamos el estado de la plaza a ocupada
+                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                            System.out.println("Plaza actualizada");
+                            break;
+
+                        }
+
+                    }
+                }
+
+                if (tipo.equalsIgnoreCase("Caravana")) {
+                    int contador = 1;
+                    for (int i = 16; i < 30; i++) {
+                        //Hacemos k si la plaza esta ocupada la salte
+                        if (plazasEstado[i] == true) {
+                            i = i + contador;
+                            contador++;
+                        }
+
+                        if (plazasEstado[i] == false) {
+                            //Se actualiza la plaza
+                            PlazasVO plazaModificada = listaPlaza.get(i);
+                            plazaModificada.setEstadoPlaza(true);
+                            //Cambiamos el estado de la plaza a ocupada
+                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                            System.out.println("Plaza actualizada");
+                            break;
+
+                        }
+
+                    }
+                }
+            }
+        }
+
     }
 
     public static void modificarAbonado() throws SQLException {
