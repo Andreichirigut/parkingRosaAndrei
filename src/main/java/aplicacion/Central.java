@@ -39,7 +39,8 @@ public class Central {
                 ejecutarOrden(Menu.menu());
                 break;
             case FACTURAR_ENTRE_FECHAS:
-                System.out.println("");
+                GestionVehiculos.consultarEntreFechas();
+                ejecutarOrden(Menu.menu());
                 break;
             case FACTURACION_ABONADOS:
                 GestionVehiculos.calcularTarifa();
