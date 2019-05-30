@@ -457,6 +457,7 @@ public class GestionVehiculos {
 
     //Método para introducir clientes NO abonados, se genera un fichero txt con el ticket pero no se almacena en la BBDD
     public static void altaCliente() throws SQLException {
+        getEstados();
         AbonadosDAO abo = new AbonadosDAO();
         VehiculosDAO ve = new VehiculosDAO();
         PlazasDAO pla = new PlazasDAO();
@@ -709,17 +710,17 @@ public class GestionVehiculos {
 
     public static void calcularTarifa() throws ParseException, SQLException {
         System.out.println("Introduzca pin del ticket");
-        Scanner teclado= new Scanner(System.in);
-        String pin=teclado.nextLine();
-        TicketDAO tic= new TicketDAO();
-        TicketVO ticket=tic.findByPk(pin);
+        Scanner teclado = new Scanner(System.in);
+        String pin = teclado.nextLine();
+        TicketDAO tic = new TicketDAO();
+        TicketVO ticket = tic.findByPk(pin);
         ticket.setFechaSalida(LocalDate.now());
         ticket.setHora_Salida(LocalTime.now());
-        int num=ticket.getNumeroPlaza();
-        PlazasDAO pla=new PlazasDAO();
-        PlazasVO plaza=pla.findByPk(num);
-        double tari=plaza.getTarifa();
-        
+        int num = ticket.getNumeroPlaza();
+        PlazasDAO pla = new PlazasDAO();
+        PlazasVO plaza = pla.findByPk(num);
+        double tari = plaza.getTarifa();
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         //TODO Recupear deBBDD y pasar a Sting y concatenar
@@ -729,9 +730,35 @@ public class GestionVehiculos {
         long secs = (fechaFin.getTime() - fechaInicial.getTime()) / 1000;
 
         long mins = secs / 60;
-        
-        System.out.println("Total a pagar:"+mins*tari);
-    
+        double to = mins * tari;
+        ticket.setCosteFinal(to);
+
+        tic.updateTicket(pin, ticket);
+        System.out.println("Total a pagar:" + to);
+
+    }
+
+    public static void consultarEntreFechas() throws SQLException {
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Introduzca fecha inicial");
+        String fecIni = teclado.nextLine();
+        LocalDate ini = LocalDate.parse(fecIni);
+        System.out.println("Introduzca fecha final");
+        String fecfin = teclado.nextLine();
+        LocalDate fin = LocalDate.parse(fecfin);
+
+        TicketDAO tic = new TicketDAO();
+        ArrayList<TicketVO> ticket = (ArrayList<TicketVO>) tic.getAll();
+
+        double total = 0;
+        for (TicketVO ticketVO : ticket) {
+            if (ticketVO.getFechaSalida().isAfter(ini) && ticketVO.getFechaSalida().isBefore(fin)) {
+                total += ticketVO.getCosteFinal();
+            }
+        }
+
+        System.out.println("Total facturación: "+total);
+
     }
 
     public static void restaurarVehiculos() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
@@ -772,67 +799,66 @@ public class GestionVehiculos {
         }
     }
 
-    public static void restaurarTickets() throws FileNotFoundException, UnsupportedEncodingException{
-        String linea="hola";
-        TicketDAO tic= new TicketDAO();
-        Scanner teclado= new Scanner(System.in);
-        
-        ArrayList<TicketVO> lista= new ArrayList<>();
+    public static void restaurarTickets() throws FileNotFoundException, UnsupportedEncodingException {
+        String linea = "hola";
+        TicketDAO tic = new TicketDAO();
+        Scanner teclado = new Scanner(System.in);
+
+        ArrayList<TicketVO> lista = new ArrayList<>();
         System.out.println("Introduzca el nombre del fichero que desea restaurar");
         String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
-        
+
         try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
 
             while (datosFichero.hasNextLine()) {
-                int contador=1;
-               
+                int contador = 1;
+
                 linea = datosFichero.nextLine();
-                if(contador%2!=0){
-            
+                if (contador % 2 != 0) {
+
                     TicketVO aux = new TicketVO();
 
-                //Abonados_2019-05-29_1
-                String[] cortarString = linea.split("\\|");
-                String[] cortarPuntos = cortarString[0].split(":");
-                String pk = cortarPuntos[1];
-                aux.setPin(pk);
-                   
-                cortarPuntos = cortarString[1].split(":");
-                pk = cortarPuntos[1];
-                aux.setMatricula(pk);
-                cortarPuntos = cortarString[2].split(":");
-                pk = cortarPuntos[1];
-                aux.setFechaEntrada(LocalDate.parse(pk));
-                cortarPuntos = cortarString[3].split(":");
-                pk = cortarPuntos[1];
-                aux.setFechaSalida(LocalDate.parse(pk));
-                cortarPuntos = cortarString[4].split(":");
-                pk = cortarPuntos[1];
-                aux.setHora_Entrada(LocalTime.parse(pk));
-                cortarPuntos = cortarString[5].split(":");
-                pk = cortarPuntos[1];
-                aux.setHora_Salida(LocalTime.parse(pk));
-                cortarPuntos = cortarString[6].split(":");
-                pk = cortarPuntos[1];
-                aux.setNumeroPlaza(Integer.parseInt(pk));
+                    //Abonados_2019-05-29_1
+                    String[] cortarString = linea.split("\\|");
+                    String[] cortarPuntos = cortarString[0].split(":");
+                    String pk = cortarPuntos[1];
+                    aux.setPin(pk);
+
+                    cortarPuntos = cortarString[1].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setMatricula(pk);
+                    cortarPuntos = cortarString[2].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setFechaEntrada(LocalDate.parse(pk));
+                    cortarPuntos = cortarString[3].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setFechaSalida(LocalDate.parse(pk));
+                    cortarPuntos = cortarString[4].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setHora_Entrada(LocalTime.parse(pk));
+                    cortarPuntos = cortarString[5].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setHora_Salida(LocalTime.parse(pk));
+                    cortarPuntos = cortarString[6].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setNumeroPlaza(Integer.parseInt(pk));
 //                cortarPuntos = cortarString[7].split(":");
 //                pk = cortarPuntos[1];
 //                aux.setCosteFinal(Double.parseDouble(pk));
-                lista.add(aux);
+                    lista.add(aux);
 
-               
+                }
+
+                for (TicketVO ticketVO : lista) {
+
+                    System.out.println(ticketVO.toString());
+
+                }
             }
-            
-            for (TicketVO ticketVO : lista) {
-                
-                System.out.println(ticketVO.toString());
-                
-            }
+
         }
-        
     }
-    }
-    
+
     public static void restaurarPlazas() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
         String linea = "hola";
         PlazasDAO plaza = new PlazasDAO();
@@ -866,7 +892,7 @@ public class GestionVehiculos {
 
             }
 
-         plaza.insertPlaza(lista);
+            plaza.insertPlaza(lista);
             System.out.println("Restauración completada");
 
         }
@@ -951,11 +977,10 @@ public class GestionVehiculos {
     public static void getEstados() throws SQLException {
         // El sistema informa en todo momento del número de plazas libres que existen de cada tipo.
 
-         Connection con = null;
+        Connection con = null;
 
-         con = Conexion.getInstance();
+        con = Conexion.getInstance();
 
-        
         String sql = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Turismo'";
         String sql2 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Caravana'";
         String sql3 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Motocicleta'";
@@ -1002,8 +1027,6 @@ public class GestionVehiculos {
 
     }
 
-    
-    
     //Método que genera un fichero-Copia de seguridad- de todos los Vehiculos
     public static void copiasVehiculos() throws SQLException {
 
@@ -1096,16 +1119,15 @@ public class GestionVehiculos {
         // GestionVehiculos.restaurarAbonados();
         //     GestionVehiculos.restaurarVehiculos();
         // GestionVehiculos.copiasPlazas();
-       // GestionVehiculos.restaurarPlazas();
-
+        // GestionVehiculos.restaurarPlazas();
 //       TicketVO ticket=new TicketVO("iokluyt", 7);
 //       ticket.setHora_Salida(LocalTime.of(17, 30));
 //       ticket.setFechaSalida(LocalDate.of(2019, 6, 03));
 //       
 //       GestionVehiculos.calcularTarifa(ticket);
 //       
-       //  GestionVehiculos.copiasTickets();
-       // GestionVehiculos.restaurarTickets();
+        //  GestionVehiculos.copiasTickets();
+        // GestionVehiculos.restaurarTickets();
         // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
@@ -1113,7 +1135,6 @@ public class GestionVehiculos {
         // GestionVehiculos.caducidad();
         //GestionVehiculos.ultimosDias();
         //GestionVehiculos.altaCliente();
-        
         GestionVehiculos.calcularTarifa();
     }
 }
