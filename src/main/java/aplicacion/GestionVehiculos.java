@@ -752,15 +752,115 @@ public class GestionVehiculos {
                 lista.add(aux);
 
             }
-            
+
             vehi.insertVehiculo(lista);
             System.out.println("Restauración completada");
+
+        }
+    }
+
+    public static void restaurarTickets() throws FileNotFoundException, UnsupportedEncodingException{
+        String linea="hola";
+        TicketDAO tic= new TicketDAO();
+        Scanner teclado= new Scanner(System.in);
+        
+        ArrayList<TicketVO> lista= new ArrayList<>();
+        System.out.println("Introduzca el nombre del fichero que desea restaurar");
+        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+        
+        try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
+
+            while (datosFichero.hasNextLine()) {
+                int contador=1;
+               
+                linea = datosFichero.nextLine();
+                if(contador%2!=0){
+            
+                    TicketVO aux = new TicketVO();
+
+                //Abonados_2019-05-29_1
+                String[] cortarString = linea.split("\\|");
+                String[] cortarPuntos = cortarString[0].split(":");
+                String pk = cortarPuntos[1];
+                aux.setPin(pk);
+                   
+                cortarPuntos = cortarString[1].split(":");
+                pk = cortarPuntos[1];
+                aux.setMatricula(pk);
+                cortarPuntos = cortarString[2].split(":");
+                pk = cortarPuntos[1];
+                aux.setFechaEntrada(LocalDate.parse(pk));
+                cortarPuntos = cortarString[3].split(":");
+                pk = cortarPuntos[1];
+                aux.setFechaSalida(LocalDate.parse(pk));
+                cortarPuntos = cortarString[4].split(":");
+                pk = cortarPuntos[1];
+                aux.setHora_Entrada(LocalTime.parse(pk));
+                cortarPuntos = cortarString[5].split(":");
+                pk = cortarPuntos[1];
+                aux.setHora_Salida(LocalTime.parse(pk));
+                cortarPuntos = cortarString[6].split(":");
+                pk = cortarPuntos[1];
+                aux.setNumeroPlaza(Integer.parseInt(pk));
+//                cortarPuntos = cortarString[7].split(":");
+//                pk = cortarPuntos[1];
+//                aux.setCosteFinal(Double.parseDouble(pk));
+                lista.add(aux);
+
+               
+            }
+            
+            for (TicketVO ticketVO : lista) {
+                
+                System.out.println(ticketVO.toString());
+                
+            }
+        }
         
     }
-}
+    }
+    
+    public static void restaurarPlazas() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
+        String linea = "hola";
+        PlazasDAO plaza = new PlazasDAO();
+        Scanner teclado = new Scanner(System.in);
+
+        ArrayList<PlazasVO> lista = new ArrayList<>();
+        System.out.println("Introduzca el nombre del fichero que desea restaurar");
+        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+        try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
+
+            while (datosFichero.hasNextLine()) {
+
+                linea = datosFichero.nextLine();
+                PlazasVO aux = new PlazasVO();
+
+                //Plazas_8_46_27
+                String[] cortarString = linea.split("\t");
+                String[] cortarPuntos = cortarString[0].split(":");
+                String pk = cortarPuntos[1];
+                aux.setNumPlaza(Integer.parseInt(pk.trim()));
+                cortarPuntos = cortarString[1].split(":");
+                pk = cortarPuntos[1];
+                aux.setTipoPlaza(pk);
+                cortarPuntos = cortarString[2].split(":");
+                pk = cortarPuntos[1];
+                aux.setEstadoPlaza(Boolean.parseBoolean(pk));
+                cortarPuntos = cortarString[3].split(":");
+                pk = cortarPuntos[1];
+                aux.setTarifa(Double.parseDouble(pk.trim()));
+                lista.add(aux);
+
+            }
+
+         plaza.insertPlaza(lista);
+            System.out.println("Restauración completada");
+
+        }
+    }
 
 //Método que restaura una copia de seguridad en la BBDD, para ello se solicita por teclado el nombre del fichero
-public static void restaurarAbonados() throws UnsupportedEncodingException, IOException, SQLException {
+    public static void restaurarAbonados() throws UnsupportedEncodingException, IOException, SQLException {
         String linea = "hola";
         AbonadosDAO abo = new AbonadosDAO();
         Scanner teclado = new Scanner(System.in);
@@ -906,18 +1006,6 @@ public static void restaurarAbonados() throws UnsupportedEncodingException, IOEx
 
     }
 
-//    public static double calcularImporte(TicketVO ticket){
-//        
-//        ticket.setFechaSalida(LocalDate.now());
-//        if(ticket.getFechaEntrada().equals(ticket.getHora_Salida())){
-//            
-//            int minutos=(ticket.getHora_Salida().toSecondOfDay()-ticket.getHora_Entrada().toSecondOfDay())*60;
-//            
-//            
-//        }
-//        
-//        
-//    }
     public static void main(String[] args) throws SQLException, IOException, ParseException {
 
 //        Menu.menu();
@@ -935,19 +1023,21 @@ public static void restaurarAbonados() throws UnsupportedEncodingException, IOEx
         // GestionVehiculos.ultimosDias();
         // GestionVehiculos.altaCliente();
         //GestionVehiculos.copiaAbonados();
-       // GestionVehiculos.copiasVehiculos();
+        // GestionVehiculos.copiasVehiculos();
         // GestionVehiculos.restaurarAbonados();
-            GestionVehiculos.restaurarVehiculos();
-        
+        //     GestionVehiculos.restaurarVehiculos();
+        // GestionVehiculos.copiasPlazas();
+       // GestionVehiculos.restaurarPlazas();
+
 //       TicketVO ticket=new TicketVO("iokluyt", 7);
 //       ticket.setHora_Salida(LocalTime.of(17, 30));
 //       ticket.setFechaSalida(LocalDate.of(2019, 6, 03));
 //       
 //       GestionVehiculos.calcularTarifa(ticket);
 //       
-//    
-//    
-        //  GestionVehiculos.altaAbonado();
+       //  GestionVehiculos.copiasTickets();
+        GestionVehiculos.restaurarTickets();
+        // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
         // GestionVehiculos.bajaAbonado();

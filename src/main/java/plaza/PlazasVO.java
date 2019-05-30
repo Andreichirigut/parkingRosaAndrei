@@ -25,7 +25,7 @@ public class PlazasVO {
         if (tipoPlaza.equalsIgnoreCase("Turismo")) {
             this.tarifa = 0.12;
         }
-        if (tipoPlaza.equalsIgnoreCase("Motocicletas")) {
+        if (tipoPlaza.equalsIgnoreCase("Motocicleta")) {
             this.tarifa = 0.08;
         }
         if (tipoPlaza.equalsIgnoreCase("Caravana")) {
@@ -71,7 +71,7 @@ public class PlazasVO {
 
     @Override
     public String toString() {
-        return "PlazasVO{" + "numPlaza=" + numPlaza + ", tipoPlaza=" + tipoPlaza + ", estadoPlaza=" + estadoPlaza + ", tarifa=" + tarifa + '}';
+        return "Plaza:" + numPlaza + "\tTipo_Plaza:" + tipoPlaza + "\tEstadoPlaza:" + estadoPlaza + "\tTarifa:" + tarifa;
     }
 
     
