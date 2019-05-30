@@ -1036,7 +1036,7 @@ public class GestionVehiculos {
 //       GestionVehiculos.calcularTarifa(ticket);
 //       
        //  GestionVehiculos.copiasTickets();
-        GestionVehiculos.restaurarTickets();
+       // GestionVehiculos.restaurarTickets();
         // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
