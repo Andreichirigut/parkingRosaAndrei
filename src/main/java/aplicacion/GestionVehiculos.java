@@ -198,12 +198,7 @@ public class GestionVehiculos {
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
         String matricula = teclado.nextLine();
-//        for (TicketVO ticketVO : listaTicket) {
-//            while (!(matricula.equalsIgnoreCase(ticketVO.getMatricula()))) {
-//                System.out.println("ERROR: No se encuentra su matricula ----- Vuelve a introducirla: ");
-//                matricula = teclado.nextLine();
-//            }
-//        }
+        
         System.out.println("Dime tu tipo de vehiculo: ");
         String tipo = teclado.nextLine();
         while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
@@ -213,21 +208,9 @@ public class GestionVehiculos {
 
         System.out.println("Introduce el pin de tu ticket: ");
         String pin = teclado.nextLine();
-//        for (TicketVO ticketVO : listaTicket) {
-//            while (!(pin.equalsIgnoreCase(ticketVO.getPin()))) {
-//                System.out.println("ERROR: No se encuentra su pin ------ Vuelve a introducirlo: ");
-//                pin = teclado.nextLine();
-//            }
-//        }
 
         System.out.println("Introduce tu numero de Plaza: ");
         int numPlaza = teclado.nextInt();
-//        for (TicketVO ticketVO : listaTicket) {
-//            while (!(numPlaza == ticketVO.getNumeroPlaza())) {
-//                System.out.println("ERROR: No se encuentra su numero de plaza ------ Vuelve a introducirla: ");
-//                numPlaza = teclado.nextInt();
-//            }
-//        }
 
         System.out.println("--------------");
 
@@ -247,7 +230,7 @@ public class GestionVehiculos {
         }
         for (TicketVO ticketVO : listaTicket) {
             if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
-                GestionVehiculos.calcularTarifa();
+//                GestionVehiculos.calcularTarifa();
                 if (tipo.equalsIgnoreCase("Motocicleta")) {
                     int contador = 1;
                     for (int i = 0; i < 15; i++) {
@@ -316,6 +299,8 @@ public class GestionVehiculos {
 
                     }
                 }
+            } else{
+                System.out.println("Has introducido datos no registrados");
             }
         }
         for (TicketVO ticketVO : listaTicket) {
@@ -386,12 +371,7 @@ public class GestionVehiculos {
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
         String matricula = teclado.nextLine();
-//        for (TicketVO ticketVO : listaTicket) {
-//            while (!(matricula.equalsIgnoreCase(ticketVO.getMatricula()))) {
-//                System.out.println("ERROR: No se encuentra su matricula ----- Vuelve a introducirla: ");
-//                matricula = teclado.nextLine();
-//            }
-//        }
+
         System.out.println("Dime tu tipo de vehiculo: ");
         String tipo = teclado.nextLine();
         while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
@@ -401,21 +381,11 @@ public class GestionVehiculos {
 
         System.out.println("Introduce el pin de tu ticket: ");
         String pin = teclado.nextLine();
-//        for (TicketVO ticketVO : listaTicket) {
-//            while (!(pin.equalsIgnoreCase(ticketVO.getPin()))) {
-//                System.out.println("ERROR: No se encuentra su pin ------ Vuelve a introducirlo: ");
-//                pin = teclado.nextLine();
-//            }
-//        }
+
 
         System.out.println("Introduce tu numero de Plaza: ");
         int numPlaza = teclado.nextInt();
-//        for (TicketVO ticketVO : listaTicket) {
-//            while (!(numPlaza == ticketVO.getNumeroPlaza())) {
-//                System.out.println("ERROR: No se encuentra su numero de plaza ------ Vuelve a introducirla: ");
-//                numPlaza = teclado.nextInt();
-//            }
-//        }
+
 
         VehiculosDAO vehiculo = new VehiculosDAO();
         TicketDAO ticket = new TicketDAO();
@@ -504,6 +474,8 @@ public class GestionVehiculos {
 
                     }
                 }
+            } else{
+                System.out.println("Has introducido datos no registrados");
             }
         }
 
@@ -1220,8 +1192,8 @@ public class GestionVehiculos {
     public static void main(String[] args) throws SQLException, IOException, ParseException {
 
 //        Menu.menu();
-//        GestionVehiculos.depositarVehiculo();
-        // GestionVehiculos.retirarVehiculo();
+      // GestionVehiculos.depositarVehiculo();
+         //GestionVehiculos.retirarVehiculo();
         // Menu.menu();
         // GestionVehiculos.depositarVehiculo();
         //        GestionVehiculos.altaAbonado();
@@ -1246,7 +1218,7 @@ public class GestionVehiculos {
 //       GestionVehiculos.calcularTarifa(ticket);
 //       
         //  GestionVehiculos.copiasTickets();
-        GestionVehiculos.restaurarTickets();
+//        GestionVehiculos.restaurarTickets();
         // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
