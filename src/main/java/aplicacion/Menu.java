@@ -32,7 +32,6 @@ public class Menu {
                 System.out.println("--------------------------");
                 System.out.println("4.- Ver estado parking");
                 System.out.println("5.- Facturar entre fechas");
-                System.out.println("6.- Facturar los abonados");
                 System.out.println("7.- Dar de alta");
                 System.out.println("8.- Modificar abono");
                 System.out.println("9.- Dar de baja");
@@ -51,8 +50,6 @@ public class Menu {
                         return Comando.VER_ESTADO_PARKING;
                     case 5:
                         return Comando.FACTURAR_ENTRE_FECHAS;
-                    case 6:
-                        return Comando.FACTURACION_ABONADOS;
                     case 7:    
                         return Comando.DAR_DE_ALTA;
                     case 8:
@@ -78,11 +75,12 @@ public class Menu {
                 System.out.println("--------------------------");
                 System.out.println("0.- Depositar vehiculo");
                 System.out.println("1.- Retirar vehiculo");
-                System.out.println("2.- Depositar abonos");
-                System.out.println("3.- Retirar abonos");
-                System.out.println("4.-Salir");
+                System.out.println("2.-Pagar");
+                System.out.println("3.- Depositar abonos");
+                System.out.println("4.- Retirar abonos");
+                System.out.println("5.-Salir");
                 int opcion3 = teclado.nextInt();
-                while (opcion3 < 0 || opcion3 > 4) {
+                while (opcion3 < 0 || opcion3 > 5) {
                     System.out.println("ERROR: Vuelve a introducir una accion corecta: ");
                     opcion2 = teclado.nextInt();
                 }
@@ -92,10 +90,12 @@ public class Menu {
                     case 1:
                         return Comando.RETIRAR_VEHICULO;
                     case 2:
+                        return Comando.FACTURACION_ABONADOS;
+                    case 3:
                         return Comando.DEPOSITAR_ABONOS;
-                    case 3: 
+                    case 4: 
                         return Comando.RETIRAR_ABONOS;
-                    case 4:
+                    case 5:
                         return Comando.SALIR;
                     default:
                         throw new AssertionError();
