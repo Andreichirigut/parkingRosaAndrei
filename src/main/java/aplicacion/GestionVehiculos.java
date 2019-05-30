@@ -16,6 +16,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
+import plaza.Conexion;
 import plaza.PlazasDAO;
 import plaza.PlazasVO;
 import ticket.TicketDAO;
@@ -43,7 +47,7 @@ public class GestionVehiculos {
     public static void depositarVehiculo() throws SQLException {
         System.out.println("-------Numero de plazas libres-------");
         PlazasDAO daoPlaza = new PlazasDAO();
-        daoPlaza.getEstados();
+        getEstados();
         System.out.println("------------------");
         Scanner teclado = new Scanner(System.in);
 
@@ -189,7 +193,7 @@ public class GestionVehiculos {
 
         System.out.println("-------Numero de plazas libres-------");
         PlazasDAO daoPlaza = new PlazasDAO();
-        daoPlaza.getEstados();
+        getEstados();
         System.out.println("-----------------------");
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
@@ -323,7 +327,7 @@ public class GestionVehiculos {
 
         System.out.println("-------Numero de plazas libres-------");
         daoPlaza = new PlazasDAO();
-        daoPlaza.getEstados();
+        getEstados();
 
     }
 
@@ -703,22 +707,31 @@ public class GestionVehiculos {
 
     }
 
-    public static void calcularTarifa(TicketVO ticket) throws ParseException {
-        //LocalDate fechaInicio = LocalDate.now();
-        //LocalDate fechaFin = LocalDate.now();
+    public static void calcularTarifa() throws ParseException, SQLException {
+        System.out.println("Introduzca pin del ticket");
+        Scanner teclado= new Scanner(System.in);
+        String pin=teclado.nextLine();
+        TicketDAO tic= new TicketDAO();
+        TicketVO ticket=tic.findByPk(pin);
+        ticket.setFechaSalida(LocalDate.now());
+        ticket.setHora_Salida(LocalTime.now());
+        int num=ticket.getNumeroPlaza();
+        PlazasDAO pla=new PlazasDAO();
+        PlazasVO plaza=pla.findByPk(num);
+        double tari=plaza.getTarifa();
+        
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         //TODO Recupear deBBDD y pasar a Sting y concatenar
         Date fechaInicial = dateFormat.parse(ticket.getFechaEntrada() + " " + ticket.getHora_Entrada());
         Date fechaFin = dateFormat.parse(ticket.getFechaSalida() + " " + ticket.getHora_Salida());
 
-        //Calendar calIni = Calendar.getInstance();
-        //cal.setTime(fechaInicial);
         long secs = (fechaFin.getTime() - fechaInicial.getTime()) / 1000;
-        //long hours = secs / 3600;    
-        //secs = secs % 3600;
+
         long mins = secs / 60;
-        //secs = secs % 60;
+        
+        System.out.println("Total a pagar:"+mins*tari);
+    
     }
 
     public static void restaurarVehiculos() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
@@ -935,6 +948,62 @@ public class GestionVehiculos {
 
     }
 
+    public static void getEstados() throws SQLException {
+        // El sistema informa en todo momento del número de plazas libres que existen de cada tipo.
+
+         Connection con = null;
+
+         con = Conexion.getInstance();
+
+        
+        String sql = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Turismo'";
+        String sql2 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Caravana'";
+        String sql3 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Motocicleta'";
+
+        try (PreparedStatement prest = con.prepareStatement(sql)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de turismo libres :" + aux);
+            }
+        }
+        try (PreparedStatement prest = con.prepareStatement(sql2)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de caravana libres :" + aux);
+            }
+        }
+        try (PreparedStatement prest = con.prepareStatement(sql3)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de motocicleta libres :" + aux);
+            }
+        }
+
+    }
+
+    
+    
     //Método que genera un fichero-Copia de seguridad- de todos los Vehiculos
     public static void copiasVehiculos() throws SQLException {
 
@@ -1044,5 +1113,7 @@ public class GestionVehiculos {
         // GestionVehiculos.caducidad();
         //GestionVehiculos.ultimosDias();
         //GestionVehiculos.altaCliente();
+        
+        GestionVehiculos.calcularTarifa();
     }
 }
