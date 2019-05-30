@@ -52,7 +52,7 @@ public class VehiculosVO {
 
     @Override
     public String toString() {
-        return "VehiculosVO{" + "codAbono=" + codAbono + ", matricula=" + matricula + ", tipoVehiculo=" + tipoVehiculo + '}';
+        return "Codigo:"+ codAbono + "\tMatricula:" + matricula + "\tTipo Vehiculo:" + tipoVehiculo;
     }
 
     
