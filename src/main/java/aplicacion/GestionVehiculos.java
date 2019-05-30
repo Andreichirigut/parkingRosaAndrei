@@ -49,7 +49,7 @@ public class GestionVehiculos {
 
         System.out.println("Introduce la matricula: ");
         String respuesta = teclado.nextLine();
-        while (respuesta.length() > 8 || respuesta.length() < 8) {
+        while (respuesta.length() > 7 || respuesta.length() < 7) {
             System.out.println("ERROR: Vuelve a introducir la matricula");
             respuesta = teclado.nextLine();
 
@@ -451,6 +451,7 @@ public class GestionVehiculos {
 
     }
 
+    //Método para introducir clientes NO abonados, se genera un fichero txt con el ticket pero no se almacena en la BBDD
     public static void altaCliente() throws SQLException {
         AbonadosDAO abo = new AbonadosDAO();
         VehiculosDAO ve = new VehiculosDAO();
@@ -701,21 +702,18 @@ public class GestionVehiculos {
         }
 
     }
-    
-    public static void calcularTarifa(TicketVO ticket) throws ParseException{
+
+    public static void calcularTarifa(TicketVO ticket) throws ParseException {
         //LocalDate fechaInicio = LocalDate.now();
         //LocalDate fechaFin = LocalDate.now();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
- 
-        
+
         //TODO Recupear deBBDD y pasar a Sting y concatenar
-        Date fechaInicial=dateFormat.parse(ticket.getFechaEntrada()+" "+ticket.getHora_Entrada());
-        Date fechaFin=dateFormat.parse(ticket.getFechaSalida()+" "+ticket.getHora_Salida());
+        Date fechaInicial = dateFormat.parse(ticket.getFechaEntrada() + " " + ticket.getHora_Entrada());
+        Date fechaFin = dateFormat.parse(ticket.getFechaSalida() + " " + ticket.getHora_Salida());
 
         //Calendar calIni = Calendar.getInstance();
         //cal.setTime(fechaInicial);
-               
-        
         long secs = (fechaFin.getTime() - fechaInicial.getTime()) / 1000;
         //long hours = secs / 3600;    
         //secs = secs % 3600;
@@ -723,13 +721,50 @@ public class GestionVehiculos {
         //secs = secs % 60;
     }
 
-    
-    //Método que restaura una copia de seguridad en la BBDD, para ello se solicita por teclado el nombre del fichero
-    public static void restaurarAbonados() throws UnsupportedEncodingException, IOException, SQLException {
+    public static void restaurarVehiculos() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
+
+        String linea = "hola";
+        VehiculosDAO vehi = new VehiculosDAO();
+        Scanner teclado = new Scanner(System.in);
+
+        ArrayList<VehiculosVO> lista = new ArrayList<>();
+        System.out.println("Introduzca el nombre del fichero que desea restaurar");
+        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+
+        try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
+
+            while (datosFichero.hasNextLine()) {
+
+                linea = datosFichero.nextLine();
+                VehiculosVO aux = new VehiculosVO();
+
+                //Abonados_2019-05-29_1
+                String[] cortarString = linea.split("\t");
+                String[] cortarPuntos = cortarString[0].split(":");
+                String pk = cortarPuntos[1];
+                aux.setCodAbono(Integer.parseInt(pk.trim()));
+                cortarPuntos = cortarString[1].split(":");
+                pk = cortarPuntos[1];
+                aux.setMatricula(pk);
+                cortarPuntos = cortarString[2].split(":");
+                pk = cortarPuntos[1];
+                aux.setTipoVehiculo(pk);
+                lista.add(aux);
+
+            }
+            
+            vehi.insertVehiculo(lista);
+            System.out.println("Restauración completada");
+        
+    }
+}
+
+//Método que restaura una copia de seguridad en la BBDD, para ello se solicita por teclado el nombre del fichero
+public static void restaurarAbonados() throws UnsupportedEncodingException, IOException, SQLException {
         String linea = "hola";
         AbonadosDAO abo = new AbonadosDAO();
         Scanner teclado = new Scanner(System.in);
-       
+
         ArrayList<AbonadosVO> lista = new ArrayList<>();
         System.out.println("Introduzca el nombre del fichero que desea restaurar");
         String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
@@ -738,34 +773,33 @@ public class GestionVehiculos {
 
             while (datosFichero.hasNextLine()) {
 
-                linea = datosFichero.nextLine(); 
-                 AbonadosVO aux = new AbonadosVO();
- 
-                    //Abonados_2019-05-29_1
-                    String[] cortarString = linea.split("\t");
-                    String[] cortarPuntos = cortarString[0].split(":");
-                    String pk = cortarPuntos[1];
-                    aux.setPk(Integer.parseInt(pk.trim()));
-                    cortarPuntos = cortarString[1].split(":");
-                    pk = cortarPuntos[1];
-                    aux.setNombre(pk);
-                    cortarPuntos = cortarString[2].split(":");
-                    pk = cortarPuntos[1];
-                    aux.setNumTarjeta(pk);
-                    cortarPuntos = cortarString[3].split(":");
-                    pk = cortarPuntos[1];
-                    aux.setTipoABono(Integer.parseInt(pk.trim()));
-                    cortarPuntos = cortarString[4].split(":");
-                    pk = cortarPuntos[1];
-                    aux.setImporte(Integer.parseInt(pk.trim()));
-                    cortarPuntos = cortarString[5].split(":");
-                    pk = cortarPuntos[1];
-                    aux.setFechaActiva(LocalDate.parse(pk));
-                    cortarPuntos = cortarString[6].split(":");
-                    pk = cortarPuntos[1];
-                    aux.setFechaFin(LocalDate.parse(pk));
-                    lista.add(aux);
-                
+                linea = datosFichero.nextLine();
+                AbonadosVO aux = new AbonadosVO();
+
+                //Abonados_2019-05-29_1
+                String[] cortarString = linea.split("\t");
+                String[] cortarPuntos = cortarString[0].split(":");
+                String pk = cortarPuntos[1];
+                aux.setPk(Integer.parseInt(pk.trim()));
+                cortarPuntos = cortarString[1].split(":");
+                pk = cortarPuntos[1];
+                aux.setNombre(pk);
+                cortarPuntos = cortarString[2].split(":");
+                pk = cortarPuntos[1];
+                aux.setNumTarjeta(pk);
+                cortarPuntos = cortarString[3].split(":");
+                pk = cortarPuntos[1];
+                aux.setTipoABono(Integer.parseInt(pk.trim()));
+                cortarPuntos = cortarString[4].split(":");
+                pk = cortarPuntos[1];
+                aux.setImporte(Integer.parseInt(pk.trim()));
+                cortarPuntos = cortarString[5].split(":");
+                pk = cortarPuntos[1];
+                aux.setFechaActiva(LocalDate.parse(pk));
+                cortarPuntos = cortarString[6].split(":");
+                pk = cortarPuntos[1];
+                aux.setFechaFin(LocalDate.parse(pk));
+                lista.add(aux);
 
             }
             abo.insertListAbonado(lista);
@@ -872,6 +906,18 @@ public class GestionVehiculos {
 
     }
 
+//    public static double calcularImporte(TicketVO ticket){
+//        
+//        ticket.setFechaSalida(LocalDate.now());
+//        if(ticket.getFechaEntrada().equals(ticket.getHora_Salida())){
+//            
+//            int minutos=(ticket.getHora_Salida().toSecondOfDay()-ticket.getHora_Entrada().toSecondOfDay())*60;
+//            
+//            
+//        }
+//        
+//        
+//    }
     public static void main(String[] args) throws SQLException, IOException, ParseException {
 
 //        Menu.menu();
@@ -879,9 +925,9 @@ public class GestionVehiculos {
         // GestionVehiculos.retirarVehiculo();
         // Menu.menu();
         // GestionVehiculos.depositarVehiculo();
-//        GestionVehiculos.altaAbonado();
+        //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
-       // GestionVehiculos.altaAbonado();
+        // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.plazaVacia("Motocicleta");
         //GestionVehiculos.bajaAbonado();
@@ -889,16 +935,24 @@ public class GestionVehiculos {
         // GestionVehiculos.ultimosDias();
         // GestionVehiculos.altaCliente();
         //GestionVehiculos.copiaAbonados();
-        //GestionVehiculos.copiasVehiculos();
-       // GestionVehiculos.restaurarAbonados();
-       
-       TicketVO ticket=new TicketVO("iokluyt", 7);
-       ticket.setHora_Salida(LocalTime.of(17, 30));
-       ticket.setFechaSalida(LocalDate.of(2019, 6, 03));
-       
-       GestionVehiculos.calcularTarifa(ticket);
-       
-    
-    
+       // GestionVehiculos.copiasVehiculos();
+        // GestionVehiculos.restaurarAbonados();
+            GestionVehiculos.restaurarVehiculos();
+        
+//       TicketVO ticket=new TicketVO("iokluyt", 7);
+//       ticket.setHora_Salida(LocalTime.of(17, 30));
+//       ticket.setFechaSalida(LocalDate.of(2019, 6, 03));
+//       
+//       GestionVehiculos.calcularTarifa(ticket);
+//       
+//    
+//    
+        //  GestionVehiculos.altaAbonado();
+        //  GestionVehiculos.modificarAbonado();
+        // GestionVehiculos.plazaVacia("Motocicleta");
+        // GestionVehiculos.bajaAbonado();
+        // GestionVehiculos.caducidad();
+        //GestionVehiculos.ultimosDias();
+        //GestionVehiculos.altaCliente();
     }
 }
