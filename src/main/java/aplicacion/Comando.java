@@ -26,7 +26,8 @@ public enum Comando {
     CONSULTAR_CADUCIDAD_ABONADOS(10, "Consultar caducidad abonados"),
     CONSULTAR_CADUCIDAD_ABONADOS_10DIAS(11, "Consultar caducidad abonados ultimos 10 dias"),
     CREAR_COPIA_SEGURIDAD(12, "Crear copia de seguridad"),
-    RESTAURAR_COPIA_SEGURIDAD(13, "Restaurar copia de seguridad");
+    RESTAURAR_COPIA_SEGURIDAD(13, "Restaurar copia de seguridad"),
+    SALIR(14,"Salir del sistema");
     
     
     
