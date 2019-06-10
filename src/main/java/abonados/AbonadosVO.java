@@ -117,7 +117,7 @@ public class AbonadosVO {
 
     @Override
     public String toString() {
-        return "Abono nº:"+pk+"\t Nombre:"+ nombre+"\t Num.Tarjeta:"+numTarjeta+"\t Tipo Abono:"+tipoAbono+"\t Importe"+importe+"\t Fecha inicio:"+fechaActiva+"\t Fecha Fin:"+fechaFin;
+        return "Abono nº:"+pk+"\t Nombre:"+ nombre+"\t Num.Tarjeta:"+numTarjeta+"\t Tipo Abono:"+tipoAbono+"\t Importe:"+importe+"\t Fecha inicio:"+fechaActiva+"\t Fecha Fin:"+fechaFin;
     }
     
  

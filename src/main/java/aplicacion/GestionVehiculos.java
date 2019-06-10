@@ -846,7 +846,7 @@ public class GestionVehiculos {
 
     }
 
-    public static void restaurarVehiculos() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
+    public static void restaurarVehiculos(String directorio) throws FileNotFoundException, UnsupportedEncodingException, SQLException {
 
         String linea = "hola";
         VehiculosDAO vehi = new VehiculosDAO();
@@ -854,7 +854,7 @@ public class GestionVehiculos {
 
         ArrayList<VehiculosVO> lista = new ArrayList<>();
         System.out.println("Introduzca el nombre del fichero que desea restaurar");
-        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+        String idFichero = "./Backups/" + directorio + "/Vehiculos.txt";
 
         try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
 
@@ -884,14 +884,14 @@ public class GestionVehiculos {
         }
     }
 
-    public static void restaurarTickets() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
+    public static void restaurarTickets(String directorio) throws FileNotFoundException, UnsupportedEncodingException, SQLException {
         String linea = "hola";
         TicketDAO tic = new TicketDAO();
         Scanner teclado = new Scanner(System.in);
 
         ArrayList<TicketVO> lista = new ArrayList<>();
         System.out.println("Introduzca el nombre del fichero que desea restaurar");
-        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+        String idFichero = "./Backups/" + directorio + "/Tickets.txt";
 
         try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
 
@@ -941,14 +941,14 @@ public class GestionVehiculos {
         }
     }
 
-    public static void restaurarPlazas() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
+    public static void restaurarPlazas(String directorio) throws FileNotFoundException, UnsupportedEncodingException, SQLException {
         String linea = "hola";
         PlazasDAO plaza = new PlazasDAO();
         Scanner teclado = new Scanner(System.in);
 
         ArrayList<PlazasVO> lista = new ArrayList<>();
         System.out.println("Introduzca el nombre del fichero que desea restaurar");
-        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+        String idFichero = "./Backups/" + directorio + "/Plazas.txt";
         try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
 
             while (datosFichero.hasNextLine()) {
@@ -1175,6 +1175,8 @@ public class GestionVehiculos {
        String directorio=teclado.nextLine();
        
         restaurarAbonados(directorio);
+        restaurarPlazas(directorio);
+        restaurarVehiculos(directorio);
        
         
     }
