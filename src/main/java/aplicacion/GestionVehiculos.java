@@ -87,7 +87,6 @@ public class GestionVehiculos {
         if (respuesta2.equalsIgnoreCase("Turismo")) {
             int contador = 1;
             for (int i = 30; i < 44; i++) {
-              
 
                 if (plazasEstado[i] == 1) {
                     //Insertamos un nuevo vehiculo
@@ -116,7 +115,6 @@ public class GestionVehiculos {
         if (respuesta2.equalsIgnoreCase("Motocicleta")) {
             int contador = 1;
             for (int i = 0; i < 14; i++) {
-                
 
                 if (plazasEstado[i] == 1) {
                     //Insertamos un nuevo vehiculo
@@ -142,7 +140,6 @@ public class GestionVehiculos {
         if (respuesta2.equalsIgnoreCase("Caravana")) {
             int contador = 1;
             for (int i = 16; i < 29; i++) {
-                
 
                 if (plazasEstado[i] == 1) {
                     //Insertamos un nuevo vehiculo
@@ -185,7 +182,7 @@ public class GestionVehiculos {
 
         System.out.println("-------Numero de plazas libres-------");
         PlazasDAO daoPlaza = new PlazasDAO();
-        getEstados();
+        getEstadosClientes();
         System.out.println("-----------------------");
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
@@ -293,7 +290,7 @@ public class GestionVehiculos {
             getEstados();
         } else {
             System.out.println("Debe de pagar primero para poder retirar el coche");
-            
+
         }
 
     }
@@ -458,7 +455,7 @@ public class GestionVehiculos {
         }
         for (TicketVO ticketVO : listaTicket) {
             if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
-               // vehiculo.deleteVehiculo(vehiculoVO);
+                // vehiculo.deleteVehiculo(vehiculoVO);
                 System.out.println("Vehiculo retirado");
 
             }
@@ -536,7 +533,7 @@ public class GestionVehiculos {
 
     //Método para introducir clientes NO abonados, se genera un fichero txt con el ticket pero no se almacena en la BBDD
     public static void altaCliente() throws SQLException {
-        getEstados();
+        getEstadosClientes();
         AbonadosDAO abo = new AbonadosDAO();
         VehiculosDAO ve = new VehiculosDAO();
         PlazasDAO pla = new PlazasDAO();
@@ -572,7 +569,7 @@ public class GestionVehiculos {
             TicketVO ticket = new TicketVO(matri, num);
             imprimirTicket(ticket);
             tic.insertTicket(ticket);
-            System.out.println(ticket.toString());
+            System.out.println(ticket.impreso());
         } else {
             System.out.println("No hemos podido estacionar el vehículo");
         }
@@ -656,7 +653,7 @@ public class GestionVehiculos {
             TicketVO ticket = new TicketVO(matri, num);
             tic.insertTicket(ticket);
             imprimirTicket(ticket);
-            System.out.println(ticket.toString());
+            System.out.println(ticket.impreso());
         } else {
             System.out.println("No hemos podido estacionar el vehículo");
         }
@@ -994,13 +991,13 @@ public class GestionVehiculos {
                 pk = cortarPuntos[1];
                 aux.setNombre(pk);
                 cortarPuntos = cortarString[2].split(":");
-                pk = cortarPuntos[1];           
+                pk = cortarPuntos[1];
                 aux.setNumTarjeta(pk);
                 cortarPuntos = cortarString[3].split(":");
-                pk = cortarPuntos[1];                 
+                pk = cortarPuntos[1];
                 aux.setTipoABono(Integer.parseInt(pk.trim()));
                 cortarPuntos = cortarString[4].split(":");
-                pk = cortarPuntos[1];             
+                pk = cortarPuntos[1];
                 aux.setImporte(Integer.parseInt(pk.trim()));
                 cortarPuntos = cortarString[5].split(":");
                 pk = cortarPuntos[1];
@@ -1043,6 +1040,60 @@ public class GestionVehiculos {
             System.out.println(e.getMessage());
         }
 
+    }
+    
+    public static void getEstadosClientes() throws SQLException{
+        
+        Connection con = null;
+
+        con = Conexion.getInstance();
+
+        String sql = "select count(*) from Plaza where estadoPlaza='1' and tipoPlaza='Turismo'";
+        String sql2 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Caravana'";
+        String sql3 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Motocicleta'";
+        
+        
+        try (PreparedStatement prest = con.prepareStatement(sql)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de turismo libres :" + aux);
+            }
+        }
+        try (PreparedStatement prest = con.prepareStatement(sql2)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de caravana libres :" + aux);
+            }
+        }
+        try (PreparedStatement prest = con.prepareStatement(sql3)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de motocicleta libres :" + aux);
+            }
+        }
+
+        
     }
 
     public static void getEstados() throws SQLException {
@@ -1104,7 +1155,7 @@ public class GestionVehiculos {
                 System.out.println("Plazas de motocicleta libres :" + aux);
             }
         }
-        
+
         System.out.println("---------------------------------------------");
         try (PreparedStatement prest = con.prepareStatement(sql4)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
@@ -1119,7 +1170,7 @@ public class GestionVehiculos {
                 System.out.println("Plazas de Turismo ocupadas por clientes :" + aux);
             }
         }
-         try (PreparedStatement prest = con.prepareStatement(sql5)) {
+        try (PreparedStatement prest = con.prepareStatement(sql5)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
             ResultSet res = null;
@@ -1132,8 +1183,8 @@ public class GestionVehiculos {
                 System.out.println("Plazas de Caravanas ocupadas por clientes :" + aux);
             }
         }
-         
-          try (PreparedStatement prest = con.prepareStatement(sql6)) {
+
+        try (PreparedStatement prest = con.prepareStatement(sql6)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
             ResultSet res = null;
@@ -1146,10 +1197,10 @@ public class GestionVehiculos {
                 System.out.println("Plazas de Motocicletas ocupadas por clientes :" + aux);
             }
         }
-          
-          System.out.println("----------------------------------------");
-          
-         try (PreparedStatement prest = con.prepareStatement(sql7)) {
+
+        System.out.println("----------------------------------------");
+
+        try (PreparedStatement prest = con.prepareStatement(sql7)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
             ResultSet res = null;
@@ -1162,7 +1213,7 @@ public class GestionVehiculos {
                 System.out.println("Plazas de Turismo libres(ABONADO) :" + aux);
             }
         }
-         try (PreparedStatement prest = con.prepareStatement(sql8)) {
+        try (PreparedStatement prest = con.prepareStatement(sql8)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
             ResultSet res = null;
@@ -1175,7 +1226,7 @@ public class GestionVehiculos {
                 System.out.println("Plazas de Caravana libres(ABONADO) :" + aux);
             }
         }
-         
+
         try (PreparedStatement prest = con.prepareStatement(sql9)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
@@ -1189,9 +1240,9 @@ public class GestionVehiculos {
                 System.out.println("Plazas de Motocicletas libres(ABONADO) :" + aux);
             }
         }
-        
+
         System.out.println("---------------------------------------------");
-          
+
         try (PreparedStatement prest = con.prepareStatement(sql10)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
@@ -1205,7 +1256,7 @@ public class GestionVehiculos {
                 System.out.println("Plazas de Turismo ocupadas(ABONADO) :" + aux);
             }
         }
-         try (PreparedStatement prest = con.prepareStatement(sql11)) {
+        try (PreparedStatement prest = con.prepareStatement(sql11)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
             ResultSet res = null;
@@ -1218,7 +1269,7 @@ public class GestionVehiculos {
                 System.out.println("Plazas de Caravana ocupadas(ABONADO) :" + aux);
             }
         }
-         
+
         try (PreparedStatement prest = con.prepareStatement(sql12)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
@@ -1283,29 +1334,29 @@ public class GestionVehiculos {
         }
 
     }
-    
-    static void restaurar() throws IOException, UnsupportedEncodingException, SQLException{
-        Scanner teclado= new Scanner(System.in);
+
+    static void restaurar() throws IOException, UnsupportedEncodingException, SQLException {
+        Scanner teclado = new Scanner(System.in);
         //Primero listamos los diferentes directorios que hay
         File f = new File("./Backups");
-		if (f.exists()){
-                    System.out.println("Directorios:");
-			File[] ficheros = f.listFiles();
-			for (File file2 : ficheros) {
-				System.out.println(file2.getName());
-			}
-	     	}else {    System.out.println("El directorio a listar no existe");
-		}
+        if (f.exists()) {
+            System.out.println("Directorios:");
+            File[] ficheros = f.listFiles();
+            for (File file2 : ficheros) {
+                System.out.println(file2.getName());
+            }
+        } else {
+            System.out.println("El directorio a listar no existe");
+        }
 
         System.out.println("Escriba el nombre del directorio que desea restaurar");
-       String directorio=teclado.nextLine();
-       
+        String directorio = teclado.nextLine();
+
         restaurarAbonados(directorio);
         restaurarPlazas(directorio);
         restaurarVehiculos(directorio);
         restaurarTickets(directorio);
-       
-        
+
     }
 
     //Método para hacer las copias de seguridad todas a la vez
@@ -1353,8 +1404,8 @@ public class GestionVehiculos {
     }
 
     public static void main(String[] args) throws SQLException, IOException, ParseException {
-GestionVehiculos.restaurar();
-        
+        GestionVehiculos.restaurar();
+
 //        Menu.menu();
         //GestionVehiculos.depositarVehiculo();
         //GestionVehiculos.retirarVehiculo();
