@@ -80,10 +80,10 @@ public class Central {
                 }
 
                 break;
-            case CONSULTAR_CADUCIDAD_ABONADOS_10DIAS:
-                GestionVehiculos.altaAbonado();
-                ejecutarOrden(Menu.menu());
-                break;
+//            case CONSULTAR_CADUCIDAD_ABONADOS_10DIAS:
+//                GestionVehiculos.altaAbonado();
+//                ejecutarOrden(Menu.menu());
+//                break;
             case CREAR_COPIA_SEGURIDAD:
                 System.out.println("CREAR COPIA DE SEGURIDAD");
 

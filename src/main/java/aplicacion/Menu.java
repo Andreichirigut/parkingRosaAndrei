@@ -36,7 +36,7 @@ public class Menu {
                 System.out.println("8.- Modificar abono");
                 System.out.println("9.- Dar de baja");
                 System.out.println("10.- Consultar caducidad abonados");
-                System.out.println("11.- Consultar caducidad abonados ultimos 10 dias");
+    //            System.out.println("11.- Consultar caducidad abonados ultimos 10 dias");
                 System.out.println("12.- Crear copia de seguridad");
                 System.out.println("13.- Restaurar copia de seguridad");
                 System.out.println("14.-Salir");
