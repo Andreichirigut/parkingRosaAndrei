@@ -9,6 +9,7 @@ import abonados.AbonadosDAO;
 import abonados.AbonadosVO;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -980,14 +981,13 @@ public class GestionVehiculos {
     }
 
 //Método que restaura una copia de seguridad en la BBDD, para ello se solicita por teclado el nombre del fichero
-    public static void restaurarAbonados() throws UnsupportedEncodingException, IOException, SQLException {
+    public static void restaurarAbonados(String directorio) throws UnsupportedEncodingException, IOException, SQLException {
         String linea = "hola";
         AbonadosDAO abo = new AbonadosDAO();
         Scanner teclado = new Scanner(System.in);
 
         ArrayList<AbonadosVO> lista = new ArrayList<>();
-        System.out.println("Introduzca el nombre del fichero que desea restaurar");
-        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+        String idFichero = "./Backups/" + directorio + "/Abonados.txt";
 
         try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
 
@@ -996,7 +996,6 @@ public class GestionVehiculos {
                 linea = datosFichero.nextLine();
                 AbonadosVO aux = new AbonadosVO();
 
-                //Abonados_2019-05-29_1
                 String[] cortarString = linea.split("\t");
                 String[] cortarPuntos = cortarString[0].split(":");
                 String pk = cortarPuntos[1];
@@ -1005,13 +1004,13 @@ public class GestionVehiculos {
                 pk = cortarPuntos[1];
                 aux.setNombre(pk);
                 cortarPuntos = cortarString[2].split(":");
-                pk = cortarPuntos[1];
+                pk = cortarPuntos[1];           
                 aux.setNumTarjeta(pk);
                 cortarPuntos = cortarString[3].split(":");
-                pk = cortarPuntos[1];
+                pk = cortarPuntos[1];                 
                 aux.setTipoABono(Integer.parseInt(pk.trim()));
                 cortarPuntos = cortarString[4].split(":");
-                pk = cortarPuntos[1];
+                pk = cortarPuntos[1];             
                 aux.setImporte(Integer.parseInt(pk.trim()));
                 cortarPuntos = cortarString[5].split(":");
                 pk = cortarPuntos[1];
@@ -1158,6 +1157,27 @@ public class GestionVehiculos {
         }
 
     }
+    
+    static void restaurar() throws IOException, UnsupportedEncodingException, SQLException{
+        Scanner teclado= new Scanner(System.in);
+        //Primero listamos los diferentes directorios que hay
+        File f = new File("./Backups");
+		if (f.exists()){
+                    System.out.println("Directorios:");
+			File[] ficheros = f.listFiles();
+			for (File file2 : ficheros) {
+				System.out.println(file2.getName());
+			}
+	     	}else {    System.out.println("El directorio a listar no existe");
+		}
+
+        System.out.println("Escriba el nombre del directorio que desea restaurar");
+       String directorio=teclado.nextLine();
+       
+        restaurarAbonados(directorio);
+       
+        
+    }
 
     //Método para hacer las copias de seguridad todas a la vez
     static void copias() throws SQLException {
@@ -1204,7 +1224,8 @@ public class GestionVehiculos {
     }
 
     public static void main(String[] args) throws SQLException, IOException, ParseException {
-
+GestionVehiculos.restaurar();
+        
 //        Menu.menu();
         // GestionVehiculos.depositarVehiculo();
         //GestionVehiculos.retirarVehiculo();
