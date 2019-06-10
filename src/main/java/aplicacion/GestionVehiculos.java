@@ -27,7 +27,9 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 import java.util.Date;
 import java.util.ArrayList;
@@ -294,7 +296,7 @@ public class GestionVehiculos {
 
             System.out.println("-------Numero de plazas libres-------");
             daoPlaza = new PlazasDAO();
-            getEstados();
+            getEstadosClientes();
         
 
     }
@@ -773,6 +775,10 @@ public class GestionVehiculos {
         }
 
     }
+    
+    
+    
+    
 
     public static double calcularTarifa(String pin) throws ParseException, SQLException {
         TicketDAO tic = new TicketDAO();
@@ -784,16 +790,29 @@ public class GestionVehiculos {
         PlazasVO plaza = pla.findByPk(num);
         double tari = plaza.getTarifa();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-        //TODO Recupear deBBDD y pasar a Sting y concatenar
-        Date fechaInicial = dateFormat.parse(ticket.getFechaEntrada() + " " + ticket.getHora_Entrada());
-        Date fechaFin = dateFormat.parse(ticket.getFechaSalida() + " " + ticket.getHora_Salida());
-
-        long secs = (fechaFin.getTime() - fechaInicial.getTime()) / 1000;
-
-        long mins = secs / 60;
-        double to = mins * tari;
+        int dia=ticket.getFechaEntrada().getDayOfMonth();
+        int mes=ticket.getFechaEntrada().getMonthValue();
+        int anio=ticket.getFechaEntrada().getYear();
+        
+        int hora=ticket.getHora_Entrada().getHour();
+        int min=ticket.getHora_Entrada().getMinute();
+        int seg=ticket.getHora_Entrada().getSecond();
+        
+        LocalDateTime ini=LocalDateTime.of(anio, mes, dia, hora, min, seg);
+        
+        dia=ticket.getFechaSalida().getDayOfMonth();
+        mes=ticket.getFechaSalida().getMonthValue();
+        anio=ticket.getFechaSalida().getYear();
+        
+        hora=ticket.getHora_Salida().getHour();
+        min=ticket.getHora_Salida().getMinute();
+        seg=ticket.getHora_Salida().getSecond();
+        
+        LocalDateTime fin=LocalDateTime.of(anio, mes, dia, hora, min, seg);
+        
+        long minutos=ChronoUnit.MINUTES.between(ini, fin);
+        
+        double to = minutos * tari;
         ticket.setCosteFinal(to);
 
         tic.updateTicket(pin, ticket);
