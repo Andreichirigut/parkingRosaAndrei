@@ -652,9 +652,15 @@ public class GestionVehiculos {
     // hacemos un update de ese abonado borrándole sus datos personales
     public static void bajaAbonado() throws SQLException {
         AbonadosDAO abo = new AbonadosDAO();
+        TicketDAO tic=new TicketDAO();
+        PlazasDAO pla= new PlazasDAO();    
         System.out.println("Introduzca el código de abonado que desea eliminar:");
         Scanner teclado = new Scanner(System.in);
+         Scanner teclado_ = new Scanner(System.in);
         int codigo = teclado.nextInt();
+        System.out.println("Introduzca el pin de su abono:");
+        String pin=teclado_.nextLine();
+        TicketVO ticket=tic.findByPk(pin);
         AbonadosVO auxiliar = abo.findByPk(codigo);
         auxiliar.setFechaActiva(LocalDate.now());
         auxiliar.setFechaFin(LocalDate.now());
@@ -662,6 +668,11 @@ public class GestionVehiculos {
         auxiliar.setTipoABono(0);
         auxiliar.setNumTarjeta("----------------");
         abo.updateAbono(codigo, auxiliar);
+        int plaza= ticket.getNumeroPlaza();
+        PlazasVO plaza_aux=pla.findByPk(plaza);
+        plaza_aux.setEstadoPlaza(1);
+        pla.updatePlaza(plaza, plaza_aux);
+        
         System.out.println("Abono eliminado con éxito");
 
     }
