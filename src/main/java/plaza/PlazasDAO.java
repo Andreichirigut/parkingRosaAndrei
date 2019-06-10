@@ -56,7 +56,7 @@ public class PlazasDAO implements IPlazas {
                 // Recogemos los datos de la persona, guardamos en un objeto
                 p.setNumPlaza(res.getInt("numPlaza"));
                 p.setTipoPlaza(res.getString("tipoPlaza"));
-                p.setEstadoPlaza(res.getBoolean("estadoPlaza"));
+                p.setEstadoPlaza(res.getInt("estadoPlaza"));
                 p.setTarifa(res.getDouble("tarifa"));
 
                 //Añadimos el objeto a la lista
@@ -88,7 +88,7 @@ public class PlazasDAO implements IPlazas {
                 // Recogemos los datos de la persona, guardamos en un objeto
                 plaza.setNumPlaza(res.getInt("numPlaza"));
                 plaza.setTipoPlaza(res.getString("tipoPlaza"));
-                plaza.setEstadoPlaza(res.getBoolean("estadoPlaza"));
+                plaza.setEstadoPlaza(res.getInt("estadoPlaza"));
                 plaza.setTarifa(res.getDouble("tarifa"));
                 return plaza;
             }
@@ -115,7 +115,7 @@ public class PlazasDAO implements IPlazas {
                 // Establecemos los parámetros de la sentencia
                 prest.setInt(1, plaza.getNumPlaza());
                 prest.setString(2, plaza.getTipoPlaza());
-                prest.setBoolean(3, plaza.isEstadoPlaza());
+                prest.setInt(3, plaza.isEstadoPlaza());
                 prest.setDouble(4, plaza.getTarifa());
                 numFilas = prest.executeUpdate();
             }
@@ -186,7 +186,7 @@ public class PlazasDAO implements IPlazas {
 
                 // Establecemos los parámetros de la sentencia
                 prest.setString(1, nuevosDatos.getTipoPlaza());
-                prest.setBoolean(2, nuevosDatos.isEstadoPlaza());
+                prest.setInt(2, nuevosDatos.isEstadoPlaza());
                 prest.setDouble(3, nuevosDatos.getTarifa());
                 prest.setInt(4, numPlaza);
 

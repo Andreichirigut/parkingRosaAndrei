@@ -12,7 +12,7 @@ package plaza;
 public class PlazasVO {
     private int numPlaza;
     private String tipoPlaza;
-    private boolean estadoPlaza;
+    private int estadoPlaza;
     private double tarifa;
     private static int contador=45; //Usamos este contador para instanciar la clave primaria, es decir, el número de plaza
 
@@ -20,7 +20,7 @@ public class PlazasVO {
         //por lo tanto solo le pasamos el tipo de plaza que es
         this.numPlaza = contador;
         this.tipoPlaza = tipoPlaza;
-        this.estadoPlaza = true;
+        this.estadoPlaza = 0;
         //Aquí hay que poner ifs dependiendo del tipoPlaza para asignarle un valor a la tarifa
         if (tipoPlaza.equalsIgnoreCase("Turismo")) {
             this.tarifa = 0.12;
@@ -53,11 +53,11 @@ public class PlazasVO {
         this.tipoPlaza = tipoPlaza;
     }
 
-    public boolean isEstadoPlaza() {
+    public int isEstadoPlaza() {
         return estadoPlaza;
     }
 
-    public void setEstadoPlaza(boolean estadoPlaza) {
+    public void setEstadoPlaza(int estadoPlaza) {
         this.estadoPlaza = estadoPlaza;
     }
 
