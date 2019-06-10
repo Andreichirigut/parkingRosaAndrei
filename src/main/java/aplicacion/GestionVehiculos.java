@@ -1055,6 +1055,15 @@ public class GestionVehiculos {
         String sql = "select count(*) from Plaza where estadoPlaza='1' and tipoPlaza='Turismo'";
         String sql2 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Caravana'";
         String sql3 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Motocicleta'";
+        String sql4 = "select count(*) from Plaza where estadoPlaza='2' and tipoPlaza='Turismo'";
+        String sql5 = "select count(*) from Plaza where estadoPlaza='2'and tipoPlaza='Caravana'";
+        String sql6 = "select count(*) from Plaza where estadoPlaza='2'and tipoPlaza='Motocicleta'";
+        String sql7 = "select count(*) from Plaza where estadoPlaza='3' and tipoPlaza='Turismo'";
+        String sql8 = "select count(*) from Plaza where estadoPlaza='3'and tipoPlaza='Caravana'";
+        String sql9 = "select count(*) from Plaza where estadoPlaza='3'and tipoPlaza='Motocicleta'";
+        String sql10 = "select count(*) from Plaza where estadoPlaza='4' and tipoPlaza='Turismo'";
+        String sql11 = "select count(*) from Plaza where estadoPlaza='4'and tipoPlaza='Caravana'";
+        String sql12 = "select count(*) from Plaza where estadoPlaza='4'and tipoPlaza='Motocicleta'";
 
         try (PreparedStatement prest = con.prepareStatement(sql)) {
             // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
@@ -1095,7 +1104,134 @@ public class GestionVehiculos {
                 System.out.println("Plazas de motocicleta libres :" + aux);
             }
         }
+        
+        System.out.println("---------------------------------------------");
+        try (PreparedStatement prest = con.prepareStatement(sql4)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
 
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de Turismo ocupadas por clientes :" + aux);
+            }
+        }
+         try (PreparedStatement prest = con.prepareStatement(sql5)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de Caravanas ocupadas por clientes :" + aux);
+            }
+        }
+         
+          try (PreparedStatement prest = con.prepareStatement(sql6)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de Motocicletas ocupadas por clientes :" + aux);
+            }
+        }
+          
+          System.out.println("----------------------------------------");
+          
+         try (PreparedStatement prest = con.prepareStatement(sql7)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de Turismo libres(ABONADO) :" + aux);
+            }
+        }
+         try (PreparedStatement prest = con.prepareStatement(sql8)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de Caravana libres(ABONADO) :" + aux);
+            }
+        }
+         
+        try (PreparedStatement prest = con.prepareStatement(sql9)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de Motocicletas libres(ABONADO) :" + aux);
+            }
+        }
+        
+        System.out.println("---------------------------------------------");
+          
+        try (PreparedStatement prest = con.prepareStatement(sql10)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de Turismo ocupadas(ABONADO) :" + aux);
+            }
+        }
+         try (PreparedStatement prest = con.prepareStatement(sql11)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de Caravana ocupadas(ABONADO) :" + aux);
+            }
+        }
+         
+        try (PreparedStatement prest = con.prepareStatement(sql12)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de Motocicletas ocupadas(ABONADO) :" + aux);
+            }
+        }
     }
 
     //Método que genera un fichero-Copia de seguridad- de todos los Vehiculos
