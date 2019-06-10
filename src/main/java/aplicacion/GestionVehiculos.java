@@ -389,16 +389,17 @@ public class GestionVehiculos {
         if (tipo.equalsIgnoreCase("Motocicleta")) {
             int contador = 1;
             for (int i = 0; i < 14; i++) {
+                for (TicketVO ticketVO : listaTicket) {
+                    if (plazasEstado[i] == 4 && pin.equalsIgnoreCase(ticketVO.getPin())) {
+                        //Se actualiza la plaza
+                        PlazasVO plazaModificada = listaPlaza.get(i);
+                        plazaModificada.setEstadoPlaza(3);
+                        //Cambiamos el estado de la plaza a ocupada
+                        plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                        System.out.println("Plaza actualizada");
+                        break;
 
-                if (plazasEstado[i] == 4) {
-                    //Se actualiza la plaza
-                    PlazasVO plazaModificada = listaPlaza.get(i);
-                    plazaModificada.setEstadoPlaza(3);
-                    //Cambiamos el estado de la plaza a ocupada
-                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                    System.out.println("Plaza actualizada");
-                    break;
-
+                    }
                 }
 
             }
@@ -409,15 +410,17 @@ public class GestionVehiculos {
             for (int i = 30; i < 44; i++) {
 //                       
 
-                if (plazasEstado[i] == 4) {
-                    //Se actualiza la plaza
-                    PlazasVO plazaModificada = listaPlaza.get(i);
-                    plazaModificada.setEstadoPlaza(3);
-                    //Cambiamos el estado de la plaza a ocupada
-                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                    System.out.println("Plaza actualizada");
-                    break;
+                for (TicketVO ticketVO : listaTicket) {
+                    if (plazasEstado[i] == 4 && pin.equalsIgnoreCase(ticketVO.getPin())) {
+                        //Se actualiza la plaza
+                        PlazasVO plazaModificada = listaPlaza.get(i);
+                        plazaModificada.setEstadoPlaza(3);
+                        //Cambiamos el estado de la plaza a ocupada
+                        plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                        System.out.println("Plaza actualizada");
+                        break;
 
+                    }
                 }
 
             }
@@ -428,22 +431,24 @@ public class GestionVehiculos {
             for (int i = 16; i < 29; i++) {
 //                       
 
-                if (plazasEstado[i] == 4) {
-                    //Se actualiza la plaza
-                    PlazasVO plazaModificada = listaPlaza.get(i);
-                    plazaModificada.setEstadoPlaza(3);
-                    //Cambiamos el estado de la plaza a ocupada
-                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                    System.out.println("Plaza actualizada");
-                    break;
+                for (TicketVO ticketVO : listaTicket) {
+                    if (plazasEstado[i] == 4 && pin.equalsIgnoreCase(ticketVO.getPin())) {
+                        //Se actualiza la plaza
+                        PlazasVO plazaModificada = listaPlaza.get(i);
+                        plazaModificada.setEstadoPlaza(3);
+                        //Cambiamos el estado de la plaza a ocupada
+                        plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+                        System.out.println("Plaza actualizada");
+                        break;
 
+                    }
                 }
 
             }
         }
         for (TicketVO ticketVO : listaTicket) {
             if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
-                // vehiculo.deleteVehiculo(vehiculoVO);
+                vehiculo.deleteVehiculo(vehiculoVO);
                 System.out.println("Vehiculo retirado");
 
             }
@@ -652,15 +657,15 @@ public class GestionVehiculos {
     // hacemos un update de ese abonado borrándole sus datos personales
     public static void bajaAbonado() throws SQLException {
         AbonadosDAO abo = new AbonadosDAO();
-        TicketDAO tic=new TicketDAO();
-        PlazasDAO pla= new PlazasDAO();    
+        TicketDAO tic = new TicketDAO();
+        PlazasDAO pla = new PlazasDAO();
         System.out.println("Introduzca el código de abonado que desea eliminar:");
         Scanner teclado = new Scanner(System.in);
-         Scanner teclado_ = new Scanner(System.in);
+        Scanner teclado_ = new Scanner(System.in);
         int codigo = teclado.nextInt();
         System.out.println("Introduzca el pin de su abono:");
-        String pin=teclado_.nextLine();
-        TicketVO ticket=tic.findByPk(pin);
+        String pin = teclado_.nextLine();
+        TicketVO ticket = tic.findByPk(pin);
         AbonadosVO auxiliar = abo.findByPk(codigo);
         auxiliar.setFechaActiva(LocalDate.now());
         auxiliar.setFechaFin(LocalDate.now());
@@ -668,11 +673,11 @@ public class GestionVehiculos {
         auxiliar.setTipoABono(0);
         auxiliar.setNumTarjeta("----------------");
         abo.updateAbono(codigo, auxiliar);
-        int plaza= ticket.getNumeroPlaza();
-        PlazasVO plaza_aux=pla.findByPk(plaza);
+        int plaza = ticket.getNumeroPlaza();
+        PlazasVO plaza_aux = pla.findByPk(plaza);
         plaza_aux.setEstadoPlaza(1);
         pla.updatePlaza(plaza, plaza_aux);
-        
+
         System.out.println("Abono eliminado con éxito");
 
     }
@@ -1408,6 +1413,11 @@ public class GestionVehiculos {
             System.out.println(e.getMessage());
         }
 
+    }
+    
+    public static void main(String[] args) throws SQLException {
+        //GestionVehiculos.depositarVehiculoAbonado();
+        GestionVehiculos.retirarVehiculoAbonado();
     }
 
 }
