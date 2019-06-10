@@ -75,7 +75,6 @@ public class Menu {
                 System.out.println("--------------------------");
                 System.out.println("0.- Depositar vehiculo");
                 System.out.println("1.- Retirar vehiculo");
-                System.out.println("2.-Pagar");
                 System.out.println("3.- Depositar abonos");
                 System.out.println("4.- Retirar abonos");
                 System.out.println("5.-Salir");
@@ -89,8 +88,6 @@ public class Menu {
                         return Comando.DEPOSITAR_VEHICULO;
                     case 1:
                         return Comando.RETIRAR_VEHICULO;
-                    case 2:
-                        return Comando.FACTURACION_ABONADOS;
                     case 3:
                         return Comando.DEPOSITAR_ABONOS;
                     case 4: 

@@ -23,17 +23,17 @@ public class Central {
             case DEPOSITAR_VEHICULO:
                 GestionVehiculos.altaCliente();
                 ejecutarOrden(Menu.menu());
-                        
+
                 break;
-//            case RETIRAR_VEHICULO:
-//                GestionVehiculos.retirarVehiculo();
-//                break;
-//            case DEPOSITAR_ABONOS:
-//                GestionVehiculos.depositarVehiculoAbonado();
-//                break;
-//            case RETIRAR_ABONOS:
-//                GestionVehiculos.retirarVehiculoAbonado();
-//                break;
+            case RETIRAR_VEHICULO:
+                GestionVehiculos.retirarVehiculo();
+                break;
+            case DEPOSITAR_ABONOS:
+                GestionVehiculos.depositarVehiculoAbonado();
+                break;
+            case RETIRAR_ABONOS:
+                GestionVehiculos.retirarVehiculoAbonado();
+                break;
             case VER_ESTADO_PARKING:
                 GestionVehiculos.getEstados();
                 ejecutarOrden(Menu.menu());
@@ -43,7 +43,7 @@ public class Central {
                 ejecutarOrden(Menu.menu());
                 break;
             case FACTURACION_ABONADOS:
-                GestionVehiculos.calcularTarifa();
+                //   GestionVehiculos.calcularTarifa();
                 ejecutarOrden(Menu.menu());
                 break;
             case DAR_DE_ALTA:
@@ -86,40 +86,13 @@ public class Central {
                 break;
             case CREAR_COPIA_SEGURIDAD:
                 System.out.println("CREAR COPIA DE SEGURIDAD");
-                
+
                 GestionVehiculos.copias();
 
                 break;
             case RESTAURAR_COPIA_SEGURIDAD:
-                System.out.println("1.-Restaurar abonados");
-                System.out.println("2.-Restaurar Vehiculos");
-                System.out.println("3.-Restaurar plazas");
-                System.out.println("4.-Restaurar tickets");
-                opcion = teclado.nextInt();
-                while (opcion < 1 || opcion > 4) {
-                    System.out.println("ERROR: Vuelva a introducir la opcion: ");
-                    opcion = teclado.nextInt();
-                }
-                switch (opcion) {
-                    case 1:
-                        GestionVehiculos.restaurarAbonados();
-                        ejecutarOrden(Menu.menu());
-                        break;
-                    case 2:
-                        GestionVehiculos.restaurarVehiculos();
-                        ejecutarOrden(Menu.menu());
-                        break;
-                    case 3:
-                        GestionVehiculos.restaurarPlazas();
-                        ejecutarOrden(Menu.menu());
-                        break;
-                    case 4:
-                        GestionVehiculos.restaurarTickets();
-                        ejecutarOrden(Menu.menu());
-                        break;
-                    default:
-                        throw new AssertionError();
-                }
+                System.out.println("RESTAURAR COPIA DE SEGURIDAD");
+                GestionVehiculos.restaurar();
                 break;
             case SALIR:
                 System.out.println("Cerrando ");

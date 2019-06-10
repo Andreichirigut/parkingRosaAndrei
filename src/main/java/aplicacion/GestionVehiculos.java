@@ -458,7 +458,7 @@ public class GestionVehiculos {
         }
         for (TicketVO ticketVO : listaTicket) {
             if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
-                vehiculo.deleteVehiculo(vehiculoVO);
+               // vehiculo.deleteVehiculo(vehiculoVO);
                 System.out.println("Vehiculo retirado");
 
             }
@@ -492,7 +492,7 @@ public class GestionVehiculos {
         System.out.println("--3.Ampliar fecha de cancelación");
         System.out.println("-----------------------------------");
         int opcion = teclado.nextInt();
-        while ((opcion == 1 || opcion == 2 || opcion == 3)) {
+        while (!(opcion == 1 || opcion == 2 || opcion == 3)) {
             System.out.println("ERROR: Vuelva a introducir la opción: ");
             opcion = teclado.nextInt();
         }
@@ -1167,6 +1167,7 @@ public class GestionVehiculos {
         restaurarAbonados(directorio);
         restaurarPlazas(directorio);
         restaurarVehiculos(directorio);
+        restaurarTickets(directorio);
        
         
     }
