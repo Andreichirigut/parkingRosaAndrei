@@ -7,22 +7,30 @@ package aplicacion;
 
 import abonados.AbonadosDAO;
 import abonados.AbonadosVO;
+
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+
 import java.util.Date;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Scanner;
+import plaza.Conexion;
 import plaza.PlazasDAO;
 import plaza.PlazasVO;
 import ticket.TicketDAO;
@@ -36,352 +44,438 @@ import vehiculos.VehiculosVO;
  */
 public class GestionVehiculos {
 
-    public static void depositarVehiculo() throws SQLException {
-        System.out.println("-------Numero de plazas libres-------");
-        PlazasDAO daoPlaza = new PlazasDAO();
-        daoPlaza.getEstados();
-        System.out.println("------------------");
-        Scanner teclado = new Scanner(System.in);
-
-        System.out.println("Introduce la matricula: ");
-        String respuesta = teclado.nextLine();
-        while (respuesta.length() > 8 || respuesta.length() < 8) {
-            System.out.println("ERROR: Vuelve a introducir la matricula");
-            respuesta = teclado.nextLine();
-
-        }
-
-        System.out.println("Introduce el tipo: ");
-        System.out.println("---Turismo" + "\n" + "---Motocicleta" + "\n" + "---Caravana");
-        String respuesta2 = teclado.nextLine();
-        while (!(respuesta2.equalsIgnoreCase("Turismo") || respuesta2.equalsIgnoreCase("Motocicleta") || respuesta2.equalsIgnoreCase("Caravana"))) {
-            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
-            respuesta2 = teclado.nextLine();
-        }
-
-        //Se declaran distintos objetos generales necesarios
-        Boolean[] plazasEstado = new Boolean[45];
-        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
-        PlazasDAO plazas = new PlazasDAO();
-        VehiculosDAO vehiculos = new VehiculosDAO();
-        VehiculosVO vehiculo = new VehiculosVO(respuesta, respuesta2);
-
-        //Se guarda en la lista las distintas plazas
-        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
-        for (int i = 0; i < listaPlaza.size(); i++) {
-            plazasEstado[i] = listaPlaza.get(i).isEstadoPlaza();
-        }
-
-        if (respuesta2.equalsIgnoreCase("Turismo")) {
-            int contador = 1;
-            for (int i = 31; i < 45; i++) {
-                //Hacemos k si la plaza esta ocupada la salte
-                if (plazasEstado[i] == false) {
-                    i = i + contador;
-                    contador++;
-                }
-
-                if (plazasEstado[i] == true) {
-                    //Insertamos un nuevo vehiculo
-                    vehiculos.insertVehiculo(vehiculo);
-                    //Se actualiza la plaza
-                    PlazasVO plazaModificada = listaPlaza.get(i);
-                    plazaModificada.setEstadoPlaza(false);
-                    //Cambiamos el estado de la plaza a ocupada
-                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                    System.out.println("Plaza actualizada");
-
-                    //Generamos un ticket
-                    TicketVO ticketVO = new TicketVO(respuesta, i);
-                    TicketDAO ticketDAO = new TicketDAO();
-                    ticketDAO.insertTicket(ticketVO);
-                    System.out.println("Ticket creado: " + ticketVO);
-
-                    break;
-
-                }
-
-            }
-
-        }
-
-        if (respuesta2.equalsIgnoreCase("Motocicleta")) {
-            int contador = 1;
-            for (int i = 0; i < 15; i++) {
-                //Hacemos k si la plaza esta ocupada la salte
-                if (plazasEstado[i] == false) {
-                    i = i + contador;
-                    contador++;
-                }
-
-                if (plazasEstado[i] == true) {
-                    //Insertamos un nuevo vehiculo
-                    vehiculos.insertVehiculo(vehiculo);
-                    //Se actualiza la plaza
-                    PlazasVO plazaModificada = listaPlaza.get(i);
-                    plazaModificada.setEstadoPlaza(false);
-                    //Cambiamos el estado de la plaza a ocupada
-                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                    System.out.println("Plaza actualizada");
-
-                    TicketVO ticketVO = new TicketVO(respuesta, i);
-                    TicketDAO ticketDAO = new TicketDAO();
-                    ticketDAO.insertTicket(ticketVO);
-                    System.out.println("Ticket creado: " + ticketVO);
-
-                    break;
-                }
-            }
-
-        }
-
-        if (respuesta2.equalsIgnoreCase("Caravana")) {
-            int contador = 1;
-            for (int i = 16; i < 30; i++) {
-                //Hacemos k si la plaza esta ocupada la salte
-                if (plazasEstado[i] == false) {
-                    i = i + contador;
-                    contador++;
-                }
-
-                if (plazasEstado[i] == true) {
-                    //Insertamos un nuevo vehiculo
-                    vehiculos.insertVehiculo(vehiculo);
-                    //Se actualiza la plaza
-                    PlazasVO plazaModificada = listaPlaza.get(i);
-                    plazaModificada.setEstadoPlaza(false);
-                    //Cambiamos el estado de la plaza a ocupada
-                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                    System.out.println("Plaza actualizada");
-
-                    TicketVO ticketVO = new TicketVO(respuesta, i);
-                    TicketDAO ticketDAO = new TicketDAO();
-                    ticketDAO.insertTicket(ticketVO);
-                    System.out.println("Ticket creado: " + ticketVO);
-
-                    break;
-                }
-            }
-
-        }
-    }
-
-    public static void retirarVehiculo() throws SQLException {
-
-        VehiculosDAO vehiculo = new VehiculosDAO();
-        TicketDAO ticket = new TicketDAO();
-        PlazasDAO plazas = new PlazasDAO();
-//        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
-//        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+//    public static void depositarVehiculo() throws SQLException {
+//        System.out.println("-------Numero de plazas libres-------");
+//        PlazasDAO daoPlaza = new PlazasDAO();
+//        getEstados();
+//        System.out.println("------------------");
+//        Scanner teclado = new Scanner(System.in);
 //
-//        ArrayList<PlazasVO> listaPlaza = new ArrayLi
-        Boolean[] plazasEstado = new Boolean[45];
-        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
-        ArrayList<TicketVO> listaTicket = new ArrayList<>();
-        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
-
-        listaTicket = (ArrayList<TicketVO>) ticket.getAll();
-        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
-
-        System.out.println("-------Numero de plazas libres-------");
-        PlazasDAO daoPlaza = new PlazasDAO();
-        daoPlaza.getEstados();
-        System.out.println("-----------------------");
-        Scanner teclado = new Scanner(System.in);
-        System.out.println("Introduce tu matricula: ");
-        String matricula = teclado.nextLine();
-//        for (TicketVO ticketVO : listaTicket) {
-//            while (!(matricula.equalsIgnoreCase(ticketVO.getMatricula()))) {
-//                System.out.println("ERROR: No se encuentra su matricula ----- Vuelve a introducirla: ");
-//                matricula = teclado.nextLine();
-//            }
-//        }
-        System.out.println("Dime tu tipo de vehiculo: ");
-        String tipo = teclado.nextLine();
-        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
-            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
-            tipo = teclado.nextLine();
-        }
-
-        System.out.println("Introduce el pin de tu ticket: ");
-        String pin = teclado.nextLine();
-//        for (TicketVO ticketVO : listaTicket) {
-//            while (!(pin.equalsIgnoreCase(ticketVO.getPin()))) {
-//                System.out.println("ERROR: No se encuentra su pin ------ Vuelve a introducirlo: ");
-//                pin = teclado.nextLine();
-//            }
-//        }
-
-        System.out.println("Introduce tu numero de Plaza: ");
-        int numPlaza = teclado.nextInt();
-//        for (TicketVO ticketVO : listaTicket) {
-//            while (!(numPlaza == ticketVO.getNumeroPlaza())) {
-//                System.out.println("ERROR: No se encuentra su numero de plaza ------ Vuelve a introducirla: ");
-//                numPlaza = teclado.nextInt();
-//            }
-//        }
-
-        System.out.println("--------------");
-
-        //Antes se debe calcular el importe
-        VehiculosVO vehiculoVO = new VehiculosVO(matricula, tipo);
+//        System.out.println("Introduce la matricula: ");
+//        String respuesta = teclado.nextLine();
+//        while (respuesta.length() > 7 || respuesta.length() < 7) {
+//            System.out.println("ERROR: Vuelve a introducir la matricula");
+//            respuesta = teclado.nextLine();
 //
-//        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
-//        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+//        }
 //
+//        System.out.println("Introduce el tipo: ");
+//        System.out.println("---Turismo" + "\n" + "---Motocicleta" + "\n" + "---Caravana");
+//        String respuesta2 = teclado.nextLine();
+//        while (!(respuesta2.equalsIgnoreCase("Turismo") || respuesta2.equalsIgnoreCase("Motocicleta") || respuesta2.equalsIgnoreCase("Caravana"))) {
+//            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
+//            respuesta2 = teclado.nextLine();
+//        }
+//
+//        //Se declaran distintos objetos generales necesarios
+//        Boolean[] plazasEstado = new Boolean[45];
 //        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+//        PlazasDAO plazas = new PlazasDAO();
+//        VehiculosDAO vehiculos = new VehiculosDAO();
+//        VehiculosVO vehiculo = new VehiculosVO(respuesta, respuesta2);
+//
+//        //Se guarda en la lista las distintas plazas
+//        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
+//        for (int i = 0; i < listaPlaza.size(); i++) {
+//            plazasEstado[i] = listaPlaza.get(i).isEstadoPlaza();
+//        }
+//
+//        if (respuesta2.equalsIgnoreCase("Turismo")) {
+//            int contador = 1;
+//            for (int i = 31; i < 45; i++) {
+//                //Hacemos k si la plaza esta ocupada la salte
+//                if (plazasEstado[i] == false) {
+//                    i = i + contador;
+//                    contador++;
+//                }
+//
+//                if (plazasEstado[i] == true) {
+//                    //Insertamos un nuevo vehiculo
+//                    vehiculos.insertVehiculo(vehiculo);
+//                    //Se actualiza la plaza
+//                    PlazasVO plazaModificada = listaPlaza.get(i);
+//                    plazaModificada.setEstadoPlaza(false);
+//                    //Cambiamos el estado de la plaza a ocupada
+//                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+//                    System.out.println("Plaza actualizada");
+//
+//                    //Generamos un ticket
+//                    TicketVO ticketVO = new TicketVO(respuesta, i);
+//                    TicketDAO ticketDAO = new TicketDAO();
+//                    ticketDAO.insertTicket(ticketVO);
+//                    System.out.println("Ticket creado: " + ticketVO);
+//
+//                    break;
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//        if (respuesta2.equalsIgnoreCase("Motocicleta")) {
+//            int contador = 1;
+//            for (int i = 0; i < 15; i++) {
+//                //Hacemos k si la plaza esta ocupada la salte
+//                if (plazasEstado[i] == false) {
+//                    i = i + contador;
+//                    contador++;
+//                }
+//
+//                if (plazasEstado[i] == true) {
+//                    //Insertamos un nuevo vehiculo
+//                    vehiculos.insertVehiculo(vehiculo);
+//                    //Se actualiza la plaza
+//                    PlazasVO plazaModificada = listaPlaza.get(i);
+//                    plazaModificada.setEstadoPlaza(false);
+//                    //Cambiamos el estado de la plaza a ocupada
+//                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+//                    System.out.println("Plaza actualizada");
+//
+//                    TicketVO ticketVO = new TicketVO(respuesta, i);
+//                    TicketDAO ticketDAO = new TicketDAO();
+//                    ticketDAO.insertTicket(ticketVO);
+//                    System.out.println("Ticket creado: " + ticketVO);
+//
+//                    break;
+//                }
+//            }
+//
+//        }
+//
+//        if (respuesta2.equalsIgnoreCase("Caravana")) {
+//            int contador = 1;
+//            for (int i = 16; i < 30; i++) {
+//                //Hacemos k si la plaza esta ocupada la salte
+//                if (plazasEstado[i] == false) {
+//                    i = i + contador;
+//                    contador++;
+//                }
+//
+//                if (plazasEstado[i] == true) {
+//                    //Insertamos un nuevo vehiculo
+//                    vehiculos.insertVehiculo(vehiculo);
+//                    //Se actualiza la plaza
+//                    PlazasVO plazaModificada = listaPlaza.get(i);
+//                    plazaModificada.setEstadoPlaza(false);
+//                    //Cambiamos el estado de la plaza a ocupada
+//                    plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+//                    System.out.println("Plaza actualizada");
+//
+//                    TicketVO ticketVO = new TicketVO(respuesta, i);
+//                    TicketDAO ticketDAO = new TicketDAO();
+//                    ticketDAO.insertTicket(ticketVO);
+//                    System.out.println("Ticket creado: " + ticketVO);
+//
+//                    break;
+//                }
+//            }
+//
+//        }
+//    }
 
-        listaTicket = (ArrayList<TicketVO>) ticket.getAll();
-        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
-
-        for (int i = 0; i < listaPlaza.size(); i++) {
-            plazasEstado[i] = listaPlaza.get(i).isEstadoPlaza();
-        }
-        for (TicketVO ticketVO : listaTicket) {
-            if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
-                if (tipo.equalsIgnoreCase("Motocicleta")) {
-                    int contador = 1;
-                    for (int i = 0; i < 15; i++) {
-                        //Hacemos k si la plaza esta ocupada la salte
-                        if (plazasEstado[i] == true) {
-                            i = i + contador;
-                            contador++;
-                        }
-
-                        if (plazasEstado[i] == false) {
-                            //Se actualiza la plaza
-                            PlazasVO plazaModificada = listaPlaza.get(i);
-                            plazaModificada.setEstadoPlaza(true);
-                            //Cambiamos el estado de la plaza a ocupada
-                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                            System.out.println("Plaza actualizada");
-                            break;
-
-                        }
-
-                    }
-                }
-
-                if (tipo.equalsIgnoreCase("Turismo")) {
-                    int contador = 1;
-                    for (int i = 31; i < 45; i++) {
-                        //Hacemos k si la plaza esta ocupada la salte
-                        if (plazasEstado[i] == true) {
-                            i = i + contador;
-                            contador++;
-                        }
-
-                        if (plazasEstado[i] == false) {
-                            //Se actualiza la plaza
-                            PlazasVO plazaModificada = listaPlaza.get(i);
-                            plazaModificada.setEstadoPlaza(true);
-                            //Cambiamos el estado de la plaza a ocupada
-                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                            System.out.println("Plaza actualizada");
-                            break;
-
-                        }
-
-                    }
-                }
-
-                if (tipo.equalsIgnoreCase("Caravana")) {
-                    int contador = 1;
-                    for (int i = 16; i < 30; i++) {
-                        //Hacemos k si la plaza esta ocupada la salte
-                        if (plazasEstado[i] == true) {
-                            i = i + contador;
-                            contador++;
-                        }
-
-                        if (plazasEstado[i] == false) {
-                            //Se actualiza la plaza
-                            PlazasVO plazaModificada = listaPlaza.get(i);
-                            plazaModificada.setEstadoPlaza(true);
-                            //Cambiamos el estado de la plaza a ocupada
-                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
-                            System.out.println("Plaza actualizada");
-                            break;
-
-                        }
-
-                    }
-                }
-            }
-        }
-        for (TicketVO ticketVO : listaTicket) {
-            if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
-                vehiculo.deleteVehiculo(vehiculoVO);
-                System.out.println("Vehiculo retirado");
-
-            }
-        }
-
-        System.out.println("-------Numero de plazas libres-------");
-        daoPlaza = new PlazasDAO();
-        daoPlaza.getEstados();
-
-    }
-
-    public static void depositarVehiculoAbonado() {
-        //Se declaran distintos objetos generales necesarios
-        Boolean[] plazasEstado = new Boolean[45];
-        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
-        PlazasDAO plazas = new PlazasDAO();
-        VehiculosDAO vehiculos = new VehiculosDAO();
-        Scanner teclado = new Scanner(System.in);
-
-        System.out.println("Dime tu matricula: ");
-        String matricula = teclado.nextLine();
-        while (matricula.length() > 8 || matricula.length() < 8) {
-            System.out.println("ERROR: Vuelve a introducir la matricula");
-            matricula = teclado.nextLine();
-
-        }
-
-        System.out.println("Dime tu DNI");
-        String dni = teclado.nextLine();
-        while (dni.length() > 9 || dni.length() < 9) {
-            System.out.println("ERROR: Vuelve a introducir la matricula");
-        }
-
-    }
-
-    public static void retirarVehiculoAbonado() {
-        Scanner teclado = new Scanner(System.in);
-        System.out.println("Introduce tu matricula: ");
-        String matricula = teclado.nextLine();
+//    public static void retirarVehiculo() throws SQLException, ParseException {
+//
+//        VehiculosDAO vehiculo = new VehiculosDAO();
+//        TicketDAO ticket = new TicketDAO();
+//        PlazasDAO plazas = new PlazasDAO();
+////        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
+////        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+////
+////        ArrayList<PlazasVO> listaPlaza = new ArrayLi
+//        Boolean[] plazasEstado = new Boolean[45];
+//        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
+//        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+//        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+//
+//        listaTicket = (ArrayList<TicketVO>) ticket.getAll();
+//        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
+//
+//        System.out.println("-------Numero de plazas libres-------");
+//        PlazasDAO daoPlaza = new PlazasDAO();
+//        getEstados();
+//        System.out.println("-----------------------");
+//        Scanner teclado = new Scanner(System.in);
+//        System.out.println("Introduce tu matricula: ");
+//        String matricula = teclado.nextLine();
+//
+//        System.out.println("Dime tu tipo de vehiculo: ");
+//        String tipo = teclado.nextLine();
+//        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
+//            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
+//            tipo = teclado.nextLine();
+//        }
+//
+//        System.out.println("Introduce el pin de tu ticket: ");
+//        String pin = teclado.nextLine();
+//
+//        System.out.println("Introduce tu numero de Plaza: ");
+//        int numPlaza = teclado.nextInt();
+//
+//        System.out.println("--------------");
+//
+//        VehiculosVO vehiculoVO = new VehiculosVO(matricula, tipo);
+////
+////        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
+////        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+////
+////        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+//
+//        listaTicket = (ArrayList<TicketVO>) ticket.getAll();
+//        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
+//
+//        for (int i = 0; i < listaPlaza.size(); i++) {
+//            plazasEstado[i] = listaPlaza.get(i).isEstadoPlaza();
+//        }
 //        for (TicketVO ticketVO : listaTicket) {
-//            while (!(matricula.equalsIgnoreCase(ticketVO.getMatricula()))) {
-//                System.out.println("ERROR: No se encuentra su matricula ----- Vuelve a introducirla: ");
-//                matricula = teclado.nextLine();
+//            if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
+////                GestionVehiculos.calcularTarifa();
+//                if (tipo.equalsIgnoreCase("Motocicleta")) {
+//                    int contador = 1;
+//                    for (int i = 0; i < 15; i++) {
+//                        //Hacemos k si la plaza esta ocupada la salte
+//                        if (plazasEstado[i] == true) {
+//                            i = i + contador;
+//                            contador++;
+//                        }
+//
+//                        if (plazasEstado[i] == false) {
+//                            //Se actualiza la plaza
+//                            PlazasVO plazaModificada = listaPlaza.get(i);
+//                            plazaModificada.setEstadoPlaza(true);
+//                            //Cambiamos el estado de la plaza a ocupada
+//                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+//                            System.out.println("Plaza actualizada");
+//                            break;
+//
+//                        }
+//
+//                    }
+//                }
+//
+//                if (tipo.equalsIgnoreCase("Turismo")) {
+//                    int contador = 1;
+//                    for (int i = 31; i < 45; i++) {
+//                        //Hacemos k si la plaza esta ocupada la salte
+//                        if (plazasEstado[i] == true) {
+//                            i = i + contador;
+//                            contador++;
+//                        }
+//
+//                        if (plazasEstado[i] == false) {
+//                            //Se actualiza la plaza
+//                            PlazasVO plazaModificada = listaPlaza.get(i);
+//                            plazaModificada.setEstadoPlaza(true);
+//                            //Cambiamos el estado de la plaza a ocupada
+//                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+//                            System.out.println("Plaza actualizada");
+//                            break;
+//
+//                        }
+//
+//                    }
+//                }
+//
+//                if (tipo.equalsIgnoreCase("Caravana")) {
+//                    int contador = 1;
+//                    for (int i = 16; i < 30; i++) {
+//                        //Hacemos k si la plaza esta ocupada la salte
+//                        if (plazasEstado[i] == true) {
+//                            i = i + contador;
+//                            contador++;
+//                        }
+//
+//                        if (plazasEstado[i] == false) {
+//                            //Se actualiza la plaza
+//                            PlazasVO plazaModificada = listaPlaza.get(i);
+//                            plazaModificada.setEstadoPlaza(true);
+//                            //Cambiamos el estado de la plaza a ocupada
+//                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+//                            System.out.println("Plaza actualizada");
+//                            break;
+//
+//                        }
+//
+//                    }
+//                }
+//            } else {
+//                System.out.println("Has introducido datos no registrados");
 //            }
 //        }
-        System.out.println("Dime tu tipo de vehiculo: ");
-        String tipo = teclado.nextLine();
-        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
-            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
-            tipo = teclado.nextLine();
-        }
-
-        System.out.println("Introduce el pin de tu ticket: ");
-        String pin = teclado.nextLine();
 //        for (TicketVO ticketVO : listaTicket) {
-//            while (!(pin.equalsIgnoreCase(ticketVO.getPin()))) {
-//                System.out.println("ERROR: No se encuentra su pin ------ Vuelve a introducirlo: ");
-//                pin = teclado.nextLine();
+//            if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
+//                vehiculo.deleteVehiculo(vehiculoVO);
+//                System.out.println("Vehiculo retirado");
+//
 //            }
 //        }
+//
+//        System.out.println("-------Numero de plazas libres-------");
+//        daoPlaza = new PlazasDAO();
+//        getEstados();
+//
+//    }
 
-        System.out.println("Introduce tu numero de Plaza: ");
-        int numPlaza = teclado.nextInt();
+//    public static void depositarVehiculoAbonado() throws SQLException {
+//        //Se declaran distintos objetos generales necesarios
+//        Boolean[] plazasEstado = new Boolean[45];
+//        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+//        PlazasDAO plazas = new PlazasDAO();
+//        VehiculosDAO vehiculos = new VehiculosDAO();
+//        Scanner teclado = new Scanner(System.in);
+//
+//        System.out.println("Dime tu matricula: ");
+//        String matricula = teclado.nextLine();
+//        while (matricula.length() > 8 || matricula.length() < 8) {
+//            System.out.println("ERROR: Vuelve a introducir la matricula");
+//            matricula = teclado.nextLine();
+//
+//        }
+//
+//        System.out.println("Dime tu DNI");
+//        String dni = teclado.nextLine();
+//        while (dni.length() > 9 || dni.length() < 9) {
+//            System.out.println("ERROR: Vuelve a introducir la matricula");
+//        }
+//
+//        System.out.println("Dime tu tipo de vehiculo: ");
+//        String tipo = teclado.nextLine();
+//        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
+//            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
+//            tipo = teclado.nextLine();
+//        }
+//
+//        VehiculosVO vehi = new VehiculosVO(matricula, tipo);
+//        VehiculosDAO veDao = new VehiculosDAO();
+//        TicketDAO tic = new TicketDAO();
+//        veDao.insertVehiculo(vehi);
+//        PlazasDAO plaza = new PlazasDAO();
+//        int num = plazaVacia(tipo);
+//        if (num != -1) {
+//            PlazasVO auxi = plaza.findByPk(num);
+//            auxi.setEstadoPlaza(false);
+//            plaza.updatePlaza(num, auxi);
+//            System.out.println("Vehículo estacionado correctamente");
+//            TicketVO ticket = new TicketVO(matricula, num);
+//            tic.insertTicket(ticket);
+//            imprimirTicket(ticket);
+//            System.out.println(ticket.toString());
+//        } else {
+//            System.out.println("No hemos podido estacionar el vehículo");
+//        }
+//
+//    }
+
+//    public static void retirarVehiculoAbonado() throws SQLException {
+//        Scanner teclado = new Scanner(System.in);
+//        System.out.println("Introduce tu matricula: ");
+//        String matricula = teclado.nextLine();
+//
+//        System.out.println("Dime tu tipo de vehiculo: ");
+//        String tipo = teclado.nextLine();
+//        while (!(tipo.equalsIgnoreCase("Turismo") || tipo.equalsIgnoreCase("Motocicleta") || tipo.equalsIgnoreCase("Caravana"))) {
+//            System.out.println("ERROR: Vuelve a introducir el tipo de vehiculo");
+//            tipo = teclado.nextLine();
+//        }
+//
+//        System.out.println("Introduce el pin de tu ticket: ");
+//        String pin = teclado.nextLine();
+//
+//        System.out.println("Introduce tu numero de Plaza: ");
+//        int numPlaza = teclado.nextInt();
+//
+//        VehiculosDAO vehiculo = new VehiculosDAO();
+//        TicketDAO ticket = new TicketDAO();
+//        PlazasDAO plazas = new PlazasDAO();
+//        ArrayList<PlazasVO> listaPlaza = new ArrayList<>();
+//
+//        Boolean[] plazasEstado = new Boolean[45];
+//        ArrayList<VehiculosVO> listaVehiculo = new ArrayList<>();
+//        ArrayList<TicketVO> listaTicket = new ArrayList<>();
+//
+//        VehiculosVO vehi = new VehiculosVO(matricula, tipo);
+//        listaTicket = (ArrayList<TicketVO>) ticket.getAll();
+//        listaPlaza = (ArrayList<PlazasVO>) plazas.getAll();
+//
+//        for (int i = 0; i < listaPlaza.size(); i++) {
+//            plazasEstado[i] = listaPlaza.get(i).isEstadoPlaza();
+//        }
 //        for (TicketVO ticketVO : listaTicket) {
-//            while (!(numPlaza == ticketVO.getNumeroPlaza())) {
-//                System.out.println("ERROR: No se encuentra su numero de plaza ------ Vuelve a introducirla: ");
-//                numPlaza = teclado.nextInt();
+//            if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
+//                if (tipo.equalsIgnoreCase("Motocicleta")) {
+//                    int contador = 1;
+//                    for (int i = 0; i < 15; i++) {
+//                        //Hacemos k si la plaza esta ocupada la salte
+//                        if (plazasEstado[i] == true) {
+//                            i = i + contador;
+//                            contador++;
+//                        }
+//
+//                        if (plazasEstado[i] == false) {
+//                            //Se actualiza la plaza
+//                            PlazasVO plazaModificada = listaPlaza.get(i);
+//                            plazaModificada.setEstadoPlaza(true);
+//                            //Cambiamos el estado de la plaza a ocupada
+//                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+//                            System.out.println("Plaza actualizada");
+//                            break;
+//
+//                        }
+//
+//                    }
+//                }
+//
+//                if (tipo.equalsIgnoreCase("Turismo")) {
+//                    int contador = 1;
+//                    for (int i = 31; i < 45; i++) {
+//                        //Hacemos k si la plaza esta ocupada la salte
+//                        if (plazasEstado[i] == true) {
+//                            i = i + contador;
+//                            contador++;
+//                        }
+//
+//                        if (plazasEstado[i] == false) {
+//                            //Se actualiza la plaza
+//                            PlazasVO plazaModificada = listaPlaza.get(i);
+//                            plazaModificada.setEstadoPlaza(true);
+//                            //Cambiamos el estado de la plaza a ocupada
+//                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+//                            System.out.println("Plaza actualizada");
+//                            break;
+//
+//                        }
+//
+//                    }
+//                }
+//
+//                if (tipo.equalsIgnoreCase("Caravana")) {
+//                    int contador = 1;
+//                    for (int i = 16; i < 30; i++) {
+//                        //Hacemos k si la plaza esta ocupada la salte
+//                        if (plazasEstado[i] == true) {
+//                            i = i + contador;
+//                            contador++;
+//                        }
+//
+//                        if (plazasEstado[i] == false) {
+//                            //Se actualiza la plaza
+//                            PlazasVO plazaModificada = listaPlaza.get(i);
+//                            plazaModificada.setEstadoPlaza(true);
+//                            //Cambiamos el estado de la plaza a ocupada
+//                            plazas.updatePlaza(listaPlaza.get(i).getNumPlaza(), plazaModificada);
+//                            System.out.println("Plaza actualizada");
+//                            break;
+//
+//                        }
+//
+//                    }
+//                }
+//            } else {
+//                System.out.println("Has introducido datos no registrados");
 //            }
 //        }
-    }
+//
+//    }
 
     public static void modificarAbonado() throws SQLException {
 
@@ -447,7 +541,9 @@ public class GestionVehiculos {
 
     }
 
+    //Método para introducir clientes NO abonados, se genera un fichero txt con el ticket pero no se almacena en la BBDD
     public static void altaCliente() throws SQLException {
+        getEstados();
         AbonadosDAO abo = new AbonadosDAO();
         VehiculosDAO ve = new VehiculosDAO();
         PlazasDAO pla = new PlazasDAO();
@@ -477,7 +573,7 @@ public class GestionVehiculos {
 
         if (num != -1) {
             PlazasVO auxi = pla.findByPk(num);
-            auxi.setEstadoPlaza(false);
+            auxi.setEstadoPlaza(2);
             pla.updatePlaza(num, auxi);
             System.out.println("Vehículo estacionado correctamente");
             TicketVO ticket = new TicketVO(matri, num);
@@ -561,7 +657,7 @@ public class GestionVehiculos {
         int num = plazaVacia(tipo);
         if (num != -1) {
             PlazasVO auxi = plaza.findByPk(num);
-            auxi.setEstadoPlaza(false);
+            auxi.setEstadoPlaza(4);
             plaza.updatePlaza(num, auxi);
             System.out.println("Vehículo estacionado correctamente");
             TicketVO ticket = new TicketVO(matri, num);
@@ -672,7 +768,7 @@ public class GestionVehiculos {
 
         for (PlazasVO pla : lista) {
 
-            if ((pla.isEstadoPlaza() == true) & (pla.getTipoPlaza().equalsIgnoreCase(tipoPlaza))) {
+            if ((pla.isEstadoPlaza() == 1 || pla.isEstadoPlaza() == 3) & (pla.getTipoPlaza().equalsIgnoreCase(tipoPlaza))) {
 
                 System.out.println("Plaza libre número " + pla.getNumPlaza());
                 return pla.getNumPlaza();
@@ -698,25 +794,194 @@ public class GestionVehiculos {
 
     }
 
-    public static void calcularTarifa(TicketVO ticket) throws ParseException {
-        //LocalDate fechaInicio = LocalDate.now();
-        //LocalDate fechaFin = LocalDate.now();
+    public static void calcularTarifa() throws ParseException, SQLException {
+        System.out.println("Introduzca pin del ticket");
+        Scanner teclado = new Scanner(System.in);
+        String pin = teclado.nextLine();
+        TicketDAO tic = new TicketDAO();
+        TicketVO ticket = tic.findByPk(pin);
+        ticket.setFechaSalida(LocalDate.now());
+        ticket.setHora_Salida(LocalTime.now());
+        int num = ticket.getNumeroPlaza();
+        PlazasDAO pla = new PlazasDAO();
+        PlazasVO plaza = pla.findByPk(num);
+        double tari = plaza.getTarifa();
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         //TODO Recupear deBBDD y pasar a Sting y concatenar
         Date fechaInicial = dateFormat.parse(ticket.getFechaEntrada() + " " + ticket.getHora_Entrada());
         Date fechaFin = dateFormat.parse(ticket.getFechaSalida() + " " + ticket.getHora_Salida());
 
-        //Calendar calIni = Calendar.getInstance();
-        //cal.setTime(fechaInicial);
         long secs = (fechaFin.getTime() - fechaInicial.getTime()) / 1000;
-        //long hours = secs / 3600;    
-        //secs = secs % 3600;
+
         long mins = secs / 60;
-        //secs = secs % 60;
+        double to = mins * tari;
+        ticket.setCosteFinal(to);
+
+        tic.updateTicket(pin, ticket);
+        System.out.println("Total a pagar:" + to);
+
     }
 
-    //Método que restaura una copia de seguridad en la BBDD, para ello se solicita por teclado el nombre del fichero
+    public static void consultarEntreFechas() throws SQLException {
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Introduzca fecha inicial");
+        String fecIni = teclado.nextLine();
+        LocalDate ini = LocalDate.parse(fecIni);
+        System.out.println("Introduzca fecha final");
+        String fecfin = teclado.nextLine();
+        LocalDate fin = LocalDate.parse(fecfin);
+
+        TicketDAO tic = new TicketDAO();
+        ArrayList<TicketVO> ticket = (ArrayList<TicketVO>) tic.getAll();
+
+        double total = 0;
+        for (TicketVO ticketVO : ticket) {
+            if (ticketVO.getFechaSalida().isAfter(ini) && ticketVO.getFechaSalida().isBefore(fin)) {
+                total += ticketVO.getCosteFinal();
+            }
+        }
+
+        System.out.println("Total facturación: " + total);
+
+    }
+
+    public static void restaurarVehiculos() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
+
+        String linea = "hola";
+        VehiculosDAO vehi = new VehiculosDAO();
+        Scanner teclado = new Scanner(System.in);
+
+        ArrayList<VehiculosVO> lista = new ArrayList<>();
+        System.out.println("Introduzca el nombre del fichero que desea restaurar");
+        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+
+        try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
+
+            while (datosFichero.hasNextLine()) {
+
+                linea = datosFichero.nextLine();
+                VehiculosVO aux = new VehiculosVO();
+
+                //Abonados_2019-05-29_1
+                String[] cortarString = linea.split("\t");
+                String[] cortarPuntos = cortarString[0].split(":");
+                String pk = cortarPuntos[1];
+                aux.setCodAbono(Integer.parseInt(pk.trim()));
+                cortarPuntos = cortarString[1].split(":");
+                pk = cortarPuntos[1];
+                aux.setMatricula(pk);
+                cortarPuntos = cortarString[2].split(":");
+                pk = cortarPuntos[1];
+                aux.setTipoVehiculo(pk);
+                lista.add(aux);
+
+            }
+
+            vehi.insertVehiculo(lista);
+            System.out.println("Restauración completada");
+
+        }
+    }
+
+    public static void restaurarTickets() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
+        String linea = "hola";
+        TicketDAO tic = new TicketDAO();
+        Scanner teclado = new Scanner(System.in);
+
+        ArrayList<TicketVO> lista = new ArrayList<>();
+        System.out.println("Introduzca el nombre del fichero que desea restaurar");
+        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+
+        try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
+
+            while (datosFichero.hasNextLine()) {
+                int contador = 1;
+
+                linea = datosFichero.nextLine();
+                if (contador % 2 != 0) {
+
+                    TicketVO aux = new TicketVO();
+
+                    //Abonados_2019-05-29_1
+                    String[] cortarString = linea.split("\\|");
+                    String[] cortarPuntos = cortarString[0].split(":");
+                    String pk = cortarPuntos[1];
+                    aux.setPin(pk);
+
+                    cortarPuntos = cortarString[1].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setMatricula(pk);
+                    cortarPuntos = cortarString[2].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setFechaEntrada(LocalDate.parse(pk));
+                    cortarPuntos = cortarString[3].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setFechaSalida(LocalDate.parse(pk));
+                    cortarPuntos = cortarString[4].split(":");
+                    pk = cortarPuntos[1] + ":" + cortarPuntos[2] + ":" + cortarPuntos[3];
+                    aux.setHora_Entrada(LocalTime.parse(pk));
+                    cortarPuntos = cortarString[5].split(":");
+                    pk = cortarPuntos[1] + ":" + cortarPuntos[2] + ":" + cortarPuntos[3];
+                    aux.setHora_Salida(LocalTime.parse(pk));
+                    cortarPuntos = cortarString[6].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setNumeroPlaza(Integer.parseInt(pk));
+                    cortarPuntos = cortarString[7].split(":");
+                    pk = cortarPuntos[1];
+                    aux.setCosteFinal(Double.parseDouble(pk));
+                    lista.add(aux);
+
+                }
+
+                tic.insertListaTicket(lista);
+                System.out.println("Restauración completada");
+            }
+
+        }
+    }
+
+    public static void restaurarPlazas() throws FileNotFoundException, UnsupportedEncodingException, SQLException {
+        String linea = "hola";
+        PlazasDAO plaza = new PlazasDAO();
+        Scanner teclado = new Scanner(System.in);
+
+        ArrayList<PlazasVO> lista = new ArrayList<>();
+        System.out.println("Introduzca el nombre del fichero que desea restaurar");
+        String idFichero = "./Copias_Seg/" + teclado.nextLine() + ".txt";
+        try (Scanner datosFichero = new Scanner(new InputStreamReader(new FileInputStream(idFichero), "ISO-8859-1"))) {
+
+            while (datosFichero.hasNextLine()) {
+
+                linea = datosFichero.nextLine();
+                PlazasVO aux = new PlazasVO();
+
+                //Plazas_8_46_27
+                String[] cortarString = linea.split("\t");
+                String[] cortarPuntos = cortarString[0].split(":");
+                String pk = cortarPuntos[1];
+                aux.setNumPlaza(Integer.parseInt(pk.trim()));
+                cortarPuntos = cortarString[1].split(":");
+                pk = cortarPuntos[1];
+                aux.setTipoPlaza(pk);
+                cortarPuntos = cortarString[2].split(":");
+                pk = cortarPuntos[1];
+                aux.setEstadoPlaza(Integer.parseInt(pk));
+                cortarPuntos = cortarString[3].split(":");
+                pk = cortarPuntos[1];
+                aux.setTarifa(Double.parseDouble(pk.trim()));
+                lista.add(aux);
+
+            }
+
+            plaza.insertPlaza(lista);
+            System.out.println("Restauración completada");
+
+        }
+    }
+
+//Método que restaura una copia de seguridad en la BBDD, para ello se solicita por teclado el nombre del fichero
     public static void restaurarAbonados() throws UnsupportedEncodingException, IOException, SQLException {
         String linea = "hola";
         AbonadosDAO abo = new AbonadosDAO();
@@ -785,9 +1050,63 @@ public class GestionVehiculos {
             }
 
             flujo.flush();
+            System.out.println("Copia de seguridad completada");
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+
+    }
+
+    public static void getEstados() throws SQLException {
+        // El sistema informa en todo momento del número de plazas libres que existen de cada tipo.
+
+        Connection con = null;
+
+        con = Conexion.getInstance();
+
+        String sql = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Turismo'";
+        String sql2 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Caravana'";
+        String sql3 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Motocicleta'";
+
+        try (PreparedStatement prest = con.prepareStatement(sql)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de turismo libres :" + aux);
+            }
+        }
+        try (PreparedStatement prest = con.prepareStatement(sql2)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de caravana libres :" + aux);
+            }
+        }
+        try (PreparedStatement prest = con.prepareStatement(sql3)) {
+            // Ejecutamos la sentencia y obtenemos las filas en el objeto ResultSet
+
+            ResultSet res = null;
+            res = prest.executeQuery();
+            // Ahora construimos la lista, recorriendo el ResultSet y mapeando los datos
+            if (res.next()) {
+
+                int aux = res.getInt(1);
+
+                System.out.println("Plazas de motocicleta libres :" + aux);
+            }
         }
 
     }
@@ -809,6 +1128,7 @@ public class GestionVehiculos {
             }
 
             flujo.flush();
+            System.out.println("Copia de seguridad completada");
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -833,11 +1153,20 @@ public class GestionVehiculos {
             }
 
             flujo.flush();
+            System.out.println("Copia de seguridad completada");
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
+    }
+    static void copias () throws SQLException{
+        
+        copiaAbonados();
+        copiasPlazas();
+        copiasVehiculos();
+        System.out.println("Copia de seguridad realizada con éxito");
+        
     }
 
     //Método que genera un fichero-Copia de seguridad- de todos los abonados
@@ -856,6 +1185,7 @@ public class GestionVehiculos {
             }
 
             flujo.flush();
+            System.out.println("Copia de seguridad completada");
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -866,11 +1196,11 @@ public class GestionVehiculos {
     public static void main(String[] args) throws SQLException, IOException, ParseException {
 
 //        Menu.menu();
-//        GestionVehiculos.depositarVehiculo();
-        // GestionVehiculos.retirarVehiculo();
+        // GestionVehiculos.depositarVehiculo();
+        //GestionVehiculos.retirarVehiculo();
         // Menu.menu();
         // GestionVehiculos.depositarVehiculo();
-//        GestionVehiculos.altaAbonado();
+        //        GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
         // GestionVehiculos.altaAbonado();
         //  GestionVehiculos.modificarAbonado();
@@ -880,14 +1210,26 @@ public class GestionVehiculos {
         // GestionVehiculos.ultimosDias();
         // GestionVehiculos.altaCliente();
         //GestionVehiculos.copiaAbonados();
-        //GestionVehiculos.copiasVehiculos();
-        GestionVehiculos.restaurarAbonados();
-
+        // GestionVehiculos.copiasVehiculos();
+        // GestionVehiculos.restaurarAbonados();
+        //     GestionVehiculos.restaurarVehiculos();
+        // GestionVehiculos.copiasPlazas();
+        // GestionVehiculos.restaurarPlazas();
 //       TicketVO ticket=new TicketVO("iokluyt", 7);
 //       ticket.setHora_Salida(LocalTime.of(17, 30));
 //       ticket.setFechaSalida(LocalDate.of(2019, 6, 03));
 //       
 //       GestionVehiculos.calcularTarifa(ticket);
 //       
+        //  GestionVehiculos.copiasTickets();
+//        GestionVehiculos.restaurarTickets();
+        // GestionVehiculos.altaAbonado();
+        //  GestionVehiculos.modificarAbonado();
+        // GestionVehiculos.plazaVacia("Motocicleta");
+        // GestionVehiculos.bajaAbonado();
+        // GestionVehiculos.caducidad();
+        //GestionVehiculos.ultimosDias();
+        //GestionVehiculos.altaCliente();
+        // GestionVehiculos.calcularTarifa();
     }
 }

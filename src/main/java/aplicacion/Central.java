@@ -25,15 +25,15 @@ public class Central {
                 ejecutarOrden(Menu.menu());
                         
                 break;
-            case RETIRAR_VEHICULO:
-                GestionVehiculos.retirarVehiculo();
-                break;
-            case DEPOSITAR_ABONOS:
-                GestionVehiculos.depositarVehiculoAbonado();
-                break;
-            case RETIRAR_ABONOS:
-                GestionVehiculos.retirarVehiculoAbonado();
-                break;
+//            case RETIRAR_VEHICULO:
+//                GestionVehiculos.retirarVehiculo();
+//                break;
+//            case DEPOSITAR_ABONOS:
+//                GestionVehiculos.depositarVehiculoAbonado();
+//                break;
+//            case RETIRAR_ABONOS:
+//                GestionVehiculos.retirarVehiculoAbonado();
+//                break;
             case VER_ESTADO_PARKING:
                 GestionVehiculos.getEstados();
                 ejecutarOrden(Menu.menu());
@@ -86,35 +86,8 @@ public class Central {
                 break;
             case CREAR_COPIA_SEGURIDAD:
                 System.out.println("CREAR COPIA DE SEGURIDAD");
-                System.out.println("1.-De Clientes");
-                System.out.println("2.-De Vehiculos");
-                System.out.println("3.-De Plazas");
-                System.out.println("4.-De tickets");
-                opcion = teclado.nextInt();
-                while (opcion < 1 || opcion > 4) {
-                    System.out.println("ERROR: Vuelva a introducir la opcion: ");
-                    opcion = teclado.nextInt();
-                }
-                switch (opcion) {
-                    case 1:
-                        GestionVehiculos.copiaAbonados();
-                        ejecutarOrden(Menu.menu());
-                        break;
-                    case 2:
-                        GestionVehiculos.copiasVehiculos();
-                        ejecutarOrden(Menu.menu());
-                        break;
-                    case 3:
-                        GestionVehiculos.copiasPlazas();
-                        ejecutarOrden(Menu.menu());
-                        break;
-                    case 4:
-                        GestionVehiculos.copiasTickets();
-                        ejecutarOrden(Menu.menu());
-                        break;
-                    default:
-                        throw new AssertionError();
-                }
+                
+                GestionVehiculos.copias();
 
                 break;
             case RESTAURAR_COPIA_SEGURIDAD:
