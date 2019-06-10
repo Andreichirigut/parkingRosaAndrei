@@ -16,6 +16,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -173,7 +176,6 @@ public class GestionVehiculos {
 //
 //        }
 //    }
-
 //    public static void retirarVehiculo() throws SQLException, ParseException {
 //
 //        VehiculosDAO vehiculo = new VehiculosDAO();
@@ -315,7 +317,6 @@ public class GestionVehiculos {
 //        getEstados();
 //
 //    }
-
 //    public static void depositarVehiculoAbonado() throws SQLException {
 //        //Se declaran distintos objetos generales necesarios
 //        Boolean[] plazasEstado = new Boolean[45];
@@ -365,7 +366,6 @@ public class GestionVehiculos {
 //        }
 //
 //    }
-
 //    public static void retirarVehiculoAbonado() throws SQLException {
 //        Scanner teclado = new Scanner(System.in);
 //        System.out.println("Introduce tu matricula: ");
@@ -476,7 +476,6 @@ public class GestionVehiculos {
 //        }
 //
 //    }
-
     public static void modificarAbonado() throws SQLException {
 
         AbonadosDAO abo = new AbonadosDAO();
@@ -683,7 +682,6 @@ public class GestionVehiculos {
         auxiliar.setNombre(" ");
         auxiliar.setTipoABono(0);
         auxiliar.setNumTarjeta("----------------");
-        auxiliar.setImporte(-1);
         abo.updateAbono(codigo, auxiliar);
         System.out.println("Abono eliminado con éxito");
 
@@ -1034,13 +1032,13 @@ public class GestionVehiculos {
     }
 
     //Método que genera un fichero-Copia de seguridad- de todas las plazas
-    public static void copiasPlazas() throws SQLException {
+    public static void copiasPlazas(String directorio) throws SQLException {
 
         PlazasDAO pla = new PlazasDAO();
 
         List<PlazasVO> lista = pla.getAll();
 
-        String idfichero = "./Copias_Seg/Plazas_" + LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond() + ".txt";
+          String idfichero = directorio+"/Plazas.txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
 
@@ -1065,7 +1063,7 @@ public class GestionVehiculos {
 
         con = Conexion.getInstance();
 
-        String sql = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Turismo'";
+        String sql = "select count(*) from Plaza where estadoPlaza='1' and tipoPlaza='Turismo'";
         String sql2 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Caravana'";
         String sql3 = "select count(*) from Plaza where estadoPlaza='1'and tipoPlaza='Motocicleta'";
 
@@ -1112,13 +1110,13 @@ public class GestionVehiculos {
     }
 
     //Método que genera un fichero-Copia de seguridad- de todos los Vehiculos
-    public static void copiasVehiculos() throws SQLException {
+    public static void copiasVehiculos(String directorio) throws SQLException {
 
         VehiculosDAO ve = new VehiculosDAO();
 
         List<VehiculosVO> lista = ve.getAll();
 
-        String idfichero = "./Copias_Seg/Vehiculos_" + LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond() + ".txt";
+          String idfichero = directorio+"/Vehiculos.txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
 
@@ -1137,13 +1135,13 @@ public class GestionVehiculos {
     }
 
     //Método que genera un fichero-Copia de seguridad- de todos los Tickets
-    public static void copiasTickets() throws SQLException {
+    public static void copiasTickets(String directorio) throws SQLException {
 
         TicketDAO tic = new TicketDAO();
 
         List<TicketVO> lista = tic.getAll();
 
-        String idfichero = "./Copias_Seg/Ticket_" + LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond() + ".txt";
+          String idfichero = directorio+"/Tickets.txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
 
@@ -1160,22 +1158,34 @@ public class GestionVehiculos {
         }
 
     }
-    static void copias () throws SQLException{
-        
-        copiaAbonados();
-        copiasPlazas();
-        copiasVehiculos();
+
+    //Método para hacer las copias de seguridad todas a la vez
+    static void copias() throws SQLException {
+
+        String directorio="./Backups/"+LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond();
+        Path directory = Paths.get(directorio);
+        try {
+            Files.createDirectory(directory);
+        } catch (IOException e) {
+            System.out.println("Problema creando el directorio.");
+            System.out.println(e.toString());
+        }
+
+        copiaAbonados(directorio);
+        copiasPlazas(directorio);
+        copiasVehiculos(directorio);
+        copiasTickets(directorio);
         System.out.println("Copia de seguridad realizada con éxito");
-        
+
     }
 
     //Método que genera un fichero-Copia de seguridad- de todos los abonados
-    static void copiaAbonados() throws SQLException {
+    static void copiaAbonados(String directorio) throws SQLException {
         AbonadosDAO abo = new AbonadosDAO();
 
         List<AbonadosVO> lista = abo.getAll();
 
-        String idfichero = "./Copias_Seg/Abonados_" + LocalTime.now().getHour() + "_" + LocalTime.now().getMinute() + "_" + LocalTime.now().getSecond() + ".txt";
+        String idfichero = directorio+"/Abonados.txt";
 
         try (BufferedWriter flujo = new BufferedWriter(new FileWriter(idfichero))) {
 
