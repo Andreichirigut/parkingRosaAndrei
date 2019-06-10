@@ -87,6 +87,7 @@ public class GestionVehiculos {
         if (respuesta2.equalsIgnoreCase("Turismo")) {
             int contador = 1;
             for (int i = 30; i < 44; i++) {
+              
 
                 if (plazasEstado[i] == 1) {
                     //Insertamos un nuevo vehiculo
@@ -115,6 +116,7 @@ public class GestionVehiculos {
         if (respuesta2.equalsIgnoreCase("Motocicleta")) {
             int contador = 1;
             for (int i = 0; i < 14; i++) {
+                
 
                 if (plazasEstado[i] == 1) {
                     //Insertamos un nuevo vehiculo
@@ -140,6 +142,7 @@ public class GestionVehiculos {
         if (respuesta2.equalsIgnoreCase("Caravana")) {
             int contador = 1;
             for (int i = 16; i < 29; i++) {
+                
 
                 if (plazasEstado[i] == 1) {
                     //Insertamos un nuevo vehiculo
@@ -182,7 +185,7 @@ public class GestionVehiculos {
 
         System.out.println("-------Numero de plazas libres-------");
         PlazasDAO daoPlaza = new PlazasDAO();
-        getEstadosClientes();
+        getEstados();
         System.out.println("-----------------------");
         Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce tu matricula: ");
@@ -220,7 +223,11 @@ public class GestionVehiculos {
         double importe = GestionVehiculos.calcularTarifa(pin);
         System.out.println("Realice el pago por favor: ");
         double pago = teclado.nextDouble();
-        if (pago == importe) {
+        while (pago != importe) {
+            System.out.println("Error al pagar: Vuelva introducir el importe correcto");
+            pago = teclado.nextDouble();
+        }
+        
             if (tipo.equalsIgnoreCase("Motocicleta")) {
                 int contador = 1;
                 for (int i = 0; i < 14; i++) {
@@ -288,10 +295,7 @@ public class GestionVehiculos {
             System.out.println("-------Numero de plazas libres-------");
             daoPlaza = new PlazasDAO();
             getEstados();
-        } else {
-            System.out.println("Debe de pagar primero para poder retirar el coche");
-
-        }
+        
 
     }
 
@@ -314,7 +318,8 @@ public class GestionVehiculos {
         System.out.println("Dime tu DNI");
         String dni = teclado.nextLine();
         while (dni.length() > 9 || dni.length() < 9) {
-            System.out.println("ERROR: Vuelve a introducir la matricula");
+            System.out.println("ERROR: Vuelve a introducir tu DNI");
+            dni = teclado.nextLine();
         }
 
         System.out.println("Dime tu tipo de vehiculo: ");
@@ -332,9 +337,7 @@ public class GestionVehiculos {
         int num = plazaVacia(tipo);
         if (num != -1) {
             PlazasVO auxi = plaza.findByPk(num);
-            if (auxi.isEstadoPlaza() == 3) {
-                auxi.setEstadoPlaza(4);
-            }
+                auxi.setEstadoPlaza(4);        
             plaza.updatePlaza(num, auxi);
             System.out.println("Vehículo estacionado correctamente");
             TicketVO ticket = new TicketVO(matricula, num);
@@ -388,11 +391,7 @@ public class GestionVehiculos {
         if (tipo.equalsIgnoreCase("Motocicleta")) {
             int contador = 1;
             for (int i = 0; i < 14; i++) {
-                //Hacemos k si la plaza esta ocupada la salte
-//                        if (plazasEstado[i] == 3 || plazasEstado[i] == 1 || plazasEstado[i] == 2) {
-//                            i = i + contador;
-//                            contador++;
-//                        }
+                
 
                 if (plazasEstado[i] == 4) {
                     //Se actualiza la plaza
@@ -411,11 +410,7 @@ public class GestionVehiculos {
         if (tipo.equalsIgnoreCase("Turismo")) {
             int contador = 1;
             for (int i = 30; i < 44; i++) {
-//                        //Hacemos k si la plaza esta ocupada la salte
-//                        if (plazasEstado[i] == 3 || plazasEstado[i] == 1 || plazasEstado[i] == 2) {
-//                            i = i + contador;
-//                            contador++;
-//                        }
+//                       
 
                 if (plazasEstado[i] == 4) {
                     //Se actualiza la plaza
@@ -434,11 +429,7 @@ public class GestionVehiculos {
         if (tipo.equalsIgnoreCase("Caravana")) {
             int contador = 1;
             for (int i = 16; i < 29; i++) {
-//                        //Hacemos k si la plaza esta ocupada la salte
-//                        if (plazasEstado[i] == 3 || plazasEstado[i] == 1 || plazasEstado[i] == 2) {
-//                            i = i + contador;
-//                            contador++;
-//                        }
+//                       
 
                 if (plazasEstado[i] == 4) {
                     //Se actualiza la plaza
@@ -455,7 +446,7 @@ public class GestionVehiculos {
         }
         for (TicketVO ticketVO : listaTicket) {
             if (matricula.equalsIgnoreCase(ticketVO.getMatricula()) && pin.equalsIgnoreCase(ticketVO.getPin()) && numPlaza == ticketVO.getNumeroPlaza()) {
-                // vehiculo.deleteVehiculo(vehiculoVO);
+               // vehiculo.deleteVehiculo(vehiculoVO);
                 System.out.println("Vehiculo retirado");
 
             }
